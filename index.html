@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RotaSaúde · Rotas e agendamentos para transporte de pacientes em hemodiálise · Hackathon USP 2026</title>
-  <meta name="description" content="Documento vivo do projeto RotaSaúde (Hackathon USP 2026): plataforma de demanda, prioridade, rotas e agendamentos para frotas que levam pessoas em hemodiálise, com foco no menor tempo de translocação.">
+  <title>Amparo · Assistência social e proteção financeira na jornada do paciente hospitalar · Hackathon USP 2026</title>
+  <meta name="description" content="Documento vivo do projeto Amparo (Hackathon USP 2026): plataforma SaaS B2B para hospitais com calculadora de vulnerabilidade financeira, identificador de direitos, organizador documental e painel da assistente social. Primeiro direito: saque do FGTS por diagnóstico.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="topbar">
-    <a class="brand" href="#inicio">RotaSaúde</a>
+    <a class="brand" href="#inicio">Amparo</a>
     <nav aria-label="Seções do documento">
       <a href="#intencao">Intenção</a>
       <a href="#dores">Dores</a>
@@ -30,17 +30,18 @@
     <!-- ABERTURA -->
     <section id="inicio" class="hero">
       <p class="eyebrow">Hackathon USP 2026 · Saúde para todos</p>
-      <h1>O menor tempo de translocação possível para quem faz hemodiálise.</h1>
+      <h1>Proteção financeira e assistência social dentro da jornada do paciente no hospital.</h1>
       <p class="lead">
-        Material de produto de uma empresa (simulada) que desenvolve um <strong>sistema de rotas e
-        agendamentos para frotas</strong> que levam pessoas em hemodiálise às capitais e aos centros
-        de referência. O núcleo do produto é: <strong>demanda, prioridade e cálculo de rotas</strong>.
-        A hemodiálise é o primeiro caso, e o núcleo é desenhado para se abrir a outras rotas.
+        Material de produto de uma empresa (simulada) que vende ao hospital, por <strong>assinatura
+        (SaaS B2B)</strong>, uma plataforma que ajuda a assistente social e o paciente a
+        <strong>medir a vulnerabilidade financeira, descobrir os direitos aplicáveis, organizar os
+        documentos e acompanhar os pedidos</strong>. O primeiro direito é o saque do FGTS por
+        diagnóstico.
       </p>
       <p class="hero-note">
-        Status: <strong>em construção</strong>. Clientes, modelo de negócio e regras de prioridade são
-        hipóteses a validar e estão marcados como tal. O sistema é apoio logístico e não substitui
-        decisões clínicas.
+        Status: <strong>em construção</strong>. Pagador, preço, regras e pesos do índice são hipóteses
+        a validar e estão marcados como tal. A plataforma é apoio à assistência social e não substitui
+        a análise de uma assistente social, de um advogado ou a decisão do órgão competente.
       </p>
     </section>
 
@@ -50,117 +51,100 @@
       <h2>Visão, produto e cliente</h2>
 
       <blockquote class="intent">
-        Reduzir ao mínimo possível o tempo de translocação de quem faz hemodiálise e precisa viajar
-        para se tratar, sem faltar a nenhuma sessão e com as frotas bem utilizadas.
+        Que nenhum paciente deixe de se tratar, ou se endivide, por não saber que direitos tem nem
+        como pedi-los, e que o hospital tenha como ajudar sem sobrecarregar a assistente social.
       </blockquote>
 
       <p>
         O tema do desafio é <em>"Saúde para todos: soluções para reduzir barreiras no acesso à
-        saúde"</em>, e a entrega esperada é principalmente <strong>um modelo</strong>. A hemodiálise é
-        um tratamento contínuo (cerca de três sessões por semana), e o paciente que mora longe do
-        centro de diálise repete a viagem a cada sessão. Para essa pessoa, o tempo de translocação é
-        a barreira de acesso mais concreta.
+        saúde"</em>, e a entrega esperada é principalmente <strong>um modelo</strong>. A barreira que
+        atacamos é financeira e burocrática: ao receber um diagnóstico grave, muitas famílias perdem
+        renda, e os direitos que poderiam aliviar essa perda exigem formulários, laudos e prazos que
+        o paciente raramente conhece.
       </p>
 
-      <h3>O produto, em cinco blocos</h3>
+      <h3>O produto, em quatro módulos</h3>
       <div class="cards">
         <article class="card focus">
-          <span class="tag">Núcleo</span>
-          <h3>DEMANDA</h3>
-          <p>Quem precisa ir, de onde, para onde, em que dias e turnos, com ou sem acompanhante e com
-            quais necessidades de acessibilidade. Inclui a previsão de crescimento.</p>
+          <span class="tag">Módulo 1</span>
+          <h3>CALCULADORA DE VULNERABILIDADE</h3>
+          <p>Índice transparente de 0 a 100 que ordena a fila de atendimento a partir de renda, queda de
+            renda, custo do tratamento, dívidas, reserva e cuidador. Não decide direitos.</p>
         </article>
         <article class="card focus">
-          <span class="tag">Núcleo</span>
-          <h3>PRIORIDADE</h3>
-          <p>Regras transparentes, definidas com as equipes de saúde, que ordenam a alocação de
-            horários e rotas e a ordem de replanejamento. Nunca para excluir alguém.</p>
+          <span class="tag">Módulo 2</span>
+          <h3>IDENTIFICADOR DE DIREITOS</h3>
+          <p>Cruza diagnóstico, vínculo e renda com regras versionadas e mostra, para cada direito, se
+            enquadra, o porquê, a base legal e o próximo passo.</p>
         </article>
         <article class="card focus">
-          <span class="tag">Núcleo</span>
-          <h3>ROTAS E AGENDA</h3>
-          <p>Calcula rotas e horários que minimizam o tempo de translocação do paciente, respeitando
-            as agendas do centro, a capacidade e a acessibilidade dos veículos.</p>
+          <span class="tag">Módulo 3</span>
+          <h3>ORGANIZADOR DOCUMENTAL</h3>
+          <p>Checklist por direito, com estado de cada documento, validade do relatório médico e
+            prontidão do dossiê antes de protocolar.</p>
+        </article>
+        <article class="card focus">
+          <span class="tag">Módulo 4</span>
+          <h3>PAINEL DA ASSISTENTE SOCIAL</h3>
+          <p>Fila priorizada, alertas de documento vencido ou pedido parado, próxima ação por caso e
+            indicadores agregados para o hospital.</p>
         </article>
         <article class="card">
-          <span class="tag tag-muted">Operação</span>
-          <h3>CONTINUIDADE</h3>
-          <p>Reserva, replanejamento quando algo falha e aviso ao centro em caso de atraso.</p>
-        </article>
-        <article class="card">
-          <span class="tag tag-muted">Conformidade</span>
-          <h3>PACTUAÇÃO</h3>
-          <p>Saídas no formato exigido pela política: gestor da frota, abrangência, itinerário, total
-            de pessoas e articulação com o agendamento.</p>
+          <span class="tag tag-muted">Negócio</span>
+          <h3>ASSINATURA DO HOSPITAL</h3>
+          <p>SaaS B2B. O hospital paga e a plataforma não cobra do paciente nem ganha comissão sobre o
+            benefício. Preço a definir com o piloto.</p>
         </article>
       </div>
 
-      <h3>Quem são os clientes (hipóteses a validar)</h3>
+      <h3>Quem são os usuários e o cliente (hipóteses a validar)</h3>
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>Cliente</th><th>O que faz hoje</th><th>O que precisa do produto</th></tr>
+            <tr><th>Papel</th><th>O que faz hoje</th><th>O que precisa do produto</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td>Gestor da frota (município, estado ou consórcio)</td>
-              <td>Recebe ou compra veículos, define rotas e horários e registra a produção.</td>
-              <td>Rotas e agendas de menor tempo para o paciente, com custo e frota justificáveis.</td>
+              <td>Hospital (cliente e pagador)</td>
+              <td>Atende o paciente e, em geral, mantém serviço social.</td>
+              <td>Reduzir o trabalho burocrático, ter visibilidade do que acontece com os casos e mostrar valor da assinatura.</td>
             </tr>
             <tr>
-              <td>Comissões regionais e estaduais (CIR e CIB)</td>
-              <td>Pactuam o arranjo regional da frota.</td>
-              <td>Rascunho de pactuação conferido pelas regras e comparação de arranjos.</td>
+              <td>Assistente social (usuária principal)</td>
+              <td>Conversa com o paciente, orienta sobre direitos e acompanha pedidos.</td>
+              <td>Fila priorizada, regras atualizadas, checklist pronto e alertas.</td>
             </tr>
             <tr>
-              <td>Centro de diálise</td>
-              <td>Organiza turnos e máquinas.</td>
-              <td>Chegadas pontuais, previsão de demanda e aviso de atrasos.</td>
+              <td>Paciente e família</td>
+              <td>Tentam descobrir direitos por conta própria, muitas vezes sem apoio.</td>
+              <td>Orientação clara, em linguagem simples, do que pedir, quando e com quais documentos.</td>
             </tr>
             <tr>
-              <td>Empresa de transporte contratada</td>
-              <td>Opera os veículos.</td>
-              <td>Rotas executáveis, com horários e paradas claros.</td>
-            </tr>
-            <tr>
-              <td>Pacientes e famílias (usuários, não pagantes)</td>
-              <td>Dependem do transporte oferecido.</td>
-              <td>Menos tempo na estrada, previsibilidade e aviso quando algo muda.</td>
+              <td>Médico assistente</td>
+              <td>Emite laudos e relatórios.</td>
+              <td>Saber exatamente o que o documento precisa conter, para não refazê-lo.</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="small">
-        <strong>Modelo de negócio (hipótese não validada):</strong> assinatura por frota, município ou
-        consórcio, somada a um projeto de implantação. Preços não foram definidos.
-      </p>
 
-      <h3>Destino: capitais e centros de referência</h3>
-      <p>
-        No modelo, o destino é um <strong>parâmetro</strong>: o mesmo sistema atende um polo regional
-        ou uma capital. Destinos mais distantes aumentam o tempo de viagem, o que torna a prioridade,
-        a continuidade e o cálculo de rotas ainda mais importantes. O laboratório permite simular isso
-        com um multiplicador de distância.
-      </p>
-
+      <h3>Escopo inicial e o que o produto não é</h3>
       <div class="two-col">
         <div>
-          <h3>Dentro do escopo</h3>
+          <h4>Escopo inicial</h4>
           <ul class="check">
-            <li>Demanda recorrente de hemodiálise por origem, dia e turno.</li>
-            <li>Prioridade operacional configurável, com regras auditáveis.</li>
-            <li>Rotas, agendas, reserva e replanejamento de frotas.</li>
-            <li>Rascunho de pactuação compatível com a política vigente.</li>
-            <li>Arquitetura aberta a outros tipos de rota (como caso de estudo conceitual).</li>
+            <li>Hospitais que atendem pacientes com câncer e HIV, onde o saque do FGTS tem hipótese própria na lei.</li>
+            <li>Quatro direitos no protótipo: saque do FGTS, auxílio por incapacidade temporária, BPC e isenção de IR.</li>
+            <li>Dados sintéticos e regras simplificadas, para demonstrar o modelo.</li>
           </ul>
         </div>
         <div>
-          <h3>Fora do escopo</h3>
+          <h4>O que não é</h4>
           <ul class="cross">
-            <li>Decisões clínicas, inclusive indicação e prescrição de diálise.</li>
-            <li>Definir os horários clínicos das sessões (vêm como entrada do centro).</li>
-            <li>Substituir a regulação regional do SUS.</li>
-            <li>Operar hoje o transporte de órgãos (abertura futura, seção 3.5).</li>
+            <li>Não é crédito, e não ganha dinheiro com dívida do paciente.</li>
+            <li>Não vende nem compartilha dados de diagnóstico com terceiros.</li>
+            <li>Não indica planos de saúde, e seguradoras não são pagadoras (D28).</li>
+            <li>Não é aconselhamento jurídico, e não garante o deferimento de nenhum pedido.</li>
           </ul>
         </div>
       </div>
@@ -184,73 +168,73 @@
           <tbody>
             <tr>
               <td>P1</td>
-              <td>Paciente</td>
-              <td>Viagens longas, várias vezes por semana, somadas a sessões de cerca de quatro horas.</td>
-              <td>O tempo de translocação é o objetivo principal do roteamento.</td>
-              <td>Estudo na Bahia (distância média até a unidade mais próxima de cerca de 101 km). Dado antigo e regional.</td>
+              <td>Paciente e família</td>
+              <td>A renda cai quando a pessoa se afasta do trabalho, e o tratamento e as dívidas continuam.</td>
+              <td>A calculadora mede essa queda e o fôlego da reserva.</td>
+              <td>Estudos de toxicidade financeira em doença renal crônica (Brasil) e em oncologia. Hipótese para o hospital piloto.</td>
             </tr>
             <tr>
               <td>P2</td>
-              <td>Paciente</td>
-              <td>Faltar a uma sessão por falta de transporte tem consequências sérias para a saúde.</td>
-              <td>Continuidade (reserva e replanejamento) é requisito, não extra.</td>
-              <td>Documentos de gestão tratam o transporte como essencial à continuidade; estudo dos EUA relata mais faltas sem transporte próprio.</td>
+              <td>Paciente e família</td>
+              <td>Não sabem que direitos têm nem em que ordem pedir.</td>
+              <td>O identificador lista direitos e próximos passos.</td>
+              <td>Hipótese do time.</td>
             </tr>
             <tr>
               <td>P3</td>
-              <td>Paciente</td>
-              <td>Atrasos encurtam a sessão, e a espera após a sessão prolonga o dia.</td>
-              <td>Pontualidade e espera entram nas métricas.</td>
-              <td>Relato de paciente nos EUA. Hipótese para o Brasil.</td>
+              <td>Paciente e médico</td>
+              <td>O pedido exige documentos específicos (formulário da Caixa, exame comprobatório, assinatura e prazo), e um laudo comum não basta.</td>
+              <td>O organizador dá o checklist exato e controla a validade.</td>
+              <td>Página da Caixa sobre saque por doença grave; auditoria do TCU cita atestados e documentos antigos entre as falhas.</td>
             </tr>
             <tr>
               <td>P4</td>
-              <td>Família e acompanhante</td>
-              <td>Perde dias de trabalho para levar o paciente ou depende de caronas.</td>
-              <td>Rotas coletivas e regulares reduzem arranjos informais.</td>
-              <td>Pedidos de veículo de municípios paulistas citam caronas e falta de transporte apropriado.</td>
+              <td>Paciente</td>
+              <td>Pedidos de benefício por incapacidade são negados com frequência, e poucos recorrem.</td>
+              <td>Dossiê completo, alerta de negativa e encaminhamento para recurso ou Defensoria.</td>
+              <td>Cerca de metade dos pedidos por incapacidade foi negada no 1º semestre de 2026 (fontes divergem nos números); o TCU aponta que muitos segurados não recorrem.</td>
             </tr>
             <tr>
               <td>P5</td>
-              <td>Gestor da frota</td>
-              <td>Frota limitada, contratos caros e pouco critério para agrupar pacientes.</td>
-              <td>Comparação de arranjos e custo por sessão transportada.</td>
-              <td>Hipótese. Há municípios que contratam empresas e outros que usam frota própria.</td>
+              <td>Assistente social</td>
+              <td>Tempo gasto em burocracia por caso, com regras que mudam.</td>
+              <td>Checklist pronto e base de regras atualizada pela plataforma.</td>
+              <td>Hipótese a medir no piloto (Q2).</td>
             </tr>
             <tr>
               <td>P6</td>
-              <td>Gestor da frota</td>
-              <td>A demanda muda (novos pacientes, altas, transplantes, mudanças de endereço), e o arranjo envelhece.</td>
-              <td>Módulo de demanda com cenários de crescimento e alerta de capacidade.</td>
-              <td>Hipótese a confirmar (Q2, Q4).</td>
+              <td>Assistente social</td>
+              <td>Sem visão do conjunto de pacientes: quem está em maior risco, quem tem pedido parado.</td>
+              <td>Painel com fila priorizada e alertas.</td>
+              <td>Hipótese do time.</td>
             </tr>
             <tr>
               <td>P7</td>
-              <td>Gestor e centro</td>
-              <td>Sem regra clara de prioridade, a decisão de quem recebe a reserva ou o melhor horário é improvisada.</td>
-              <td>Módulo de prioridade com classes definidas pelas equipes de saúde.</td>
-              <td>Hipótese a confirmar (Q6).</td>
+              <td>Médico assistente</td>
+              <td>Não conhece o formulário exigido e refaz o relatório.</td>
+              <td>O organizador mostra o que o documento deve conter.</td>
+              <td>Hipótese a validar (Q5).</td>
             </tr>
             <tr>
               <td>P8</td>
-              <td>Centro de diálise</td>
-              <td>Atrasos e faltas deixam máquinas ociosas e desorganizam os turnos.</td>
-              <td>A chegada respeita o início do turno de cada grupo.</td>
-              <td>Hipótese a confirmar (Q9).</td>
+              <td>Cuidador familiar</td>
+              <td>Reduz ou deixa o trabalho para acompanhar o paciente, e não há benefício direto para ele.</td>
+              <td>A calculadora conta o cuidador como fator de vulnerabilidade.</td>
+              <td>Hipótese do time.</td>
             </tr>
             <tr>
               <td>P9</td>
-              <td>Motorista e operação</td>
-              <td>Estradas rurais ruins, chuva e veículos sem acessibilidade.</td>
-              <td>Margem de tempo e restrições de acessibilidade no cálculo.</td>
-              <td>Hipótese (Q3, Q5).</td>
+              <td>Pessoas sem vínculo formal</td>
+              <td>Sem FGTS e sem contribuição ao INSS, ficam fora do saque e do auxílio por incapacidade.</td>
+              <td>O identificador sinaliza o BPC como caminho a avaliar e declara o limite do produto.</td>
+              <td>Regras de qualidade de segurado e carência do INSS; cartilha do BPC.</td>
             </tr>
             <tr>
               <td>P10</td>
-              <td>Nosso time</td>
-              <td>Não há dados reais por paciente (LGPD) e a região ainda não foi escolhida.</td>
-              <td>Trabalhamos com dados agregados e sintéticos, e declaramos isso.</td>
-              <td>Restrição do projeto.</td>
+              <td>Hospital</td>
+              <td>Risco de tratar dado de saúde de forma inadequada e dúvida sobre o que pode orientar.</td>
+              <td>Consentimento, perfis de acesso, métricas agregadas e parecer jurídico.</td>
+              <td>LGPD (dado sensível, art. 11).</td>
             </tr>
           </tbody>
         </table>
@@ -262,352 +246,175 @@
       <p class="kicker">3 · Pesquisa</p>
       <h2>O que sabemos, o que supomos e o que falta descobrir</h2>
 
-      <h3>3.1 Mercado, política e contexto (verificado em fontes)</h3>
+      <h3>3.1 FGTS por diagnóstico (verificado em fontes)</h3>
       <ul>
         <li>
-          <strong>Rotina do tratamento:</strong> as fontes descrevem sessões de três a quatro horas,
-          cerca de três vezes por semana, com variação conforme o paciente. A frequência e a duração
-          são decisão clínica e entram no modelo como dado de entrada.
+          <strong>Hipóteses da lei:</strong> o art. 20 da Lei 8.036/1990 permite o saque quando o
+          trabalhador ou um dependente tem neoplasia maligna (câncer), é portador do HIV ou está em
+          estágio terminal por doença grave. Câncer e HIV não exigem estágio terminal. Há também uma
+          hipótese para doenças raras reconhecidas pelo Ministério da Saúde, cujo regulamento ainda
+          precisa ser conferido. O saque alcança o saldo de todas as contas, inclusive a do contrato
+          atual.
         </li>
         <li>
-          <strong>Dimensão nacional:</strong> o Censo Brasileiro de Diálise 2023 estimou cerca de 157
-          mil pessoas em diálise crônica, das quais 88,2% em hemodiálise, 8,0% em hemodiafiltração e
-          3,8% em diálise peritoneal. É estimativa baseada em amostra (cerca de 37% dos centros
-          responderam).
+          <strong>Documentos:</strong> a Caixa exige o formulário "Relatório Médico de Doenças Graves",
+          assinado sobre carimbo ou com certificado digital, com CRM do médico assistente, mais o
+          exame comprobatório (anatomopatológico no câncer; carga viral ou sorologia no HIV). Uma
+          cartilha acadêmica cita validade de até um ano para o relatório, a confirmar na Caixa. Para
+          dependentes, é preciso comprovar a dependência.
         </li>
         <li>
-          <strong>Distância no interior:</strong> um estudo no interior da Bahia (dados de 2004 a 2006)
-          encontrou distância média de cerca de 101 km até a unidade de hemodiálise mais próxima, com
-          cerca de 4 horas de ida e volta estimadas. O dado é antigo e regional.
+          <strong>Como pedir:</strong> pelo app FGTS (Saques, Solicitar saque, "Doença Grave, Estágio
+          terminal de vida ou Órtese/Prótese"), informando se o doente é titular ou dependente e
+          anexando os documentos.
         </li>
         <li>
-          <strong>Transporte e faltas (contexto internacional):</strong> o estudo EnROUTE (EUA, mais de
-          115 mil pacientes) relatou que 27% não tinham transporte particular para ir à diálise e que
-          quem dependia de transporte de terceiros tinha mais chance de perder sessões.
+          <strong>Doenças fora da lista:</strong> o STJ entende que o rol do art. 20 é exemplificativo, e há
+          decisões que liberaram o saldo em casos como cardiopatia grave. Mas a Caixa trata as
+          hipóteses como restritas (uma sentença de 2026 menciona a Circular Caixa 1.081/2025), e um
+          acórdão exigiu provar a necessidade do saldo para o tratamento. É um caminho judicial.
         </li>
         <li>
-          <strong>Política vigente:</strong> a Lei 15.233, de 7 de outubro de 2025, alterou a Lei
-          12.732/2012 e garante transporte sanitário a pacientes do SUS em hemodiálise que precisem se
-          deslocar a serviço a mais de 50 km do domicílio. A Portaria GM/MS 11.165/2026 (maio de 2026)
-          trata da doação de veículos e do financiamento. Os veículos são distribuídos por macrorregião,
-          e o gestor local organiza os fluxos.
-        </li>
-        <li>
-          <strong>Mercado inicial:</strong> o Ministério da Saúde informou a entrega de cerca de 3,3
-          mil veículos (vans, micro-ônibus e ambulâncias) para deslocamentos acima de 50 km, e uma
-          notícia indica 1.476 voltados a radioterapia e hemodiálise. Segundo uma reportagem, não há
-          edital aberto para novos pedidos, e municípios fora da distribuição podem comprar veículos
-          pela ata de registro de preços do Ministério. Esses números são de fontes jornalísticas e
-          precisam ser conferidos.
-        </li>
-        <li>
-          <strong>Pactuação:</strong> segundo orientações do COSEMS-SP, a CIR aprova qual ente gere a
-          frota, a CIB homologa e envia ao Ministério da Saúde. O documento deve conter, entre outros
-          itens, o total de pessoas a transportar (com acompanhantes), o desenho regional dos
-          itinerários com os municípios abrangidos e a articulação com o agendamento nos serviços. A
-          descrição é de São Paulo e vem de uma entidade de secretários municipais. O texto oficial e o
-          fluxo do estado escolhido precisam ser conferidos.
-        </li>
-        <li>
-          <strong>Literatura de roteamento:</strong> o roteamento de pacientes (<em>dial-a-ride</em>)
-          já é estudado, inclusive com um caso de prefeitura brasileira (Ouro Preto) e um modelo
-          específico para hemodiálise. O diferencial do produto, portanto, não é o algoritmo, e sim
-          demanda, prioridade, pactuação e operação.
+          <strong>Correção importante:</strong> listas mais longas (por exemplo, com nefropatia grave)
+          aparecem em sites e cartilhas, mas não foram confirmadas em fonte oficial e se confundem com
+          a lista de doenças graves da isenção de imposto de renda. O produto parte da lei e da página
+          da Caixa.
         </li>
       </ul>
 
-      <h3>3.2 Demanda: como modelar</h3>
-      <p>
-        A demanda de hemodiálise é <strong>recorrente</strong>: cada paciente gera uma viagem de ida e
-        outra de volta em cada sessão, nos dias e turnos do seu grupo. O produto trabalha com
-        <em>pedidos recorrentes agregados</em>, nunca com dados individuais identificáveis.
-      </p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Campo do pedido recorrente</th><th>Descrição</th><th>Observação</th></tr></thead>
-          <tbody>
-            <tr><td>Origem</td><td>Município ou ponto de embarque.</td><td>Agregado por origem.</td></tr>
-            <tr><td>Destino</td><td>Centro de diálise (capital ou polo regional).</td><td>Parâmetro do modelo.</td></tr>
-            <tr><td>Grupo de dias e turno</td><td>Quando o grupo faz a sessão.</td><td>Vem do centro.</td></tr>
-            <tr><td>Quantidade de pacientes</td><td>Pessoas que viajam juntas na mesma origem, dia e turno.</td><td>Sujeita a mudanças semanais.</td></tr>
-            <tr><td>Acompanhantes</td><td>Proporção ou número de acompanhantes.</td><td>O padrão de 10% vem das orientações do COSEMS-SP, a confirmar.</td></tr>
-            <tr><td>Necessidades de acessibilidade</td><td>Cadeira de rodas, mobilidade reduzida.</td><td>Define o tipo de veículo.</td></tr>
-            <tr><td>Classe de prioridade</td><td>Definida pelas equipes de saúde (ver 3.3).</td><td>Não é decisão do sistema.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>
-        A <strong>dinâmica da demanda</strong> (entradas por novos casos, saídas por transplante, alta
-        ou óbito, mudanças de endereço) é modelada como cenário de crescimento ou redução. O sistema
-        responde a uma pergunta de planejamento: <em>"com X% a mais de pacientes, o arranjo atual ainda
-        cabe nas máquinas, nos assentos e nos limites de horário?"</em> Se não couber, o sistema aponta
-        o que falta (máquinas, turnos ou veículos) e não deixa ninguém sem rota.
-      </p>
-
-      <h3>3.3 Prioridade: princípios</h3>
-      <div class="cards">
-        <article class="card">
-          <h3>1 · Definida por quem entende</h3>
-          <p>As classes de prioridade vêm das equipes de saúde e da regulação. O sistema as aplica.</p>
-        </article>
-        <article class="card">
-          <h3>2 · Ordena, não exclui</h3>
-          <p>Prioridade define quem escolhe primeiro os horários mais favoráveis e quem é replanejado
-            primeiro em uma falha. Nenhum paciente deixa de ter rota por causa dela.</p>
-        </article>
-        <article class="card">
-          <h3>3 · Capacidade insuficiente é alerta</h3>
-          <p>Se faltam máquinas, turnos ou veículos, o sistema mostra a lacuna e propõe ampliar, e não
-            escolhe quem fica de fora.</p>
-        </article>
-        <article class="card">
-          <h3>4 · Auditável</h3>
-          <p>Toda decisão de alocação mostra a regra que a gerou.</p>
-        </article>
-      </div>
-      <p class="small">
-        Exemplos de fatores que as equipes poderiam considerar (<strong>a definir com elas</strong>, não
-        são recomendação clínica): necessidade de acessibilidade, ausência de transporte alternativo,
-        necessidade de acompanhante e tempo de viagem. No laboratório, as classes são "Alta", "Média"
-        e "Normal", escolhidas pelo usuário.
-      </p>
-
-      <h3>3.4 Menor tempo de translocação: como medir e otimizar</h3>
+      <h3>3.2 INSS, BPC e IR (verificado em fontes, regras simplificadas no lab)</h3>
       <ul>
-        <li><strong>Tempo a bordo:</strong> minutos dentro do veículo, em cada trecho (ida e volta).</li>
-        <li><strong>Espera:</strong> tempo no centro antes e depois da sessão, além da folga de chegada.</li>
-        <li><strong>Horas semanais de translocação:</strong> soma, para todos os pacientes, do tempo a bordo
-          nas viagens da semana. É o indicador central do produto.</li>
-        <li><strong>Equidade:</strong> acompanhar o máximo, e não só a média, para que quem mora mais longe
-          não carregue sempre o maior tempo.</li>
+        <li>
+          <strong>Negativas:</strong> no 1º semestre de 2026 o INSS registrou cerca de 4,3 milhões de
+          indeferimentos, mais que as concessões no período, e 2,76 milhões foram em benefícios por
+          incapacidade. Uma fonte aponta 50,8% de recusa em auxílio-doença e BPC de janeiro a julho, e
+          outra, 53% no grupo de incapacidade. Os números divergem, mas apontam na mesma direção. O TCU
+          identificou negativas manuais sem justificativa válida, inconsistências no CNIS e documentos
+          antigos entre os motivos.
+        </li>
+        <li>
+          <strong>Auxílio por incapacidade temporária:</strong> exige qualidade de segurado, carência de
+          12 contribuições (dispensada para uma lista de doenças, que inclui câncer e AIDS, a conferir)
+          e incapacidade comprovada. A perícia decide a incapacidade, e não o diagnóstico. Desde 2026 há
+          análise documental por até 90 dias em alguns casos.
+        </li>
+        <li>
+          <strong>BPC:</strong> um salário mínimo para pessoa com deficiência (impedimento de longo prazo)
+          ou idosa com 65 anos ou mais, com renda familiar por pessoa de até 1/4 do salário mínimo e
+          avaliação médica e social pelo INSS. A lei prevê flexibilização até 1/2, dependente de
+          regulamentação. O salário mínimo de 2026 usado como referência é R$ 1.621.
+        </li>
+        <li>
+          <strong>Isenção de IR:</strong> a lista de doenças graves da Lei 7.713/1988 vale para rendimentos
+          de aposentadoria, pensão ou reforma, com laudo. Exigências atuais a conferir.
+        </li>
       </ul>
-      <p>
-        <strong>Ordem de objetivos:</strong> primeiro a viabilidade (nenhuma restrição violada), depois a
-        redução do tempo de translocação dos pacientes, e por último o custo da frota. Há uma troca
-        natural: agrupar pacientes em uma mesma rota reduz veículos, mas acrescenta paradas e tempo a
-        bordo. O laboratório tem um controle de <em>peso do tempo do paciente</em> para mostrar essa troca.
-      </p>
 
-      <h3>3.5 Abertura para outras rotas: o caso do transporte de órgãos</h3>
-      <p>
-        <span class="badge st-proposta">Abertura futura</span>
-        O núcleo de rotas (tempos de viagem, janelas de tempo, prioridade, replanejamento) é
-        reaproveitável em outros contextos. O transporte de órgãos para transplante é um exemplo
-        interessante porque leva o princípio do <em>menor tempo</em> ao extremo, mas é um problema de
-        natureza diferente.
-      </p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th></th><th>Hemodiálise</th><th>Transporte de órgãos</th></tr></thead>
-          <tbody>
-            <tr><td>Demanda</td><td>Recorrente e previsível (sessões semanais).</td><td>Pontual e imprevisível (surge quando há um doador).</td></tr>
-            <tr><td>Tempo</td><td>Janelas de horário e conforto do paciente.</td><td>Tempo é a principal restrição: cada órgão tem um limite de isquemia fria.</td></tr>
-            <tr><td>Modais</td><td>Veículos terrestres de frota fixa.</td><td>Com frequência exige transporte aéreo e coordenação de voos.</td></tr>
-            <tr><td>Planejamento</td><td>Periódico, repetido toda semana.</td><td>Sob demanda, a cada ocorrência.</td></tr>
-            <tr><td>Coordenação</td><td>Gestores municipais e regionais (CIR e CIB).</td><td>Sistema Nacional de Transplantes e centrais de transplantes.</td></tr>
-            <tr><td>Problema de otimização</td><td>Roteamento periódico com janelas de tempo e capacidade.</td><td>Caminho mais rápido com restrições de recursos e horários de voos.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>
-        A literatura brasileira já trata a otimização de rotas de órgãos: uma dissertação da
-        COPPE/UFRJ propõe um algoritmo para escolher a sequência de voos que entrega o órgão o mais
-        rápido possível, e cita perda de órgãos por falta de transporte em um período recente. O
-        que o RotaSaúde pode oferecer, no futuro, é a camada de <strong>demanda, prioridade e
-        replanejamento</strong> sobre um motor de rotas comum. Isso exigiria parceria com as centrais
-        de transplantes e validação clínica e regulatória, e <strong>não faz parte do escopo
-        atual</strong>.
-      </p>
-
-      <h3>3.6 Perguntas abertas</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>ID</th><th>Pergunta</th><th>Como responder</th><th>Fonte</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Q1</td>
-              <td>Onde estão os centros habilitados e para qual cada município é regulado (inclusive capitais)?</td>
-              <td>Consultar cadastro e regulação regional.</td>
-              <td>CNES, regulação</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q2</td>
-              <td>Quantos pacientes há por município, em quais dias e turnos, e como a demanda varia ao longo do ano?</td>
-              <td>Dados agregados dos centros e das secretarias.</td>
-              <td>Centros, secretarias, SIA/SUS</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q3</td>
-              <td>Qual o tempo real de viagem até o destino, incluindo estradas de terra e longas distâncias?</td>
-              <td>Matriz de tempos com mapas e margem validada por motoristas.</td>
-              <td>OpenStreetMap, motoristas</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q4</td>
-              <td>Que transporte existe hoje (frota própria, consórcio, contrato, linha regular) e como as rotas são definidas?</td>
-              <td>Entrevistar gestores municipais e da regional.</td>
-              <td>Secretarias de saúde</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q5</td>
-              <td>Quantos assentos e quais recursos de acessibilidade têm os veículos?</td>
-              <td>Levantar a frota.</td>
-              <td>Secretarias, CNES (veículos)</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q6</td>
-              <td>Que critérios de prioridade as equipes de saúde aceitariam, e em que situações elas se aplicam?</td>
-              <td>Oficina com equipe do centro e da regulação.</td>
-              <td>Equipes de saúde</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q7</td>
-              <td>Qual o tempo máximo a bordo e quais janelas de saída e retorno são aceitáveis?</td>
-              <td>Ouvir pacientes, famílias e equipe clínica.</td>
-              <td>Campo, equipe clínica</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q8</td>
-              <td>Qual o custo por quilômetro e por contrato, e que valores do incentivo federal estão em vigor?</td>
-              <td>Conferir contratos e os anexos da Portaria 11.165/2026.</td>
-              <td>Prefeituras, Diário Oficial</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q9</td>
-              <td>Quantas faltas e atrasos ocorrem por problemas de transporte, e que plano de contingência existe?</td>
-              <td>Pedir dados agregados ao centro e entrevistar gestores.</td>
-              <td>Centros de diálise, secretarias</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q10</td>
-              <td>A hemodiálise de rotina exige estrutura fixa (hipótese)? Quando a diálise peritoneal domiciliar reduz a necessidade de viagens?</td>
-              <td>Conversar com um nefrologista. A decisão clínica não é do modelo.</td>
-              <td>Equipe clínica</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q11</td>
-              <td>Como o fluxo de pactuação funciona na prática no estado escolhido, e haverá novas rodadas?</td>
-              <td>Entrevistar uma regional de saúde ou um gestor.</td>
-              <td>CIR, CIB, secretaria estadual</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-            <tr>
-              <td>Q12</td>
-              <td>Quem pagaria pelo produto, e quanto? (modelo de negócio)</td>
-              <td>Entrevistas com gestores e consórcios.</td>
-              <td>Mercado</td>
-              <td><span class="badge st-aberta">Aberta</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>3.7 Hipóteses de trabalho</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>ID</th><th>Hipótese</th><th>Como testar</th><th>Pergunta ligada</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>H1</td>
-              <td>Agrupar municípios vizinhos nas mesmas rotas reduz veículos e horas de frota, mas aumenta o tempo a bordo. O melhor arranjo depende do peso dado ao tempo do paciente.</td>
-              <td>Variar o peso no laboratório e observar a troca.</td>
-              <td>Q2, Q3, Q7</td>
-            </tr>
-            <tr>
-              <td>H2</td>
-              <td>Em destinos mais distantes (capitais), o limite de tempo a bordo passa a ser a restrição dominante, e rotas diretas ganham valor.</td>
-              <td>Aumentar o multiplicador de distância no laboratório.</td>
-              <td>Q3, Q7</td>
-            </tr>
-            <tr>
-              <td>H3</td>
-              <td>Uma regra explícita de prioridade para alocar a reserva e replanejar reduz decisões improvisadas.</td>
-              <td>Testar com gestores em cenários de falha.</td>
-              <td>Q6, Q9</td>
-            </tr>
-            <tr>
-              <td>H4</td>
-              <td>Alinhar grupos de dias e turnos entre municípios vizinhos aumenta as oportunidades de compartilhar veículos.</td>
-              <td>Comparar agendas atuais e coordenadas.</td>
-              <td>Q2</td>
-            </tr>
-            <tr>
-              <td>H5</td>
-              <td>Planejar com cenários de crescimento da demanda evita rearranjos emergenciais.</td>
-              <td>Testar com o controle de crescimento e com dados históricos reais.</td>
-              <td>Q2</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>3.8 Ponto de partida técnico</h3>
-      <div class="formula" role="figure" aria-label="Formulação do problema">
-        <p class="formula-label">Formulação</p>
-        <p class="formula-body">
-          minimizar [ w &middot; tempo de translocação dos pacientes + (1 &minus; w) &middot; horas de veículo ]<br>
-          sujeito a: chegar antes do início do turno &middot; voltar depois do fim &middot;
-          pacientes &le; assentos &middot; pacientes por turno &le; máquinas &middot; tempo a bordo &le; limite
-        </p>
-      </div>
-      <p>
-        Em termos de problema, é um roteamento de veículos periódico com janelas de tempo, capacidade
-        e limite de tempo a bordo (da família <em>dial-a-ride</em>). O peso <em>w</em> é escolhido pelo
-        gestor, e a prioridade ordena a alocação.
-      </p>
-      <div class="two-col">
-        <div>
-          <h3>Fontes de dados previstas</h3>
-          <ul>
-            <li><strong>CNES:</strong> centros e serviços habilitados, e veículos cadastrados.</li>
-            <li><strong>SIA/SUS (DATASUS):</strong> produção de hemodiálise, agregada.</li>
-            <li><strong>IBGE:</strong> malha municipal e população.</li>
-            <li><strong>OpenStreetMap:</strong> rede viária para tempos de viagem.</li>
-            <li><strong>Censo Brasileiro de Diálise:</strong> contexto nacional.</li>
-            <li><strong>Dados sintéticos:</strong> dados por paciente não são públicos (LGPD).</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Ferramentas previstas</h3>
-          <ul>
-            <li><strong>Python:</strong> geopandas e osmnx para tempos de viagem.</li>
-            <li><strong>Otimização:</strong> OR-Tools (VRP com janelas de tempo e capacidade).</li>
-            <li><strong>Visualização:</strong> Folium ou Streamlit, com quadro semanal e mapa.</li>
-          </ul>
-        </div>
-      </div>
-
-      <h3>3.9 Fontes consultadas</h3>
-      <ul class="sources">
-        <li><a href="https://www.scielo.br/j/jbn/a/kDwfc3xxqJbGJh4cTPZKBqw/" target="_blank" rel="noopener">Censo Brasileiro de Diálise 2023 (Jornal Brasileiro de Nefrologia, SciELO)</a></li>
-        <li><a href="https://periodicos.ufpe.br/revistas/revistaenfermagem/article/download/239674/32864/148049" target="_blank" rel="noopener">Artigo sobre procedimentos de hemodiálise no SUS (Revista de Enfermagem da UFPE), rotina de sessões</a></li>
-        <li><a href="https://pesquisa.bvsalud.org/oncologiauy/resource/en/lil-606106" target="_blank" rel="noopener">Distância até a unidade de hemodiálise no interior da Bahia (J. Bras. Nefrol., 2007)</a></li>
-        <li><a href="https://www.kidney.org/es/noticias-historias/un-estudio-arroja-luz-sobre-las-barreras-de-transporte-en-la-dialisis-y-explica" target="_blank" rel="noopener">Estudo EnROUTE sobre barreiras de transporte na diálise (National Kidney Foundation, EUA)</a></li>
-        <li><a href="https://atlaspublico.com.br/camara/noticias/comissao-de-saude-aprova-pl-que-garante-clinica-de-79171" target="_blank" rel="noopener">Notícia que cita a Lei 15.233/2025 e o transporte a mais de 50 km (Atlas Público)</a></li>
-        <li><a href="https://www.conass.org.br/?p=56720" target="_blank" rel="noopener">Informe do CONASS sobre a Portaria GM/MS de transporte sanitário (2026)</a></li>
-        <li><a href="https://www.cosemssp.org.br/wp-content/uploads/2026/06/NT-GCPATE_transporte-sanitario.pdf" target="_blank" rel="noopener">Orientações do COSEMS-SP para a pactuação do transporte sanitário (Portaria GM/MS 11.165/2026)</a></li>
-        <li><a href="https://diariodotransporte.com.br/2026/05/14/caminhos-da-saude-se-torna-outra-esperanca-para-a-industria-de-onibus-e-governo-federal-regulamenta-financiamento-para-mais-modalidades/" target="_blank" rel="noopener">Reportagem sobre o programa Caminhos da Saúde e os 3,3 mil veículos (Diário do Transporte, 2026)</a></li>
-        <li><a href="https://atlaspublico.com.br/noticias/ministerio-da-saude-doa-35-vans-acessiveis-a-secretaria-da-78551" target="_blank" rel="noopener">Notícia sobre doação de vans acessíveis de 15 lugares e total para radioterapia e hemodiálise (Atlas Público)</a></li>
-        <li><a href="https://ohoje.com/2026/11/02/prefeitura-de-goiania-aprova-licitacao-de-r-33-milhoes-para-transporte-de-pacientes-de-hemodialise/" target="_blank" rel="noopener">Reportagem sobre o programa e a compra de veículos por ata de registro de preços (O Hoje, 2026)</a></li>
-        <li><a href="https://educapes.capes.gov.br/handle/capes/1004234?mode=full" target="_blank" rel="noopener">Algoritmos meta-heurísticos para o problema dial-a-ride, com dados da prefeitura de Ouro Preto (UFOP)</a></li>
-        <li><a href="https://aminer.org/pub/65671acf939a5f40823f396a/mathematical-model-for-dial-a-ride-problem-with-time-windows-case-hemodialysis" target="_blank" rel="noopener">Modelo matemático de dial-a-ride com janelas de tempo para pacientes de hemodiálise (DASA, 2023)</a></li>
-        <li><a href="https://pantheon.ufrj.br/handle/11422/13760?mode=full" target="_blank" rel="noopener">Algoritmo de programação dinâmica para o transporte de órgãos para transplantes (COPPE/UFRJ)</a></li>
-        <li><a href="https://www.pet.coppe.ufrj.br/images/Dissertação.pdf" target="_blank" rel="noopener">Dissertação sobre logística aérea de órgãos e tempo de isquemia fria (COPPE/UFRJ)</a></li>
+      <h3>3.3 Evidência sobre navegação de benefícios</h3>
+      <ul>
+        <li>
+          Parcerias entre saúde e direito reportam ganhos financeiros: mais de US$ 700 mil obtidos em um
+          projeto oncológico em Washington e retorno de 319% em um programa rural.
+        </li>
+        <li>
+          O resultado clínico é menos claro: um ensaio randomizado em Boston, com pacientes com câncer, não
+          encontrou efeito da navegação reforçada por apoio jurídico sobre o início do tratamento nem
+          sobre o sofrimento do paciente. Por isso as métricas do produto são de renda e tempo, e não de
+          desfecho clínico.
+        </li>
       </ul>
+
+      <h3>3.4 Quem paga (hipóteses, não verificadas)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pagador</th><th>Por que pagaria</th><th>Cuidado</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Hospital (escolhido)</td>
+              <td>Reduz trabalho da assistente social, dá visibilidade dos casos e pode melhorar a adesão.</td>
+              <td>Hospital público compra devagar. Filantrópico e privado tendem a decidir mais rápido.</td>
+            </tr>
+            <tr>
+              <td>Empresas (RH)</td>
+              <td>Benefício ao funcionário diagnosticado, cobrado por colaborador.</td>
+              <td>A empresa não pode saber quem usa nem o diagnóstico.</td>
+            </tr>
+            <tr>
+              <td>Programas de apoio ao paciente e ONGs</td>
+              <td>Já financiam apoio ao paciente.</td>
+              <td>Separação clara de qualquer promoção de medicamento.</td>
+            </tr>
+            <tr>
+              <td>Seguradoras (descartadas)</td>
+              <td>Pagariam por leads de diagnóstico.</td>
+              <td>Cobertura parcial temporária de até 24 meses para doença preexistente; a LGPD veda às operadoras o uso de dado de saúde para seleção de riscos (art. 11 §5º). Ver D28.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3.5 O que ainda não sabemos</h3>
+      <ul>
+        <li>Concorrência: não pesquisamos plataformas semelhantes no Brasil. Alternativas de fato incluem o app FGTS, o Meu INSS, advocacia previdenciária, ONGs e serviços sociais hospitalares.</li>
+        <li>Tamanho do mercado: não há dado confiável de quantos pacientes deixam de pedir o saque ou o benefício.</li>
+        <li>Prazo entre a aprovação do saque e o pagamento, e taxa de recusa administrativa da Caixa por documentação.</li>
+        <li>Se o módulo de direitos se enquadra como informação ou como orientação jurídica.</li>
+      </ul>
+
+      <h3>3.6 Perguntas de pesquisa</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Pergunta</th><th>Como responder</th></tr></thead>
+          <tbody>
+            <tr><td>Q1</td><td>Quantos pacientes novos por mês chegam ao hospital piloto e quantos têm FGTS?</td><td>Entrevista com o serviço social.</td></tr>
+            <tr><td>Q2</td><td>Quanto tempo a assistente social gasta por caso hoje?</td><td>Entrevista e observação.</td></tr>
+            <tr><td>Q3</td><td>Quais são os motivos de recusa de saque na Caixa e de negativa no INSS vistos no hospital?</td><td>Entrevista e casos anonimizados.</td></tr>
+            <tr><td>Q4</td><td>Quem recorre e quem desiste?</td><td>Entrevista.</td></tr>
+            <tr><td>Q5</td><td>Os médicos conhecem o formulário da Caixa? Quanto tempo gastam?</td><td>Entrevista com médico assistente.</td></tr>
+            <tr><td>Q6</td><td>Quem decide a compra de software social no hospital e com que orçamento?</td><td>Entrevista com gestão.</td></tr>
+            <tr><td>Q7</td><td>Quais sistemas o hospital já usa (prontuário, ERP) e como integrar?</td><td>Entrevista com TI.</td></tr>
+            <tr><td>Q8</td><td>Que dados o hospital aceita coletar e com qual consentimento?</td><td>Parecer jurídico e encarregado de dados.</td></tr>
+            <tr><td>Q9</td><td>Quantos pacientes há por assistente social, em oncologia?</td><td>Entrevista.</td></tr>
+            <tr><td>Q10</td><td>O índice de vulnerabilidade concorda com o julgamento da assistente social?</td><td>Teste cego com casos anonimizados.</td></tr>
+            <tr><td>Q11</td><td>Qual é o prazo do pagamento do saque após aprovação?</td><td>Caixa e relatos de pacientes.</td></tr>
+            <tr><td>Q12</td><td>A orientação sobre direitos é informação ou aconselhamento jurídico?</td><td>Parecer de advogado e Defensoria.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3.7 Hipóteses de negócio</h3>
+      <ol>
+        <li><strong>H1:</strong> o hospital paga a assinatura se a plataforma reduzir trabalho e melhorar a adesão.</li>
+        <li><strong>H2:</strong> um dossiê completo aumenta a aprovação na primeira tentativa.</li>
+        <li><strong>H3:</strong> a triagem estruturada identifica pacientes em risco que a conversa não identifica.</li>
+        <li><strong>H4:</strong> assistentes sociais adotam o painel se ele economiza tempo sem tirar a autonomia delas.</li>
+        <li><strong>H5:</strong> manter a base de regras atualizada é uma barreira de entrada.</li>
+      </ol>
+
+      <details>
+        <summary>3.8 Fontes consultadas</summary>
+        <ol class="sources">
+          <li><a href="https://www.caixa.gov.br/beneficios-trabalhador/fgts/saque-FGTS/doencas-graves/Paginas/default.aspx">Saque do FGTS por doenças graves (Caixa)</a></li>
+          <li><a href="https://blog.econeteditora.com.br/saque-fgts-doenca-grave/">Doença grave e saque do FGTS: hipóteses e documentos (Econet)</a></li>
+          <li><a href="https://www.migalhas.com.br/depeso/312148/e-possivel-o-saque-do-fgts-em-casos-de-doencas-graves-de-dependentes">Saque do FGTS em doenças de dependentes (Migalhas)</a></li>
+          <li><a href="https://uit.br/site/wp-content/uploads/2026/06/CARTILHA-CIENCIAS-CONTABEIS-FGTS-E-DOENCAS-GRAVES.pdf">Cartilha sobre FGTS e doenças graves (Universidade de Itaúna)</a></li>
+          <li><a href="https://www.trf2.jus.br/sites/default/publico/2026-06/sentenca-levantamento-de-fgts-tdah-e-deficiencia-intelectual-1.pdf">Sentença TRF2 de 2026 (diagnósticos fora do rol da Caixa)</a></li>
+          <li><a href="https://wagner.adv.br/stj-entende-que-doenca-grave-nao-prevista-em-lei-justifica-saque-do-fgts/">STJ: rol de doenças do FGTS não é taxativo (Wagner Advogados)</a></li>
+          <li><a href="https://web.trf3.jus.br/noticias-sjsp/Noticiar/ExibirNoticia/383-justica-federal-libera-fgts-para-trabalhador-com-doenca">TRF3: FGTS para cardiopatia grave</a></li>
+          <li><a href="https://www.dgabc.com.br/Noticia/4350655/negativas-do-inss-disparam-e-ja-superam-as-concessoes">Negativas do INSS superam as concessões (DGABC)</a></li>
+          <li><a href="https://previdenciarista.com/blog/inss-nega-51-dos-pedidos-no-1o-semestre-de-2026/">INSS nega 51% dos pedidos no 1º semestre de 2026 (Previdenciarista)</a></li>
+          <li><a href="https://www.dgabc.com.br/Noticia/4215182/inss-nega-beneficios-injustamente-e-prejudica-pessoas-aponta-tcu">Auditoria do TCU sobre indeferimentos (DGABC)</a></li>
+          <li><a href="https://www.gov.br/inss/pt-br/media/cartilha-bpc_atualizado-novembro-2024.pdf">Cartilha do BPC (gov.br/INSS)</a></li>
+          <li><a href="https://atlaspublico.com.br/camara/noticias/deputado-apresenta-pl-para-mudar-criterio-de-renda-per-68680">Critério de renda do BPC e valor em 2026 (Atlas Público)</a></li>
+          <li><a href="https://jornalcontabil.com.br/noticia/mudanca-no-inss-passa-para-18-as-condicoes-que-isentam-carencia/">Doenças que dispensam carência (Jornal Contábil)</a></li>
+          <li><a href="https://www.legisweb.com.br/legislacao/?id=105065">RN ANS 162/2007: doenças preexistentes e cobertura parcial temporária</a></li>
+          <li><a href="https://www.healthbit.com.br/wp-content/uploads/2023/05/Cartilha-de-Protecao-de-Dados.pdf">LGPD art. 11 §§4º e 5º, setor de saúde</a></li>
+          <li><a href="https://idec.org.br/sites/default/files/carta_idec_abramge.pdf">Carta do Idec sobre LGPD e seleção de riscos</a></li>
+          <li><a href="https://www.medical-legalpartnership.org/mlp-resources/cancer-patients-mlp-financial-benefits">Parceria saúde-direito em câncer (Georgetown)</a></li>
+          <li><a href="https://cmfdn.thehcn.net/promisepractice/index/view?pid=30473">Parceria saúde-direito rural, retorno de 319%</a></li>
+          <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10476517/">Toxicidade financeira em pessoas em hemodiálise (Rev. Bras. Enferm., 2023)</a></li>
+        </ol>
+      </details>
     </section>
 
     <!-- 4. OBJETIVOS -->
@@ -616,43 +423,40 @@
       <h2>O que o produto precisa alcançar</h2>
       <ol class="steps">
         <li id="o1">
-          <h3>O1 · Representar e prever a demanda</h3>
-          <p>Manter o retrato atual da demanda recorrente por origem, destino, dia e turno, e testar
-            cenários de crescimento.</p>
+          <h3>O1 · Identificar cedo a vulnerabilidade financeira</h3>
+          <p>Triar o paciente nos primeiros dias da jornada e ordenar a fila com um índice transparente.</p>
         </li>
         <li id="o2">
-          <h3>O2 · Priorizar com regras transparentes</h3>
-          <p>Aplicar classes de prioridade definidas pelas equipes de saúde para ordenar alocações e
-            replanejamentos, sem excluir ninguém.</p>
+          <h3>O2 · Mostrar os direitos aplicáveis, com base legal</h3>
+          <p>Dizer, para cada direito, se enquadra, por quê, com que fonte e qual o próximo passo, sem
+            prometer deferimento.</p>
         </li>
         <li id="o3">
-          <h3>O3 · Minimizar o tempo de translocação</h3>
-          <p>Calcular rotas e agendas que reduzam o tempo do paciente a bordo, respeitando a agenda do
-            centro e a capacidade.</p>
+          <h3>O3 · Reduzir erro e retrabalho documental</h3>
+          <p>Entregar o checklist exato, controlar a validade e medir a prontidão do dossiê antes de
+            protocolar.</p>
         </li>
         <li id="o4">
-          <h3>O4 · Garantir continuidade</h3>
-          <p>Reduzir ao mínimo as sessões perdidas por falta de transporte, com reserva, replanejamento
-            e aviso ao centro.</p>
+          <h3>O4 · Dar à assistente social uma fila e alertas</h3>
+          <p>Mostrar quem precisa de ação primeiro, por quê, e qual é a próxima ação, mantendo a
+            decisão com ela.</p>
         </li>
         <li id="o5">
-          <h3>O5 · Usar bem a frota</h3>
-          <p>Reduzir veículos, quilômetros e custo por sessão transportada, sem violar O3 e O4.</p>
+          <h3>O5 · Acompanhar pedidos e negativas</h3>
+          <p>Registrar a etapa de cada pedido e sinalizar negativa para recurso ou Defensoria.</p>
         </li>
         <li id="o6">
-          <h3>O6 · Cumprir a política e apoiar a pactuação</h3>
-          <p>Gerar saídas compatíveis com a pactuação regional e conferir regras como o critério de
-            mais de 50 km.</p>
+          <h3>O6 · Proteger dados e autonomia do paciente</h3>
+          <p>Consentimento, perfis de acesso, métricas agregadas e nenhuma venda de dado de saúde.</p>
         </li>
         <li id="o7">
-          <h3>O7 · Manter o núcleo aberto a outras rotas</h3>
-          <p>Separar demanda, prioridade e cálculo de rotas em módulos, de modo que outros contextos
-            possam usá-los no futuro. Isso é decisão de arquitetura, não entrega atual.</p>
+          <h3>O7 · Sustentar o modelo SaaS B2B</h3>
+          <p>Gerar valor mensurável para o hospital: tempo economizado, casos acompanhados e
+            dossiês completos.</p>
         </li>
         <li id="o8">
           <h3>O8 · Entregar um protótipo demonstrável e honesto</h3>
-          <p>Mostrar demanda, prioridade, rotas e rascunho de pactuação, com premissas e incertezas
-            visíveis.</p>
+          <p>Mostrar os quatro módulos com dados fictícios, premissas visíveis e limites declarados.</p>
         </li>
       </ol>
     </section>
@@ -662,83 +466,77 @@
       <p class="kicker">5 · Requisitos</p>
       <h2>O que o sistema precisa fazer e respeitar</h2>
 
-      <h3>Demanda (RD)</h3>
+      <h3>Vulnerabilidade (RV)</h3>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
           <tbody>
-            <tr><td>RD1</td><td>Cadastrar pedidos recorrentes agregados: origem, destino, grupo de dias, turno, quantidade, acompanhantes e acessibilidade.</td><td>O1</td></tr>
-            <tr><td>RD2</td><td>Simular cenários de crescimento ou redução da demanda e apontar o que deixa de caber.</td><td>O1, O4</td></tr>
-            <tr><td>RD3</td><td>Registrar a prioridade de cada origem entre classes configuráveis.</td><td>O2</td></tr>
+            <tr><td>RV1</td><td>Coletar com consentimento os dados mínimos: renda antes e agora, moradores, despesas, custo do tratamento, dívidas, reserva e se há cuidador sem trabalhar.</td><td>O1, O6</td></tr>
+            <tr><td>RV2</td><td>Calcular um índice de 0 a 100 mostrando cada componente, seu peso e sua contribuição.</td><td>O1</td></tr>
+            <tr><td>RV3</td><td>Permitir ajustar o salário mínimo, os pesos, os limites de banda e o fôlego de referência.</td><td>O1</td></tr>
+            <tr><td>RV4</td><td>Usar o índice apenas para ordenar a fila. Nunca para negar atendimento, direito ou benefício.</td><td>O1, O4</td></tr>
+            <tr><td>RV5</td><td>Mostrar o fôlego da reserva em meses, com e sem o saque do FGTS.</td><td>O1</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>Prioridade (RP)</h3>
+      <h3>Identificador de direitos (RI)</h3>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
           <tbody>
-            <tr><td>RP1</td><td>Usar a prioridade para ordenar a alocação de horários e rotas e a ordem de replanejamento.</td><td>O2</td></tr>
-            <tr><td>RP2</td><td>Nunca excluir um paciente por prioridade. Se faltar capacidade, apontar a lacuna.</td><td>O2, O4</td></tr>
-            <tr><td>RP3</td><td>Registrar a regra que originou cada alocação, para auditoria.</td><td>O2</td></tr>
+            <tr><td>RI1</td><td>Manter regras versionadas por direito, com base legal e data de revisão.</td><td>O2</td></tr>
+            <tr><td>RI2</td><td>Devolver quatro situações: Enquadra, Verificar, Não enquadra, Não se aplica agora, sempre com o motivo.</td><td>O2</td></tr>
+            <tr><td>RI3</td><td>Separar a via administrativa da via judicial e orientar o encaminhamento.</td><td>O2, O5</td></tr>
+            <tr><td>RI4</td><td>Declarar que o resultado é estimativa pelos dados informados. A elegibilidade é decidida pelo órgão competente.</td><td>O2, O6</td></tr>
+            <tr><td>RI5</td><td>Apontar o que depende de dado externo (CNIS, perícia, regulamento) em vez de afirmar certeza.</td><td>O2</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>Rotas e agenda (RR)</h3>
+      <h3>Organizador documental (RO)</h3>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
           <tbody>
-            <tr><td>RR1</td><td>Calcular a matriz de tempos de viagem, com fator de margem para estradas rurais e multiplicador para destinos distantes.</td><td>O3</td></tr>
-            <tr><td>RR2</td><td>Atribuir cada origem a um grupo de dias e a um turno, respeitando as máquinas do turno.</td><td>O3, O5</td></tr>
-            <tr><td>RR3</td><td>Gerar rotas com horário de saída que garanta chegada antes do início do turno e retorno após o fim.</td><td>O3, O4</td></tr>
-            <tr><td>RR4</td><td>Respeitar assentos, acessibilidade, tempo máximo a bordo e janelas de saída e retorno.</td><td>O3</td></tr>
-            <tr><td>RR5</td><td>Permitir ao gestor definir o peso entre o tempo do paciente e o custo da frota.</td><td>O3, O5</td></tr>
-            <tr><td>RR6</td><td>Dimensionar frota e veículo reserva.</td><td>O4, O5</td></tr>
-            <tr><td>RR7</td><td>Mostrar o plano em quadro semanal e em mapa, com comparação com o arranjo atual.</td><td>O8</td></tr>
+            <tr><td>RO1</td><td>Gerar o checklist de documentos por direito, conforme o perfil do paciente.</td><td>O3</td></tr>
+            <tr><td>RO2</td><td>Registrar o estado de cada documento: faltando, recebido, em revisão, pronto ou vencido.</td><td>O3</td></tr>
+            <tr><td>RO3</td><td>Marcar como vencido o relatório médico mais antigo que a validade configurada.</td><td>O3</td></tr>
+            <tr><td>RO4</td><td>Calcular a prontidão do dossiê e listar o que falta, antes de protocolar.</td><td>O3</td></tr>
+            <tr><td>RO5</td><td>Gerar um resumo do caso e as pendências em linguagem simples (leitura automática de documentos fica fora do MVP).</td><td>O3, O4</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>Operação e conformidade (RO e RC)</h3>
+      <h3>Painel da assistente social (RA)</h3>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
           <tbody>
-            <tr><td>RO1</td><td>Simular falha de veículo ou estrada interditada e propor replanejamento.</td><td>O4</td></tr>
-            <tr><td>RO2</td><td>Avisar o centro e as famílias sobre atrasos e mudanças (fase futura).</td><td>O4</td></tr>
-            <tr><td>RC1</td><td>Gerar rascunho de pactuação com gestor da frota, destino, abrangência, itinerário, total de pessoas com acompanhantes, prioridade e articulação com o agendamento.</td><td>O6</td></tr>
-            <tr><td>RC2</td><td>Conferir o critério de mais de 50 km e sinalizar pacientes fora dele.</td><td>O6</td></tr>
+            <tr><td>RA1</td><td>Listar os pacientes por prioridade, com o índice, os direitos que enquadram e a prontidão.</td><td>O4</td></tr>
+            <tr><td>RA2</td><td>Mostrar a regra da prioridade: índice mais acréscimos por documento vencido, falta de pedido há mais de 14 dias e pedido negado.</td><td>O4</td></tr>
+            <tr><td>RA3</td><td>Indicar a próxima ação de cada caso.</td><td>O4, O5</td></tr>
+            <tr><td>RA4</td><td>Registrar a etapa de cada pedido: não iniciado, reunindo documentos, protocolado, concluído ou negado.</td><td>O5</td></tr>
+            <tr><td>RA5</td><td>Exibir indicadores agregados do serviço para o hospital, sem identificar pacientes.</td><td>O7</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>Plataforma e não funcionais (RX e RNF)</h3>
+      <h3>Transversais (RX) e não funcionais (RNF)</h3>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
           <tbody>
-            <tr><td>RX1</td><td>Separar em módulos independentes a demanda, a prioridade e o cálculo de rotas.</td><td>O7</td></tr>
-            <tr><td>RNF1</td><td>Usar apenas dados agregados, públicos ou sintéticos, em conformidade com a LGPD. Nenhum dado individual de paciente no sistema.</td><td>O8</td></tr>
-            <tr><td>RNF2</td><td>Transparência: toda premissa e simplificação deve estar visível.</td><td>O8</td></tr>
-            <tr><td>RNF3</td><td>Segurança: o sistema é apoio logístico. Decisões clínicas e de regulação seguem com as equipes de saúde, e qualquer plano deve ser validado por elas.</td><td>O4</td></tr>
-            <tr><td>RNF4</td><td>Auditabilidade: cada plano guarda as premissas e as regras usadas.</td><td>O2, O6</td></tr>
-            <tr><td>RNF5</td><td>Funcionar em navegador comum, sem servidor, na demonstração.</td><td>O8</td></tr>
-            <tr><td>RNF6</td><td>Interface legível por gestores e equipes sem formação técnica.</td><td>O8</td></tr>
+            <tr><td>RX1</td><td>Consentimento explícito para tratar dados de saúde, com finalidade declarada.</td><td>O6</td></tr>
+            <tr><td>RX2</td><td>Perfis de acesso: a assistente social vê o caso, o hospital vê apenas agregados, o empregador (se houver) não vê diagnóstico.</td><td>O6</td></tr>
+            <tr><td>RX3</td><td>Nenhuma venda ou compartilhamento de dado de diagnóstico com terceiros.</td><td>O6</td></tr>
+            <tr><td>RX4</td><td>Registro de auditoria das ações e das versões das regras.</td><td>O2, O6</td></tr>
+            <tr><td>RNF1</td><td>Linguagem simples para o paciente e acessibilidade.</td><td>O2</td></tr>
+            <tr><td>RNF2</td><td>Dados fictícios no protótipo. Dado real só com consentimento e parecer jurídico.</td><td>O6, O8</td></tr>
+            <tr><td>RNF3</td><td>Funcionar offline no navegador, sem servidor, no protótipo.</td><td>O8</td></tr>
           </tbody>
         </table>
       </div>
-
-      <h3>Restrições e premissas</h3>
-      <ul>
-        <li>As agendas de sessão (grupo de dias, turno e duração) vêm do centro e não são definidas pelo modelo.</li>
-        <li>Escopo inicial: um destino e de 4 a 8 origens, com veículos do tipo van.</li>
-        <li>Não temos dados reais de pacientes ou de frota. Os números do laboratório são fictícios.</li>
-        <li>A malha viária rural é imprecisa, e isso é declarado nos resultados.</li>
-        <li>O modelo não depende do financiamento federal para funcionar. Os valores do incentivo por faixa de distância não foram confirmados.</li>
-      </ul>
     </section>
 
     <!-- 6. MÉTRICAS -->
@@ -746,9 +544,9 @@
       <p class="kicker">6 · Métricas</p>
       <h2>Como saberemos se funcionou</h2>
       <p>
-        As metas ficam <strong>a definir</strong> até termos a região e as medidas reais, exceto onde
-        a meta decorre da própria definição. Definimos antes o que medir, para não escolher a métrica
-        depois de ver o resultado.
+        As metas ficam <strong>a definir</strong> até termos um hospital piloto e medidas reais. Definimos
+        antes o que medir, para não escolher a métrica depois de ver o resultado. As métricas são de
+        renda, tempo e processo, e não de desfecho clínico, porque a evidência clínica é incerta.
       </p>
       <div class="table-wrap">
         <table>
@@ -756,83 +554,17 @@
             <tr><th>ID</th><th>Métrica</th><th>Definição</th><th>Objetivo</th><th>Meta</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td>M1</td>
-              <td>Horas semanais de translocação</td>
-              <td>Soma, para todos os pacientes, do tempo a bordo nas viagens da semana. Indicador central.</td>
-              <td>O3</td>
-              <td>Menor que o arranjo de referência</td>
-            </tr>
-            <tr>
-              <td>M2</td>
-              <td>Tempo a bordo (médio e máximo)</td>
-              <td>Minutos de viagem em cada trecho, por paciente.</td>
-              <td>O3</td>
-              <td>Abaixo do limite aceito (Q7)</td>
-            </tr>
-            <tr>
-              <td>M3</td>
-              <td>Cobertura de transporte</td>
-              <td>Pacientes com rota atribuída e sem violação de restrição, divididos pelo total de pacientes.</td>
-              <td>O1, O4</td>
-              <td>100%</td>
-            </tr>
-            <tr>
-              <td>M4</td>
-              <td>Pontualidade</td>
-              <td>Parcela de chegadas antes do início do turno, com a margem definida.</td>
-              <td>O3, O4</td>
-              <td>A definir</td>
-            </tr>
-            <tr>
-              <td>M5</td>
-              <td>Veículos e horas de frota por semana</td>
-              <td>Frota estimada e soma das horas de veículo em viagem.</td>
-              <td>O5</td>
-              <td>A definir</td>
-            </tr>
-            <tr>
-              <td>M6</td>
-              <td>Custo por sessão transportada</td>
-              <td>Custo operacional dividido pelo número de sessões transportadas.</td>
-              <td>O5</td>
-              <td>A definir</td>
-            </tr>
-            <tr>
-              <td>M7</td>
-              <td>Robustez a falhas</td>
-              <td>Pacientes afetados se um veículo falhar, com e sem reserva.</td>
-              <td>O4</td>
-              <td>Zero com reserva</td>
-            </tr>
-            <tr>
-              <td>M8</td>
-              <td>Violações de restrição</td>
-              <td>Turnos com excesso de máquinas ou assentos, ou com saída e retorno fora dos limites.</td>
-              <td>O3, O6</td>
-              <td>Zero</td>
-            </tr>
-            <tr>
-              <td>M9</td>
-              <td>Folga de capacidade na demanda</td>
-              <td>Crescimento de demanda que o arranjo suporta antes de violar uma restrição.</td>
-              <td>O1</td>
-              <td>A definir</td>
-            </tr>
-            <tr>
-              <td>M10</td>
-              <td>Equidade de tempo a bordo</td>
-              <td>Diferença entre o tempo a bordo da origem mais distante e a média.</td>
-              <td>O2, O3</td>
-              <td>A definir</td>
-            </tr>
-            <tr>
-              <td>M11</td>
-              <td>Adoção (negócio)</td>
-              <td>Número de gestores de frota e pactuações que usam o sistema.</td>
-              <td>O6</td>
-              <td>A definir após piloto</td>
-            </tr>
+            <tr><td>M1</td><td>Cobertura da triagem</td><td>Pacientes novos triados nos primeiros dias, divididos pelos pacientes novos.</td><td>O1</td><td>A definir no piloto</td></tr>
+            <tr><td>M2</td><td>Concordância do índice</td><td>Casos em que a faixa do índice coincide com o julgamento da assistente social (Q10).</td><td>O1</td><td>A definir</td></tr>
+            <tr><td>M3</td><td>Direitos identificados por paciente</td><td>Direitos que enquadram ou a verificar, dividido pelos pacientes atendidos.</td><td>O2</td><td>Sem meta (descritiva)</td></tr>
+            <tr><td>M4</td><td>Dossiês completos na primeira submissão</td><td>Pedidos protocolados com prontidão de 100%, divididos pelos pedidos protocolados.</td><td>O3</td><td>A definir</td></tr>
+            <tr><td>M5</td><td>Tempo até a primeira solicitação</td><td>Dias entre o diagnóstico e o primeiro pedido de direito.</td><td>O3, O5</td><td>Menor que antes do piloto</td></tr>
+            <tr><td>M6</td><td>Aprovação na primeira tentativa</td><td>Pedidos concluídos sem negativa, divididos pelos pedidos decididos. Depende de dado do órgão.</td><td>O3</td><td>A definir</td></tr>
+            <tr><td>M7</td><td>Horas de assistente social por caso</td><td>Tempo médio medido antes e depois do uso da plataforma.</td><td>O4, O7</td><td>Menor que antes do piloto</td></tr>
+            <tr><td>M8</td><td>Valor liberado por paciente</td><td>Saque do FGTS e benefícios concedidos, em agregado.</td><td>O2, O5</td><td>Sem meta (descritiva)</td></tr>
+            <tr><td>M9</td><td>Fôlego financeiro</td><td>Meses de déficit cobertos pela reserva, com e sem os direitos obtidos.</td><td>O1, O2</td><td>Sem meta (descritiva)</td></tr>
+            <tr><td>M10</td><td>Recursos após negativa</td><td>Negativas seguidas de recurso ou encaminhamento, divididas pelas negativas.</td><td>O5</td><td>A definir</td></tr>
+            <tr><td>M11</td><td>Custo por dossiê e retenção do hospital</td><td>Horas de equipe por dossiê e renovação da assinatura.</td><td>O7</td><td>A definir</td></tr>
           </tbody>
         </table>
       </div>
@@ -841,210 +573,235 @@
     <!-- 7. LAB DE UI -->
     <section id="lab">
       <p class="kicker">7 · Lab de UI</p>
-      <h2>Demanda, prioridade e rotas: testando onde, quando e com que tempo</h2>
+      <h2>Vulnerabilidade, direitos, documentos e painel: testando o modelo</h2>
       <p>
-        Este laboratório é um protótipo da interface que um gestor de frota usaria. Os municípios,
-        pacientes, distâncias e prioridades são <strong>fictícios e ilustrativos</strong>. Ajuste a
-        demanda, escolha prioridade, grupo de dias e turno de cada origem, e veja o tempo de
-        translocação, a frota e as restrições. Todos os pacientes de um município vão juntos no
-        mesmo turno.
+        Este laboratório é um protótipo da interface que uma assistente social usaria. Os pacientes, valores,
+        prazos e pesos são <strong>fictícios e ilustrativos</strong>. Escolha um paciente, altere os
+        dados e veja o índice, os direitos que enquadram, os documentos pendentes e o painel de todos os casos.
+      </p>
+      <p class="alert" role="note">
+        As regras estão simplificadas e o índice de vulnerabilidade não foi validado. O resultado é
+        uma estimativa pelos dados informados, não decide nem garante nenhum direito. Confira nas fontes (seção 3) e com
+        uma assistente social ou um advogado antes de orientar uma pessoa de verdade.
       </p>
 
-      <h3>Premissas do cenário</h3>
+      <h3>Premissas</h3>
       <div class="lab-controls" aria-label="Premissas do laboratório">
         <label>
-          Crescimento da demanda (%)
-          <input id="in-cresc" type="number" min="0" max="100" step="5" value="0">
+          Salário mínimo de referência (R$)
+          <input id="in-sm" type="number" min="1" step="1" value="1621">
         </label>
         <label>
-          Distância ao destino (multiplicador; 1 = polo regional)
-          <input id="in-fator" type="number" min="0.5" max="5" step="0.5" value="1">
+          Peso: renda por pessoa
+          <input id="in-w-renda" type="number" min="0" max="100" step="5" value="25">
         </label>
         <label>
-          Peso do tempo do paciente no agrupamento (%)
-          <input id="in-peso" type="number" min="0" max="100" step="10" value="70">
+          Peso: queda de renda
+          <input id="in-w-perda" type="number" min="0" max="100" step="5" value="20">
         </label>
         <label>
-          Máquinas por turno no centro
-          <input id="in-maq" type="number" min="1" max="40" step="1" value="8">
+          Peso: custo do tratamento
+          <input id="in-w-desp" type="number" min="0" max="100" step="5" value="15">
         </label>
         <label>
-          Assentos por veículo (van acessível padrão: 15)
-          <input id="in-assentos" type="number" min="1" max="30" step="1" value="15">
+          Peso: dívidas
+          <input id="in-w-div" type="number" min="0" max="100" step="5" value="10">
         </label>
         <label>
-          Duração da sessão (horas)
-          <input id="in-dur" type="number" min="3" max="4.5" step="0.5" value="4">
+          Peso: fôlego da reserva
+          <input id="in-w-folego" type="number" min="0" max="100" step="5" value="20">
         </label>
         <label>
-          Tempo máximo a bordo (min, por trecho)
-          <input id="in-limite" type="number" min="15" max="600" step="5" value="90">
+          Peso: cuidador sem trabalhar
+          <input id="in-w-cuid" type="number" min="0" max="100" step="5" value="10">
         </label>
         <label>
-          Saída de casa não antes de
-          <input id="in-saida" type="time" value="05:00">
+          Faixa Alta a partir de (pontos)
+          <input id="in-alto" type="number" min="0" max="100" step="5" value="60">
         </label>
         <label>
-          Chegada em casa até
-          <input id="in-retorno" type="time" value="21:30">
+          Faixa Média a partir de (pontos)
+          <input id="in-medio" type="number" min="0" max="100" step="5" value="35">
         </label>
         <label>
-          Minutos por parada de embarque
-          <input id="in-parada" type="number" min="0" max="20" step="1" value="5">
+          Fôlego de referência (meses)
+          <input id="in-ref" type="number" min="1" max="24" step="1" value="6">
         </label>
-        <label class="inline">
-          <input id="in-reserva" type="checkbox">
-          Incluir um veículo reserva na frota
+        <label>
+          Validade do relatório médico (meses)
+          <input id="in-validade" type="number" min="0" max="36" step="1" value="12">
+        </label>
+        <label>
+          Minutos por dossiê sem a plataforma (suposição)
+          <input id="in-min-sem" type="number" min="0" max="600" step="5" value="90">
+        </label>
+        <label>
+          Minutos por dossiê com a plataforma (suposição)
+          <input id="in-min-com" type="number" min="0" max="600" step="5" value="30">
         </label>
       </div>
       <p class="small">
-        Para simular uma capital, aumente o multiplicador de distância (por exemplo, 3) e depois o
-        tempo máximo a bordo: o laboratório mostra quais restrições deixam de ser cumpridas.
-        Peso 100% prioriza só o tempo do paciente, e 0% prioriza só as horas de veículo.
-        Início dos turnos (fixos): manhã 06:30, tarde 11:30 e noite 16:30. Grupo A: segunda, quarta e
-        sexta. Grupo B: terça, quinta e sábado. A chegada deve ocorrer 15 minutos antes do início, e o
-        retorno sai 15 minutos após o fim da sessão.
+        Os pesos são normalizados para somar 100%. Todos são hipóteses do time. O fôlego de referência de 6
+        meses e a validade de 12 meses (cartilha acadêmica, a confirmar na Caixa) também. Os minutos por
+        dossiê são suposições ilustrativas, sem fonte: servem só para mostrar como o ganho de
+        tempo seria calculado, e devem ser medidos no piloto (M7).
       </p>
 
+      <h3 id="lab-foco">Paciente em foco</h3>
       <div class="lab-actions">
-        <button type="button" id="btn-naive" class="btn">Arranjo atual: um município por turno</button>
-        <button type="button" id="btn-greedy" class="btn btn-primary">Sugerir agrupamento (guloso)</button>
-        <button type="button" id="btn-clear" class="btn">Limpar</button>
+        <label>
+          Paciente (fictício)
+          <select id="sel-paciente"></select>
+        </label>
+        <button type="button" id="btn-restaurar" class="btn">Restaurar pacientes fictícios</button>
+      </div>
+      <div class="lab-controls" aria-label="Dados do paciente">
+        <label>Diagnóstico <select id="f-dx"></select></label>
+        <label>O doente é <select id="f-titular"></select></label>
+        <label>Vínculo do titular <select id="f-vinculo"></select></label>
+        <label>Meses de contribuição <input id="f-contrib" type="number" min="0" max="600" step="1" value="0"></label>
+        <label>Meses desde o último recolhimento <input id="f-semcontrib" type="number" min="0" max="600" step="1" value="0"></label>
+        <label>Saldo de FGTS (R$) <input id="f-saldo" type="number" min="0" step="100" value="0"></label>
+        <label>Renda da família antes (R$/mês) <input id="f-rantes" type="number" min="0" step="100" value="0"></label>
+        <label>Renda da família agora (R$/mês) <input id="f-ratual" type="number" min="0" step="100" value="0"></label>
+        <label>Pessoas na casa <input id="f-morad" type="number" min="1" max="15" step="1" value="1"></label>
+        <label>Despesas da casa (R$/mês) <input id="f-desp" type="number" min="0" step="100" value="0"></label>
+        <label>Gasto com o tratamento (R$/mês) <input id="f-trat" type="number" min="0" step="50" value="0"></label>
+        <label>Parcelas de dívidas (R$/mês) <input id="f-div" type="number" min="0" step="50" value="0"></label>
+        <label>Reserva disponível (R$) <input id="f-reserva" type="number" min="0" step="100" value="0"></label>
+        <label>Dias desde o diagnóstico <input id="f-dias" type="number" min="0" max="3650" step="1" value="0"></label>
+        <label>Idade do relatório médico (meses) <input id="f-relmeses" type="number" min="0" max="120" step="1" value="0"></label>
+        <label class="inline"><input id="f-desemp" type="checkbox"> Desemprego involuntário</label>
+        <label class="inline"><input id="f-incapaz" type="checkbox"> Incapacidade para o trabalho atestada</label>
+        <label class="inline"><input id="f-imped" type="checkbox"> Impedimento de longo prazo (a avaliar)</label>
+        <label class="inline"><input id="f-aposent" type="checkbox"> Recebe aposentadoria ou pensão</label>
+        <label class="inline"><input id="f-cuid" type="checkbox"> Cuidador parou de trabalhar</label>
       </div>
 
-      <h3>Demanda e prioridade por origem</h3>
-      <div class="table-wrap">
-        <table class="lab-table" id="lab-table">
-          <thead>
-            <tr>
-              <th>Município (fictício)</th>
-              <th>Pacientes hoje</th>
-              <th>Pacientes no cenário</th>
-              <th>Até o destino</th>
-              <th>Mais de 50 km?</th>
-              <th>Prioridade</th>
-              <th>Grupo de dias</th>
-              <th>Turno</th>
-              <th>Situação</th>
-            </tr>
-          </thead>
-          <tbody id="lab-body"></tbody>
-        </table>
-      </div>
+      <h3>7.1 Calculadora de vulnerabilidade financeira</h3>
       <p class="small">
-        A prioridade define quem escolhe primeiro os horários mais favoráveis no agrupamento guloso.
-        Ela nunca deixa um município sem rota: se faltar capacidade, o laboratório mostra a lacuna.
+        Índice de 0 a 100 para ordenar a fila. Cada componente vai de 0% (sem vulnerabilidade) a 100% e
+        é multiplicado pelo seu peso. Foi inspirado em instrumentos de toxicidade financeira, mas não é
+        um instrumento validado e não mede elegibilidade.
       </p>
-
-      <h3>Turnos e rotas</h3>
-      <div class="table-wrap">
-        <table class="lab-table" id="slot-table">
-          <thead>
-            <tr>
-              <th>Turno</th>
-              <th>Municípios na rota</th>
-              <th>Pacientes / máquinas</th>
-              <th>Veículos</th>
-              <th>Sai de casa</th>
-              <th>Chega em casa</th>
-              <th>Máx. a bordo</th>
-              <th>Situação</th>
-            </tr>
-          </thead>
-          <tbody id="slot-body"></tbody>
-        </table>
-      </div>
-
       <div class="results" aria-live="polite">
         <div class="result">
-          <span class="result-num" id="res-trans">0</span>
-          <span class="result-label">horas semanais de translocação dos pacientes (M1)</span>
+          <span class="result-num" id="res-indice">0</span>
+          <span class="result-label">índice de vulnerabilidade (0 a 100)</span>
         </div>
         <div class="result">
-          <span class="result-num" id="res-medio">0</span>
-          <span class="result-label">tempo médio a bordo por trecho, em min (M2)</span>
+          <span class="result-num" id="res-banda">-</span>
+          <span class="result-label">faixa de prioridade</span>
         </div>
         <div class="result">
-          <span class="result-num" id="res-bordo">0</span>
-          <span class="result-label">tempo máximo a bordo, em min (M2)</span>
+          <span class="result-num" id="res-rpc">0</span>
+          <span class="result-label">renda atual por pessoa</span>
         </div>
         <div class="result">
-          <span class="result-num" id="res-cobertura">0</span>
-          <span class="result-label">pacientes com rota válida (M3)</span>
+          <span class="result-num" id="res-folego">0</span>
+          <span class="result-label">fôlego da reserva, em meses</span>
         </div>
         <div class="result">
-          <span class="result-num" id="res-frota">0</span>
-          <span class="result-label">veículos na frota estimada (M5)</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="res-horas">0</span>
-          <span class="result-label">horas de veículo por semana (M5)</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="res-falha">0</span>
-          <span class="result-label">pacientes afetados se 1 veículo falhar (M7)</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="res-viol">0</span>
-          <span class="result-label">violações de restrição (M8)</span>
+          <span class="result-num" id="res-folego-fgts">0</span>
+          <span class="result-label">fôlego com o saque do FGTS, em meses</span>
         </div>
       </div>
-      <p id="lab-alert" class="alert" role="status" hidden></p>
-
-      <h3>Quadro da semana</h3>
       <div class="table-wrap">
-        <table class="board" id="board">
+        <table class="lab-table">
           <thead>
-            <tr><th></th></tr>
+            <tr><th>Componente</th><th>Dado</th><th>Vulnerabilidade</th><th>Peso</th><th>Pontos</th></tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="comp-body"></tbody>
         </table>
       </div>
-      <p class="small">
-        Simplificações do laboratório: os municípios ficam alinhados no corredor até o destino, e o
-        veículo recolhe do mais distante ao mais próximo. O tempo de translocação de cada paciente é o
-        tempo a bordo (distância mais as paradas feitas depois do embarque dele), nos dois sentidos, em
-        três sessões por semana. A frota estimada soma, por turno, o maior número de veículos entre os
-        dois grupos de dias (sem reaproveitar veículos entre turnos). Quando uma rota precisa de mais
-        de um veículo, os tempos mostrados são conservadores. O agrupamento guloso testa uma origem por
-        vez, por prioridade e depois por distância, e escolhe o turno de menor custo ponderado
-        (tempo do paciente e horas de veículo) sem violar restrições. O otimizador de verdade
-        (OR-Tools) considerará a ordem das paradas e a divisão entre veículos.
-      </p>
 
-      <h3>Rascunho da pactuação</h3>
-      <p>
-        Gera, a partir do arranjo acima, uma tabela com os campos que as orientações do COSEMS-SP
-        descrevem para a pactuação regional: gestor da frota, municípios abrangidos, itinerário, total
-        de pessoas (com acompanhantes) e articulação com o agendamento. Acrescentamos destino e
-        prioridade. A coluna de elegíveis aplica o critério de mais de 50 km. O formato oficial é
-        definido pela CIR e pela CIB do estado, então este rascunho é só um ponto de partida.
-      </p>
-      <div class="lab-controls" aria-label="Dados do rascunho">
-        <label>
-          Município gestor da frota
-          <input id="in-gestor" type="text" maxlength="60" placeholder="A definir pela CIR">
-        </label>
-        <label>
-          Destino (centro de diálise)
-          <input id="in-destino" type="text" maxlength="60" placeholder="Centro de diálise">
-        </label>
-        <label>
-          Acompanhantes (% dos pacientes)
-          <input id="in-acomp" type="number" min="0" max="100" step="1" value="10">
-        </label>
-      </div>
+      <h3>7.2 Identificador de direitos</h3>
       <p class="small">
-        O padrão de 10% vem das orientações do COSEMS-SP para a hemodiálise. Confirme o valor na
-        portaria.
+        Enquadra: pelos dados informados, os requisitos parecem atendidos. Verificar: falta dado ou depende
+        de regra externa. Não enquadra: algum requisito falha. Não se aplica agora: o direito não cabe
+        na situação atual. A coluna Etapa registra o andamento do pedido.
+      </p>
+      <div class="table-wrap">
+        <table class="lab-table">
+          <thead>
+            <tr><th>Direito</th><th>Situação</th><th>Por quê e próximos passos</th><th>Base</th><th>Etapa</th><th>Prontidão</th></tr>
+          </thead>
+          <tbody id="rights-body"></tbody>
+        </table>
+      </div>
+      <p id="rights-alert" class="alert" role="status" hidden></p>
+
+      <h3>7.3 Organizador documental</h3>
+      <p class="small">
+        Mude a situação de cada documento e veja a prontidão no módulo 7.2 e no painel. O relatório
+        médico do FGTS passa a Vencido quando a idade informada supera a validade configurada.
+      </p>
+      <div class="table-wrap">
+        <table class="lab-table">
+          <thead>
+            <tr><th>Direito</th><th>Documento</th><th>Observação</th><th>Situação</th></tr>
+          </thead>
+          <tbody id="docs-body"></tbody>
+        </table>
+      </div>
+
+      <div class="lab-actions">
+        <button type="button" id="btn-resumo" class="btn btn-primary">Gerar resumo do caso</button>
+        <button type="button" id="resumo-copy" class="btn" hidden>Copiar como Markdown</button>
+        <span id="resumo-msg" class="small" role="status"></span>
+      </div>
+      <pre id="resumo-out" class="draft-pre" hidden></pre>
+
+      <h3>7.4 Painel da assistente social</h3>
+      <p class="small">
+        Prioridade = índice + 15 se houver documento vencido + 10 se nenhum pedido foi iniciado há mais
+        de 14 dias e algum direito enquadra + 10 se há pedido negado. A regra é visível para que a
+        assistente social possa discordar dela. O painel ordena, e a decisão é dela.
       </p>
       <div class="lab-actions">
-        <button type="button" id="btn-draft" class="btn btn-primary">Gerar rascunho da pactuação</button>
-        <button type="button" id="draft-copy" class="btn">Copiar como Markdown</button>
-        <span id="draft-msg" class="small" role="status"></span>
+        <label>
+          Mostrar faixa
+          <select id="filtro-banda">
+            <option value="todas">Todas</option>
+            <option value="Alta">Alta</option>
+            <option value="Média">Média</option>
+            <option value="Baixa">Baixa</option>
+          </select>
+        </label>
       </div>
-      <div id="draft-out" aria-live="polite">
-        <p class="muted">Clique em "Gerar rascunho da pactuação" depois de montar o arranjo.</p>
+      <div class="table-wrap">
+        <table class="lab-table">
+          <thead>
+            <tr><th>Paciente</th><th>Índice</th><th>Direitos que enquadram</th><th>Prontidão média</th><th>Alertas</th><th>Próxima ação</th><th></th></tr>
+          </thead>
+          <tbody id="panel-body"></tbody>
+        </table>
+      </div>
+      <div class="results" aria-live="polite">
+        <div class="result">
+          <span class="result-num" id="kpi-n">0</span>
+          <span class="result-label">pacientes no painel</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="kpi-alta">0</span>
+          <span class="result-label">pacientes na faixa Alta</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="kpi-enq">0</span>
+          <span class="result-label">direitos que enquadram (M3)</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="kpi-fgts">0</span>
+          <span class="result-label">FGTS potencialmente liberável (M8)</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="kpi-venc">0</span>
+          <span class="result-label">pacientes com documento vencido</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="kpi-horas">0</span>
+          <span class="result-label">horas de equipe economizadas (suposição ilustrativa)</span>
+        </div>
       </div>
     </section>
 
@@ -1059,119 +816,84 @@
 
       <div class="adr-list">
         <article class="adr">
-          <header><h3>D16 · Apresentar como produto de uma empresa (plataforma B2G)</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
-          <p><strong>Contexto:</strong> a política cria gestores de frota que precisam de rotas e
-            agendas. Clientes e modelo de negócio são hipóteses (Q12).</p>
-          <p><strong>Alternativas:</strong> apresentar só como protótipo acadêmico.</p>
+          <header><h3>D22 · Produto: plataforma de assistência social e proteção financeira na jornada hospitalar</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
+          <p><strong>Contexto:</strong> a barreira financeira e burocrática leva famílias a perder renda e
+            direitos. O hospital já é o ponto de contato do paciente com diagnóstico.</p>
+          <p><strong>Alternativas:</strong> crédito durante a recuperação (descartado por risco de endividar quem perdeu renda).</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D17 · Objetivo principal: menor tempo de translocação do paciente</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> é a necessidade mais direta de quem faz hemodiálise e viaja.
-            O custo da frota vem depois, com peso ajustável pelo gestor.</p>
-          <p><strong>Alternativas:</strong> minimizar apenas o custo da frota.</p>
+          <header><h3>D23 · Modelo de negócio: SaaS B2B, o hospital paga assinatura</h3><span class="badge st-proposta">Proposta</span></header>
+          <p><strong>Contexto:</strong> o hospital é o balcão e quem sente a carga de trabalho. Preço e comprador
+            são hipóteses (Q6, H1).</p>
+          <p><strong>Alternativas:</strong> empresas (RH), programas de apoio ao paciente, setor público.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D18 · Prioridade ordena, nunca exclui</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> classes de prioridade vêm das equipes de saúde. O sistema as
-            usa para ordenar alocações e replanejamentos, e aponta a lacuna quando falta capacidade.</p>
+          <header><h3>D24 · Cunha: saque do FGTS por diagnóstico</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> regra clara na lei para câncer, HIV e estágio terminal, documentos definidos
+            e resultado mensurável. Os demais direitos entram depois.</p>
+          <p><strong>Alternativas:</strong> começar pelo INSS (maior dor, regra mais complexa).</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D19 · O destino é um parâmetro (capital ou polo regional)</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> o foco passa a incluir capitais. O mesmo núcleo atende destinos
-            próximos e distantes, com multiplicador de distância no laboratório.</p>
+          <header><h3>D25 · MVP com quatro módulos</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> calculadora de vulnerabilidade, identificador de direitos, organizador
+            documental e painel da assistente social, com pacientes fictícios.</p>
+          <p><strong>Alternativas:</strong> só o identificador de direitos.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D20 · Transporte de órgãos como abertura futura, fora do escopo atual</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> o problema é de natureza diferente (urgente, pontual, com limite
-            rígido de tempo e coordenação própria). Só o núcleo de rotas pode ser reaproveitado.</p>
-          <p><strong>Condição:</strong> parceria com centrais de transplantes e validação clínica e
-            regulatória.</p>
+          <header><h3>D26 · O índice ordena a fila e não decide direitos</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> o índice não está validado (Q10). Usá-lo para negar atendimento ou
+            benefício seria injusto e arriscado.</p>
+          <p><strong>Alternativas:</strong> usar o índice como critério de elegibilidade.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D21 · Ferramenta de apoio à pactuação como moldura</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
-          <p><strong>Contexto:</strong> a lei garante o direito e os veículos, mas o desenho dos
-            arranjos regionais fica com a gestão. O sistema monta o rascunho e confere as regras.</p>
-          <p><strong>Alternativas:</strong> agenda e rota juntas como diferencial isolado; rota viva
-            (replanejamento) como extra.</p>
+          <header><h3>D27 · Sem crédito, sem venda de dados, sem comissão sobre o benefício</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> o público é vulnerável. Crédito pode endividar, e dado de saúde é sensível.</p>
+          <p><strong>Alternativas:</strong> comissão sobre o valor obtido; ponte de renda; venda de leads.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D10 · Afunilar o tema para hemodiálise</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> tratamento contínuo, em geral três vezes por semana, em que a
-            distância até o centro é uma barreira diária.</p>
-          <p><strong>Alternativas:</strong> prevenção com unidade móvel (ideia anterior).</p>
+          <header><h3>D28 · Seguradoras não são pagadoras nem destino de indicação</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> a cobertura parcial temporária (até 24 meses) suspende cirurgias, leitos
+            de alta tecnologia e procedimentos de alta complexidade ligados à doença declarada, e a LGPD
+            veda às operadoras o uso de dado de saúde para seleção de riscos.</p>
+          <p><strong>Alternativas:</strong> módulo informativo neutro sobre a cobertura do plano atual, pago por hospital ou empresa.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D11 · Levar o paciente ao centro, e não o serviço ao paciente</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
-          <p><strong>Contexto:</strong> hipótese de que a hemodiálise de rotina depende de estrutura
-            fixa. A confirmar com um nefrologista (Q10).</p>
-          <p><strong>Alternativas:</strong> unidade satélite ou diálise domiciliar, tratadas como
-            comparação futura (D15).</p>
+          <header><h3>D29 · Pessoas sem vínculo formal: o limite do produto</h3><span class="badge st-proposta">Proposta</span></header>
+          <p><strong>Contexto:</strong> sem FGTS nem contribuição, o saque e o auxílio não se aplicam. O BPC é o
+            caminho a avaliar, e o produto declara esse limite.</p>
+          <p><strong>Alternativas:</strong> ampliar o escopo para programas de renda do governo.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D12 · Roteamento periódico com janelas de tempo e limite de tempo a bordo</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
-          <p><strong>Contexto:</strong> as sessões se repetem toda semana, com horários fixos, e o
-            paciente não deve passar tempo demais no veículo.</p>
-          <p><strong>Alternativas:</strong> roteamento com prêmios (da ideia anterior), que não se
-            aplica porque todos os pacientes precisam ser atendidos.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D13 · Escopo do MVP</h3><span class="badge st-proposta">Proposta (atualizada)</span></header>
-          <p><strong>Proposta:</strong> um destino, de 4 a 8 origens, dois grupos de dias, três turnos e
-            veículos do tipo van, com demanda, prioridade e rascunho de pactuação.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D14 · O modelo é apoio logístico, não clínico</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Decisão:</strong> horários das sessões e decisões clínicas e de regulação vêm como
-            entrada. Qualquer plano deve ser validado pelas equipes de saúde.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D15 · Cenários alternativos como comparação futura</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Proposta:</strong> comparar o custo do transporte com o de uma unidade satélite e
-            com a diálise domiciliar. Isso exige dados e avaliação clínica, e fica fora do MVP.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D5 · Validação por simulação com arranjo de referência</h3><span class="badge st-proposta">Proposta (atualizada)</span></header>
-          <p><strong>Proposta:</strong> comparar o plano agrupado com o arranjo atual (um veículo por
-            município) e testar a sensibilidade aos tempos de viagem, ao peso do tempo do paciente e ao
-            crescimento da demanda.</p>
+          <header><h3>D30 · Primeiro cenário: oncologia</h3><span class="badge st-proposta">Proposta</span></header>
+          <p><strong>Contexto:</strong> câncer é a hipótese própria da lei, sem depender de via judicial, e é um
+            contexto com serviço social estruturado (a confirmar em Q9).</p>
+          <p><strong>Alternativas:</strong> começar por HIV; ampliar para outras doenças crônicas.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
           <header><h3>D6 · Dados agregados, públicos ou sintéticos (LGPD)</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Decisão:</strong> nenhum dado individual de paciente entra no sistema.</p>
+          <p><strong>Contexto:</strong> dado de saúde é sensível. O protótipo usa pacientes fictícios, e dado real
+            exigiria consentimento e parecer jurídico.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D7 · Região do caso de estudo</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Em aberto:</strong> qual destino (centro de diálise) e quais municípios de origem,
-            de preferência em uma região próxima ao campus do time.</p>
-        </article>
-        <article class="adr">
-          <header><h3>D8 · Parâmetros operacionais do transporte</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Em aberto:</strong> assentos, tempo máximo a bordo, janelas de saída e retorno,
-            margem para estradas rurais e classes de prioridade (Q3, Q5, Q6 e Q7).</p>
-        </article>
-        <article class="adr">
           <header><h3>D9 · Nome do projeto</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Em aberto:</strong> "RotaSaúde" é um nome provisório.</p>
+          <p><strong>Em aberto:</strong> "Amparo" é um nome provisório e não foi verificado quanto a marcas já registradas.</p>
         </article>
         <article class="adr archived">
-          <header><h3>D1 a D4 · Unidade móvel de prevenção</h3><span class="badge st-pendente">Substituídas</span></header>
-          <p><strong>Histórico:</strong> unidade móvel em vez de unidades fixas (D1), foco em medicina
-            preventiva (D2), roteamento com prêmios (D3) e escopo de MVP para essa ideia (D4). Foram
-            substituídas por D10 a D13 após o afunilamento do tema para a hemodiálise.</p>
+          <header><h3>D1 a D21 · Temas anteriores</h3><span class="badge st-pendente">Substituídas</span></header>
+          <p><strong>Histórico:</strong> unidade móvel de prevenção (D1 a D4), transporte de pacientes em
+            hemodiálise, ferramenta de pactuação e produto de rotas e agendamentos para frotas (D5 a D21,
+            chamado RotaSaúde). Foram substituídas depois que o orientador recomendou trocar o tema. O
+            conteúdo permanece no histórico do repositório.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
       </div>
@@ -1182,52 +904,52 @@
       <p class="kicker">9 · Workflow</p>
       <h2>Como o trabalho flui</h2>
 
-      <h3>9.1 Fluxo do cliente no produto</h3>
-      <p>Como um gestor de frota usaria o sistema, do cadastro da demanda ao acompanhamento.</p>
+      <h3>9.1 Jornada do paciente no produto</h3>
+      <p>Como o paciente e a assistente social usariam a plataforma, do diagnóstico ao resultado.</p>
       <ol class="flow">
         <li class="flow-step">
-          <h3>1 · Cadastrar a demanda</h3>
-          <p><strong>Entra:</strong> origens, pacientes por grupo e turno, acompanhantes e acessibilidade.<br>
-             <strong>Sai:</strong> retrato atual da demanda.</p>
+          <h3>1 · Entrada</h3>
+          <p><strong>Entra:</strong> diagnóstico e primeiro contato com o serviço social.<br>
+             <strong>Sai:</strong> paciente cadastrado, com consentimento.</p>
         </li>
         <li class="flow-step">
-          <h3>2 · Definir prioridades</h3>
-          <p><strong>Entra:</strong> classes definidas com as equipes de saúde.<br>
-             <strong>Sai:</strong> origens classificadas, com a regra registrada.</p>
+          <h3>2 · Triagem financeira</h3>
+          <p><strong>Entra:</strong> renda, despesas, dívidas, reserva e cuidador.<br>
+             <strong>Sai:</strong> índice, faixa e fôlego.</p>
         </li>
         <li class="flow-step">
-          <h3>3 · Calcular rotas e agenda</h3>
-          <p><strong>Entra:</strong> demanda, prioridade, frota, destino e peso do tempo do paciente.<br>
-             <strong>Sai:</strong> rotas, horários, quadro semanal e métricas.</p>
+          <h3>3 · Direitos</h3>
+          <p><strong>Entra:</strong> diagnóstico, vínculo e renda.<br>
+             <strong>Sai:</strong> direitos que enquadram, a verificar, com motivo e base legal.</p>
         </li>
         <li class="flow-step">
-          <h3>4 · Pactuar e aprovar</h3>
-          <p><strong>Entra:</strong> arranjo escolhido.<br>
-             <strong>Sai:</strong> rascunho de pactuação para a CIR e a CIB.</p>
+          <h3>4 · Documentos</h3>
+          <p><strong>Entra:</strong> checklist por direito.<br>
+             <strong>Sai:</strong> dossiê com prontidão e pendências.</p>
         </li>
         <li class="flow-step">
-          <h3>5 · Operar e registrar</h3>
-          <p><strong>Entra:</strong> plano aprovado.<br>
-             <strong>Sai:</strong> viagens executadas e registros de produção (fase futura).</p>
+          <h3>5 · Pedido e acompanhamento</h3>
+          <p><strong>Entra:</strong> dossiê pronto.<br>
+             <strong>Sai:</strong> pedido protocolado e etapa registrada.</p>
         </li>
         <li class="flow-step">
-          <h3>6 · Replanejar e medir</h3>
-          <p><strong>Entra:</strong> falhas, mudanças na demanda e indicadores.<br>
-             <strong>Sai:</strong> plano atualizado e relatório de métricas.</p>
+          <h3>6 · Resultado</h3>
+          <p><strong>Entra:</strong> decisão do órgão.<br>
+             <strong>Sai:</strong> concluído, ou recurso e encaminhamento em caso de negativa.</p>
         </li>
       </ol>
 
       <h3>9.2 Nosso ciclo de desenvolvimento</h3>
       <p>
-        Seis etapas, cada uma com entradas, saídas e uma definição de pronto. As etapas 1 e 2 são o que
-        estamos fazendo agora.
+        Seis etapas, cada uma com entradas, saídas e uma definição de pronto. As etapas 1 a 4 estão
+        encaminhadas nesta versão.
       </p>
       <ol class="flow">
         <li class="flow-step done">
           <h3>1 · Entender</h3>
           <p><strong>Entra:</strong> tema do desafio e fontes.<br>
              <strong>Sai:</strong> intenção, dores, perguntas de pesquisa.<br>
-             <strong>Pronto quando:</strong> o problema central está formulado e as perguntas Q1 a Q12 têm responsável.</p>
+             <strong>Pronto quando:</strong> o problema está formulado e as perguntas Q1 a Q12 têm responsável.</p>
           <span class="badge st-decidida">Em andamento</span>
         </li>
         <li class="flow-step done">
@@ -1237,24 +959,24 @@
              <strong>Pronto quando:</strong> cada requisito aponta para um objetivo e cada objetivo tem métrica.</p>
           <span class="badge st-decidida">Em andamento</span>
         </li>
-        <li class="flow-step">
+        <li class="flow-step done">
           <h3>3 · Modelar</h3>
-          <p><strong>Entra:</strong> requisitos e dados.<br>
-             <strong>Sai:</strong> demanda, prioridade, matriz de tempos e otimizador de rotas.<br>
-             <strong>Pronto quando:</strong> gera um plano semanal sem violações.</p>
-          <span class="badge st-pendente">Pendente</span>
+          <p><strong>Entra:</strong> requisitos e regras das fontes.<br>
+             <strong>Sai:</strong> índice, regras de direitos, checklist e fila de prioridade.<br>
+             <strong>Pronto quando:</strong> casos de teste cobrem cada regra.</p>
+          <span class="badge st-decidida">Primeira versão</span>
         </li>
-        <li class="flow-step">
+        <li class="flow-step done">
           <h3>4 · Prototipar</h3>
           <p><strong>Entra:</strong> modelo e lab de UI.<br>
-             <strong>Sai:</strong> quadro semanal, mapa e rascunho de pactuação interativos.<br>
-             <strong>Pronto quando:</strong> o gestor altera premissas e vê o efeito.</p>
-          <span class="badge st-pendente">Pendente</span>
+             <strong>Sai:</strong> os quatro módulos interativos com pacientes fictícios.<br>
+             <strong>Pronto quando:</strong> a assistente social altera dados e vê o efeito.</p>
+          <span class="badge st-decidida">Primeira versão</span>
         </li>
         <li class="flow-step">
           <h3>5 · Validar</h3>
-          <p><strong>Entra:</strong> protótipo e arranjo de referência.<br>
-             <strong>Sai:</strong> métricas M1 a M11, sensibilidade e revisão de uma pessoa da área de saúde.<br>
+          <p><strong>Entra:</strong> protótipo.<br>
+             <strong>Sai:</strong> revisão por uma assistente social, parecer jurídico e de dados, e teste do índice (Q10).<br>
              <strong>Pronto quando:</strong> os limites do modelo estão declarados.</p>
           <span class="badge st-pendente">Pendente</span>
         </li>
@@ -1270,29 +992,30 @@
       <details>
         <summary>Roteiro do pitch (5 minutos)</summary>
         <ol class="timeline">
-          <li><strong>Problema:</strong> uma pessoa em hemodiálise precisa chegar ao centro cerca de três
-            vezes por semana. Para quem mora longe, só a viagem soma horas, e faltar não é opção.</li>
-          <li><strong>Contexto:</strong> a lei garante o transporte a mais de 50 km e o governo enviou
-            veículos. O desenho das rotas e dos horários fica com a gestão regional.</li>
-          <li><strong>Produto:</strong> demanda, prioridade e rotas, com o menor tempo de translocação
-            como objetivo principal e o rascunho de pactuação como saída.</li>
-          <li><strong>Demo:</strong> arranjo atual contra arranjo agrupado, peso do tempo do paciente,
-            crescimento da demanda, capital e falha de veículo.</li>
-          <li><strong>Impacto e limites:</strong> horas de translocação, robustez a falhas, dados
-            fictícios, validação clínica e próximos passos com uma regional de saúde. A abertura para
-            outras rotas é visão de longo prazo, não promessa.</li>
+          <li><strong>Problema:</strong> quem recebe um diagnóstico grave perde renda, e os direitos que
+            ajudariam exigem formulários e laudos que quase ninguém conhece. Cerca de metade dos pedidos
+            por incapacidade foi negada no INSS no 1º semestre de 2026.</li>
+          <li><strong>Usuária:</strong> a assistente social do hospital, que faz esse trabalho sem
+            ferramenta própria (hipótese a confirmar em Q2).</li>
+          <li><strong>Produto:</strong> quatro módulos: vulnerabilidade, direitos, documentos e painel.
+            Começamos pelo saque do FGTS por diagnóstico, que a lei prevê para câncer, HIV e estágio terminal.</li>
+          <li><strong>Demo:</strong> escolher um paciente, ver o índice, os direitos que enquadram, o
+            relatório vencido, a prontidão e o painel ordenado.</li>
+          <li><strong>Negócio e limites:</strong> o hospital paga assinatura, sem crédito, sem venda de dados
+            e sem comissão. Dados fictícios, regras simplificadas, índice não validado. Escala: INSS, BPC,
+            IR, doenças fora da lista, empresas e novos eventos de vida.</li>
         </ol>
       </details>
 
       <details>
         <summary>Cuidados a declarar na apresentação</summary>
         <ul>
-          <li>O sistema é apoio logístico. Decisões clínicas e de regulação são das equipes de saúde.</li>
-          <li>Os dados do protótipo são fictícios, e os tempos de viagem rurais são aproximados.</li>
-          <li>Roteamento de pacientes já é estudado na literatura. O diferencial é demanda, prioridade, pactuação e operação.</li>
-          <li>A prioridade ordena alocações e nunca exclui um paciente.</li>
-          <li>Equidade: a origem mais distante não deve carregar sempre o maior tempo a bordo.</li>
-          <li>Transporte de órgãos é uma abertura conceitual e exigiria parceria e validação próprias.</li>
+          <li>A plataforma é apoio à assistência social. Não garante deferimento nem substitui advogado ou perícia.</li>
+          <li>Os dados do protótipo são fictícios, e as regras estão simplificadas.</li>
+          <li>O índice de vulnerabilidade não foi validado e ordena a fila, sem decidir direitos.</li>
+          <li>O saque do FGTS só ajuda quem tem ou teve vínculo formal e saldo.</li>
+          <li>Não temos dado de mercado nem de concorrência verificados. Pagador e preço são hipóteses.</li>
+          <li>Seguradoras não são pagadoras, e dado de diagnóstico não é vendido ou compartilhado.</li>
         </ul>
       </details>
     </section>
@@ -1323,7 +1046,7 @@
         </label>
         <label class="grow">
           O que aconteceu
-          <input id="diary-text" type="text" maxlength="400" placeholder="Ex.: Conversamos com o centro de diálise sobre ..." required>
+          <input id="diary-text" type="text" maxlength="400" placeholder="Ex.: Conversamos com a assistente social do hospital sobre ..." required>
         </label>
         <button type="submit" class="btn btn-primary">Adicionar</button>
       </form>
@@ -1338,7 +1061,7 @@
   </main>
 
   <footer>
-    <p>Hackathon USP 2026 · RotaSaúde (nome provisório) · documento vivo</p>
+    <p>Hackathon USP 2026 · Amparo (nome provisório) · documento vivo</p>
   </footer>
 
   <script src="script.js"></script>

@@ -369,6 +369,57 @@ input[type="number"], input[type="text"], select {
 
 .small { font-size: .9rem; color: var(--muted); }
 
+/* Amparo: lab de direitos e painel */
+.lab-actions label { display: grid; gap: .3rem; font-size: .88rem; font-weight: 600; }
+.lab-actions select { width: auto; min-width: 12rem; }
+h4 { margin: 0 0 .5em; font-size: 1rem; color: var(--red-dark); }
+
+.pill {
+  display: inline-block;
+  padding: .15rem .6rem;
+  border-radius: 99px;
+  font-size: .8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.pill-enq { background: #e3f3ea; color: var(--green); }
+.pill-ver { background: #fbf1dc; color: var(--amber); }
+.pill-nao { background: #fbeceb; color: var(--red-dark); }
+.pill-na { background: var(--line); color: var(--muted); }
+
+.band-alta { color: var(--red); font-weight: 800; }
+.band-media { color: var(--amber); font-weight: 800; }
+.band-baixa { color: var(--green); font-weight: 800; }
+
+.meter {
+  display: inline-block;
+  width: 90px;
+  height: 10px;
+  background: var(--line);
+  border-radius: 99px;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.meter-fill { display: block; height: 100%; background: var(--red); }
+
+.steps-mini { margin: .4rem 0 0; padding-left: 1.1rem; font-size: .88rem; color: var(--muted); }
+.lab-table td { vertical-align: top; }
+.lab-table tr.row-focus td { background: #fbeceb; }
+.lab-table td.small { min-width: 140px; }
+
+.draft-pre {
+  white-space: pre-wrap;
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  font-size: .9rem;
+  overflow-x: auto;
+}
+.draft-pre[hidden] { display: none; }
+.lab-actions .btn[hidden] { display: none; }
+p.alert { margin-bottom: 1rem; }
+
 /* Diary */
 .diary { list-style: none; padding: 0; border-left: 3px solid var(--line); margin-left: .6rem; }
 .diary li { position: relative; padding: 0 0 1.2rem 1.4rem; }
