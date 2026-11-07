@@ -1,916 +1,522 @@
-/* Amparo · Lab de UI (vulnerabilidade financeira, direitos, documentos e painel da assistente social)
-   e Diário de bordo.
-   Todos os pacientes, valores e prazos do laboratório são fictícios e ilustrativos.
-   As regras são simplificadas e servem para demonstrar o modelo. Não substituem a análise de uma
-   assistente social ou de um advogado, e devem ser conferidas nas fontes listadas no documento. */
+/* Vaga Viva · lab de risco, confirmação, reocupação e retorno.
+   Todos os dados são fictícios e as taxas são hipóteses. */
 (function () {
   'use strict';
 
-  /* ---------- utilitários ---------- */
+  /* ---------- utilidades ---------- */
   function $(id) { return document.getElementById(id); }
-  function num(id, fallback) {
+  function num(id, def) {
     var el = $(id);
-    if (!el) return fallback;
+    if (!el) { return def; }
     var v = parseFloat(String(el.value).replace(',', '.'));
-    return isNaN(v) ? fallback : v;
-  }
-  function fmt(n, d) { return n.toFixed(d === undefined ? 1 : d).replace('.', ','); }
-  function brl(n) {
-    return 'R$ ' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return isNaN(v) ? def : v;
   }
   function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
-  function pct(x) { return Math.round(x * 100) + '%'; }
-  function el(tag, cls, text) {
-    var e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (text !== undefined) e.textContent = text;
-    return e;
+  function fmtInt(n) {
+    var s = String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return (n < 0 && Math.round(Math.abs(n)) > 0 ? '-' : '') + s;
   }
-  function opt(value, label) {
-    var o = document.createElement('option');
-    o.value = value;
-    o.textContent = label;
-    return o;
+  function fmtBRL(n) { return (n < 0 ? '-R$ ' : 'R$ ') + fmtInt(Math.abs(n)); }
+  function fmtPct(x, d) { return (x * 100).toFixed(d === undefined ? 0 : d).replace('.', ',') + '%'; }
+  function fmtNum(x, d) { return x.toFixed(d).replace('.', ','); }
+  function fmtSign(x, d) { return (x >= 0 ? '+' : '-') + fmtNum(Math.abs(x), d); }
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
-  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function sigmoid(z) { return 1 / (1 + Math.exp(-z)); }
+  function setText(id, t) { var el = $(id); if (el) { el.textContent = t; } }
 
-  /* ---------- catálogos ---------- */
-  var DX = [
-    { id: 'cancer', nome: 'Câncer (neoplasia maligna)' },
-    { id: 'hiv', nome: 'HIV' },
-    { id: 'terminal', nome: 'Estágio terminal por doença grave' },
-    { id: 'rara', nome: 'Doença rara (lista do Ministério da Saúde)' },
-    { id: 'outra', nome: 'Outra doença grave (fora da lista da lei)' }
-  ];
-  var VINCULOS = [
-    { id: 'clt', nome: 'CLT em atividade' },
-    { id: 'desligado', nome: 'Desligado (já contribuiu)' },
-    { id: 'contrib', nome: 'Autônomo ou MEI contribuinte' },
-    { id: 'informal', nome: 'Informal, sem contribuição' }
-  ];
-  var DIREITOS = [
-    { id: 'fgts', nome: 'Saque do FGTS por doença grave' },
-    { id: 'inss', nome: 'Auxílio por incapacidade temporária (INSS)' },
-    { id: 'bpc', nome: 'BPC (Benefício de Prestação Continuada)' },
-    { id: 'ir', nome: 'Isenção de IR em aposentadoria por doença grave' }
-  ];
-  var ETAPAS = [
-    ['nao_iniciado', 'Não iniciado'],
-    ['docs', 'Reunindo documentos'],
-    ['protocolado', 'Protocolado'],
-    ['concluido', 'Concluído'],
-    ['negado', 'Negado']
-  ];
-  var ESTADOS_DOC = [
-    ['faltando', 'Faltando'],
-    ['recebido', 'Recebido'],
-    ['revisao', 'Em revisão'],
-    ['pronto', 'Pronto'],
-    ['vencido', 'Vencido']
-  ];
-  var NIVEIS = {
-    enq: { rotulo: 'Enquadra', cls: 'pill-enq', ordem: 0 },
-    ver: { rotulo: 'Verificar', cls: 'pill-ver', ordem: 1 },
-    nao: { rotulo: 'Não enquadra', cls: 'pill-nao', ordem: 2 },
-    na: { rotulo: 'Não se aplica agora', cls: 'pill-na', ordem: 3 }
+  /* ---------- 7.1 modelo de risco ---------- */
+  var TIPOS = {
+    consulta: { label: 'Consulta (primeira vez)', v: 0 },
+    retorno: { label: 'Retorno', v: -0.3 },
+    exame: { label: 'Exame', v: 0.2 },
+    cirurgia: { label: 'Cirurgia', v: -0.9 }
   };
+  var CONF = {
+    nao: { label: 'Ainda não contatado', v: 0 },
+    confirmou: { label: 'Confirmou ativamente', v: -1.2 },
+    sem: { label: 'Contatado, sem resposta', v: 1.0 }
+  };
+  var TRANSP = {
+    proprio: { label: 'Meio próprio ou a pé', v: 0 },
+    publico: { label: 'Transporte público', v: 0.5 },
+    prefeitura: { label: 'Depende de transporte da prefeitura ou de terceiros', v: 0.9 }
+  };
+  var PRIOR_TAXA = 0.2, PRIOR_FORCA = 2;
+  var W_PADRAO = { b0: -3, hist: 3, antec: 0.9, desloc: 0.9, transp: 1, tipo: 1, conf: 1 };
 
-  function nomeDe(lista, id) {
-    for (var i = 0; i < lista.length; i++) if (lista[i].id === id) return lista[i].nome;
-    return id;
-  }
-  function direitoNome(id) { return nomeDe(DIREITOS, id); }
-
-  /* ---------- pacientes fictícios ----------
-     "titular" = quem tem a conta de FGTS e o vínculo; se o doente é dependente, vínculo, FGTS e
-     contribuições são do titular. Valores em reais por mês, exceto saldo, reserva e prazos. */
-  function base(id, nome, o) {
-    var p = {
-      id: id, nome: nome, dx: 'cancer', titular: true, vinculo: 'clt',
-      contribMeses: 60, semContrib: 0, desemp: false, saldo: 0, incapaz: false, imped: false,
-      aposent: false, rAntes: 3000, rAtual: 3000, morad: 3, desp: 2500, trat: 300, div: 200,
-      reserva: 500, cuid: false, dias: 10, relMeses: 1,
-      etapas: { fgts: 'nao_iniciado', inss: 'nao_iniciado', bpc: 'nao_iniciado', ir: 'nao_iniciado' },
-      docs: {}
-    };
-    for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) p[k] = o[k];
-    return p;
-  }
-
-  var PACIENTES_BASE = [
-    base('A', 'Paciente A (câncer, CLT)', {
-      dx: 'cancer', vinculo: 'clt', contribMeses: 96, saldo: 18000, incapaz: true,
-      rAntes: 6500, rAtual: 3900, morad: 3, desp: 4200, trat: 700, div: 650, reserva: 6000, dias: 10,
-      etapas: { fgts: 'docs', inss: 'nao_iniciado', bpc: 'nao_iniciado', ir: 'nao_iniciado' },
-      docs: { 'fgts:relatorio': 'pronto', 'fgts:identidade': 'pronto', 'fgts:exame': 'recebido' }
-    }),
-    base('B', 'Paciente B (HIV, desligado)', {
-      dx: 'hiv', vinculo: 'desligado', contribMeses: 30, semContrib: 8, desemp: true, saldo: 9500,
-      incapaz: false, rAntes: 2600, rAtual: 1800, morad: 2, desp: 1900, trat: 150, div: 300,
-      reserva: 1500, dias: 25
-    }),
-    base('C', 'Paciente C (criança com câncer, mãe titular)', {
-      dx: 'cancer', titular: false, vinculo: 'clt', contribMeses: 60, saldo: 12000, cuid: true,
-      rAntes: 5200, rAtual: 3100, morad: 3, desp: 4300, trat: 900, div: 800, reserva: 400,
-      dias: 30, relMeses: 14,
-      etapas: { fgts: 'docs', inss: 'nao_iniciado', bpc: 'nao_iniciado', ir: 'nao_iniciado' },
-      docs: { 'fgts:relatorio': 'pronto', 'fgts:exame': 'pronto', 'fgts:identidade': 'pronto',
-        'fgts:ctps': 'pronto', 'fgts:conta': 'recebido', 'fgts:dependencia': 'pronto' }
-    }),
-    base('D', 'Paciente D (estágio terminal, MEI)', {
-      dx: 'terminal', vinculo: 'contrib', contribMeses: 40, saldo: 0, incapaz: true,
-      rAntes: 2200, rAtual: 800, morad: 3, desp: 2000, trat: 450, div: 500, reserva: 100, dias: 18,
-      etapas: { fgts: 'nao_iniciado', inss: 'protocolado', bpc: 'nao_iniciado', ir: 'nao_iniciado' }
-    }),
-    base('E', 'Paciente E (doença fora da lista, CLT)', {
-      dx: 'outra', vinculo: 'clt', contribMeses: 14, saldo: 7200, incapaz: true,
-      rAntes: 3400, rAtual: 1900, morad: 3, desp: 2800, trat: 520, div: 400, reserva: 900, dias: 45,
-      etapas: { fgts: 'negado', inss: 'docs', bpc: 'nao_iniciado', ir: 'nao_iniciado' }
-    }),
-    base('F', 'Paciente F (câncer, informal)', {
-      dx: 'cancer', vinculo: 'informal', contribMeses: 0, saldo: 0, incapaz: true, imped: true,
-      rAntes: 1500, rAtual: 0, morad: 3, desp: 1400, trat: 250, div: 100, reserva: 0, dias: 12
-    }),
-    base('G', 'Paciente G (câncer, aposentado)', {
-      dx: 'cancer', vinculo: 'contrib', contribMeses: 300, aposent: true, saldo: 5000,
-      rAntes: 3000, rAtual: 3000, morad: 2, desp: 2400, trat: 600, div: 0, reserva: 8000, dias: 60,
-      etapas: { fgts: 'concluido', inss: 'nao_iniciado', bpc: 'nao_iniciado', ir: 'nao_iniciado' }
-    }),
-    base('H', 'Paciente H (doença rara, CLT)', {
-      dx: 'rara', vinculo: 'clt', contribMeses: 12, saldo: 22000, incapaz: true,
-      rAntes: 7500, rAtual: 5200, morad: 4, desp: 4800, trat: 1100, div: 900, reserva: 6000, dias: 8
-    }),
-    base('I', 'Paciente I (câncer, desligado há 20 meses)', {
-      dx: 'cancer', vinculo: 'desligado', contribMeses: 150, semContrib: 20, saldo: 6800,
-      incapaz: true, rAntes: 3500, rAtual: 1800, morad: 2, desp: 2400, trat: 380, div: 350,
-      reserva: 5000, dias: 22
-    }),
-    base('J', 'Paciente J (câncer, desligado há 30 meses)', {
-      dx: 'cancer', vinculo: 'desligado', contribMeses: 40, semContrib: 30, saldo: 4000,
-      incapaz: true, imped: false, rAntes: 2100, rAtual: 600, morad: 3, desp: 1900, trat: 300,
-      div: 250, reserva: 0, dias: 35
-    }),
-    base('K', 'Paciente K (HIV, renda estável)', {
-      dx: 'hiv', vinculo: 'clt', contribMeses: 84, saldo: 15000, incapaz: false,
-      rAntes: 9000, rAtual: 9000, morad: 2, desp: 5200, trat: 200, div: 400, reserva: 20000,
-      dias: 5
-    })
-  ];
-
-  var pacientes = clone(PACIENTES_BASE);
-  var atual = pacientes[0];
-
-  /* ---------- premissas ---------- */
-  var PESOS_IDS = [
-    ['renda', 'in-w-renda'], ['perda', 'in-w-perda'], ['desp', 'in-w-desp'],
-    ['div', 'in-w-div'], ['folego', 'in-w-folego'], ['cuid', 'in-w-cuid']
-  ];
-
-  function premissas() {
-    var pesos = {};
-    var soma = 0;
-    PESOS_IDS.forEach(function (x) {
-      var v = Math.max(0, num(x[1], 0));
-      pesos[x[0]] = v;
-      soma += v;
-    });
-    PESOS_IDS.forEach(function (x) {
-      pesos[x[0]] = soma > 0 ? pesos[x[0]] / soma : 1 / PESOS_IDS.length;
-    });
+  function pesos() {
     return {
-      sm: Math.max(1, num('in-sm', 1621)),
-      pesos: pesos,
-      alto: num('in-alto', 60),
-      medio: num('in-medio', 35),
-      refMeses: Math.max(1, num('in-ref', 6)),
-      validade: Math.max(0, num('in-validade', 12)),
-      minSem: Math.max(0, num('in-min-sem', 90)),
-      minCom: Math.max(0, num('in-min-com', 30))
+      b0: num('w-b0', W_PADRAO.b0), hist: num('w-hist', W_PADRAO.hist),
+      antec: num('w-antec', W_PADRAO.antec), desloc: num('w-desloc', W_PADRAO.desloc),
+      transp: num('w-transp', 1), tipo: num('w-tipo', 1), conf: num('w-conf', 1)
     };
   }
-
-  /* ---------- 7.2 identificador de direitos ---------- */
-  function regraFgts(p) {
-    var base = 'Lei 8.036/1990, art. 20 (incisos XI, XIII, XIV e XXII); página da Caixa sobre saque por doença grave.';
-    var r = { id: 'fgts', base: base, nivel: 'nao', motivo: '', passos: [] };
-    if (p.saldo <= 0) {
-      r.motivo = 'Sem saldo de FGTS na conta (vínculo informal, MEI ou saldo já retirado).';
-      r.passos = ['Conferir no app FGTS se existe saldo em contas de vínculos anteriores.'];
-      return r;
-    }
-    if (p.dx === 'cancer') {
-      r.nivel = 'enq';
-      r.motivo = 'Neoplasia maligna do titular ou de dependente é hipótese própria da lei e não exige estágio terminal.';
-    } else if (p.dx === 'hiv') {
-      r.nivel = 'enq';
-      r.motivo = 'HIV do titular ou de dependente é hipótese própria da lei e não exige estágio terminal.';
-    } else if (p.dx === 'terminal') {
-      r.nivel = 'enq';
-      r.motivo = 'Exige atestado que diga expressamente que a pessoa está em estágio terminal, com CID.';
-    } else if (p.dx === 'rara') {
-      r.nivel = 'ver';
-      r.motivo = 'A lei prevê doença rara reconhecida pelo Ministério da Saúde. Conferir se o diagnóstico consta e qual o regulamento.';
-    } else {
-      r.nivel = 'ver';
-      r.motivo = 'Fora da lista da lei. A Caixa tende a negar. Há decisões judiciais favoráveis (o STJ trata a lista como exemplificativa), e o juiz pode exigir prova da necessidade do saldo. Via judicial.';
-    }
-    r.passos = r.nivel === 'ver' && p.dx === 'outra'
-      ? ['Reunir laudo detalhado e prova da necessidade do saldo.', 'Encaminhar à Defensoria ou a assistência jurídica gratuita se a Caixa negar.']
-      : ['Obter o relatório médico no formulário da Caixa e o exame comprobatório.', 'Pedir o saque pelo app FGTS (Saques, Solicitar saque, Doença grave).'];
-    return r;
+  function limiares() {
+    var alto = clamp(num('in-alto', 40), 1, 99) / 100;
+    var medio = clamp(num('in-medio', 20), 1, 99) / 100;
+    if (medio > alto) { medio = alto; }
+    return { alto: alto, medio: medio };
   }
-
-  function regraInss(p) {
-    var base = 'Lei 8.213/1991 (arts. 15, 25 e 59); orientações do INSS. Regra simplificada.';
-    var r = { id: 'inss', base: base, nivel: 'nao', motivo: '', passos: [] };
-    if (p.aposent) {
-      r.nivel = 'na';
-      r.motivo = 'Já recebe aposentadoria. Conferir no INSS se há acúmulo possível.';
-      return r;
-    }
-    if (!p.titular) {
-      r.nivel = 'na';
-      r.motivo = 'O auxílio é do segurado incapacitado. Aqui o doente é dependente.';
-      return r;
-    }
-    if (p.vinculo === 'informal') {
-      r.motivo = 'Sem contribuição não há qualidade de segurado. Avaliar o BPC.';
-      return r;
-    }
-    var ativo = p.vinculo === 'clt' || p.vinculo === 'contrib';
-    var graca = 12 + (p.contribMeses >= 120 ? 12 : 0) + (p.desemp ? 12 : 0);
-    var qualidade = ativo || p.semContrib <= graca;
-    var semCarencia = p.dx === 'cancer' || p.dx === 'hiv';
-    if (!qualidade) {
-      r.motivo = 'Último recolhimento há ' + p.semContrib + ' meses, acima do período de graça simplificado de ' + graca + ' meses. Conferir o CNIS e o art. 15.';
-      r.passos = ['Conferir o CNIS e a data do último recolhimento.'];
-      return r;
-    }
-    if (p.contribMeses < 12 && !semCarencia) {
-      r.nivel = 'ver';
-      r.motivo = 'Menos de 12 contribuições. Depende de a doença constar na lista que dispensa a carência (conferir a lista atual).';
-      r.passos = ['Conferir a lista de doenças que dispensam carência.'];
-      return r;
-    }
-    if (!p.incapaz) {
-      r.nivel = 'nao';
-      r.motivo = 'O benefício depende de incapacidade para o trabalho, não só do diagnóstico. Reavaliar se o afastamento for necessário.';
-      r.passos = ['Pedir ao médico assistente que registre a avaliação da capacidade de trabalho.'];
-      return r;
-    }
-    r.nivel = 'enq';
-    r.motivo = 'Qualidade de segurado' + (ativo ? '' : ' (dentro do período de graça)') + ' e carência atendidas pelos dados informados. Falta provar a incapacidade com laudo atualizado. A perícia decide.';
-    r.passos = ['Montar o laudo atualizado com CID e descrição da incapacidade.', 'Conferir o CNIS antes de pedir pelo Meu INSS.'];
-    return r;
+  function taxaSuavizada(faltas, total) {
+    var f = Math.max(0, faltas), t = Math.max(f, total);
+    return (f + PRIOR_TAXA * PRIOR_FORCA) / (t + PRIOR_FORCA);
   }
-
-  function regraBpc(p, prem) {
-    var r = {
-      id: 'bpc', nivel: 'nao', motivo: '', passos: [],
-      base: 'Lei 8.742/1993 (LOAS), art. 20; cartilha do BPC (INSS). O cálculo do INSS desconsidera alguns benefícios de até 1 salário mínimo, o que o lab não implementa.'
-    };
-    var rpc = p.rAtual / Math.max(1, p.morad);
-    var lim = prem.sm / 4;
-    if (rpc <= lim) {
-      if (p.imped) {
-        r.nivel = 'enq';
-        r.motivo = 'Renda por pessoa de ' + brl(rpc) + ', até 1/4 do salário mínimo (' + brl(lim) + '), e impedimento de longo prazo a ser avaliado pelo INSS (avaliação médica e social).';
-        r.passos = ['Atualizar o CadÚnico (a conferir).', 'Reunir laudo sobre o impedimento de longo prazo.'];
-      } else {
-        r.nivel = 'ver';
-        r.motivo = 'Renda por pessoa dentro do limite de 1/4 do salário mínimo. Falta caracterizar o impedimento de longo prazo.';
-        r.passos = ['Pedir ao médico a descrição do impedimento de longo prazo.'];
-      }
-    } else if (rpc <= prem.sm / 2) {
-      r.nivel = 'ver';
-      r.motivo = 'Renda por pessoa entre 1/4 e 1/2 salário mínimo. A lei prevê flexibilização até 1/2 conforme critérios, que dependem de regulamentação. Conferir.';
-      r.passos = ['Conferir os critérios atuais de flexibilização do limite de renda.'];
-    } else {
-      r.motivo = 'Renda por pessoa de ' + brl(rpc) + ', acima de 1/2 salário mínimo.';
-    }
-    return r;
-  }
-
-  function regraIr(p) {
-    var r = {
-      id: 'ir', nivel: 'na', passos: [],
-      base: 'Lei 7.713/1988 (lista de doenças graves para isenção); exigências de laudo a conferir.'
-    };
-    if (!p.aposent) {
-      r.motivo = 'A isenção vale para aposentadoria, pensão ou reforma. Reavaliar se a pessoa se aposentar por incapacidade.';
-      return r;
-    }
-    r.nivel = 'ver';
-    r.motivo = (p.dx === 'cancer' || p.dx === 'hiv')
-      ? 'Neoplasia maligna e AIDS constam da lista de doenças graves para isenção. Exige laudo de serviço médico oficial (conferir exigências atuais).'
-      : 'Conferir se a doença consta da lista de doenças graves para isenção.';
-    r.passos = ['Obter o laudo de serviço médico oficial (a conferir).', 'Apresentar à fonte pagadora do benefício.'];
-    return r;
-  }
-
-  function direitos(p, prem) {
-    return [regraFgts(p), regraInss(p), regraBpc(p, prem), regraIr(p)];
-  }
-
-  /* ---------- 7.3 organizador documental ---------- */
-  function itensDoc(p, d) {
-    var it = [];
-    if (d === 'fgts') {
-      it.push({ k: 'relatorio', nome: 'Relatório Médico de Doenças Graves (formulário da Caixa)', nota: 'Assinatura sobre carimbo ou certificado digital, com CRM do médico assistente. Tem prazo de validade.' });
-      var exame = {
-        cancer: 'Exame anatomopatológico ou histopatológico',
-        hiv: 'Exame de carga viral ou sorologia',
-        terminal: 'Atestado com a expressão "estágio terminal" e o CID',
-        rara: 'Documentação do diagnóstico da doença rara',
-        outra: 'Laudo detalhado e prova da necessidade do saldo (para a ação judicial)'
-      };
-      it.push({ k: 'exame', nome: exame[p.dx], nota: 'Anexar ao pedido.' });
-      it.push({ k: 'identidade', nome: 'Documento de identidade com foto e CPF', nota: '' });
-      it.push({ k: 'ctps', nome: 'Carteira de trabalho ou número do PIS/Pasep', nota: '' });
-      it.push({ k: 'conta', nome: 'Dados da conta bancária do solicitante', nota: '' });
-      if (!p.titular) it.push({ k: 'dependencia', nome: 'Comprovante de dependência (certidão de casamento, nascimento ou guarda)', nota: '' });
-    } else if (d === 'inss') {
-      it.push({ k: 'laudo', nome: 'Laudo ou atestado atualizado com CID e descrição da incapacidade para o trabalho', nota: 'Documento antigo que não prova a incapacidade atual é motivo comum de negativa.' });
-      it.push({ k: 'exames', nome: 'Exames e relatórios que sustentem o laudo', nota: '' });
-      it.push({ k: 'cnis', nome: 'CNIS conferido: vínculos e contribuições sem divergência', nota: 'Divergências no CNIS causam negativas indevidas.' });
-      it.push({ k: 'gov', nome: 'Conta gov.br e acesso ao Meu INSS', nota: '' });
-      if (p.vinculo === 'desligado') it.push({ k: 'deslig', nome: 'Comprovante de desligamento e do último recolhimento', nota: '' });
-    } else if (d === 'bpc') {
-      it.push({ k: 'cad', nome: 'CadÚnico atualizado', nota: 'A conferir.' });
-      it.push({ k: 'renda', nome: 'Comprovação de renda e da composição da família', nota: '' });
-      it.push({ k: 'imped', nome: 'Laudo sobre o impedimento de longo prazo', nota: '' });
-    } else if (d === 'ir') {
-      it.push({ k: 'laudoOficial', nome: 'Laudo de serviço médico oficial', nota: 'A conferir.' });
-      it.push({ k: 'comprov', nome: 'Comprovante de rendimentos da aposentadoria ou pensão', nota: '' });
-    }
-    return it;
-  }
-
-  function estadoDoc(p, d, item, prem) {
-    var est = p.docs[d + ':' + item.k] || 'faltando';
-    if (d === 'fgts' && item.k === 'relatorio' && est === 'pronto' && p.relMeses > prem.validade) {
-      return 'vencido';
-    }
-    return est;
-  }
-
-  function prontidao(p, d, prem) {
-    var itens = itensDoc(p, d);
-    if (!itens.length) return { pct: 0, prontos: 0, total: 0, pend: [], vencidos: 0 };
-    var prontos = 0;
-    var pend = [];
-    var venc = 0;
-    itens.forEach(function (it) {
-      var e = estadoDoc(p, d, it, prem);
-      if (e === 'pronto') prontos++;
-      else pend.push(it.nome);
-      if (e === 'vencido') venc++;
-    });
-    return { pct: Math.round(100 * prontos / itens.length), prontos: prontos, total: itens.length, pend: pend, vencidos: venc };
-  }
-
-  /* ---------- 7.1 calculadora de vulnerabilidade financeira ---------- */
-  function indice(p, prem, dirs) {
-    var rpc = p.rAtual / Math.max(1, p.morad);
-    var c1 = clamp((2 * prem.sm - rpc) / (1.75 * prem.sm), 0, 1);
-    var perda = p.rAntes > 0 ? clamp((p.rAntes - p.rAtual) / p.rAntes, 0, 1) : 0;
-    var c2 = clamp(perda / 0.5, 0, 1);
-    var rTrat = p.rAtual > 0 ? p.trat / p.rAtual : (p.trat > 0 ? 1 : 0);
-    var c3 = clamp(rTrat / 0.3, 0, 1);
-    var rDiv = p.rAtual > 0 ? p.div / p.rAtual : (p.div > 0 ? 1 : 0);
-    var c4 = clamp(rDiv / 0.3, 0, 1);
-    var deficit = Math.max(0, p.desp + p.trat - p.rAtual);
-    var meses = deficit > 0 ? p.reserva / deficit : Infinity;
-    var fgts = 0;
-    dirs.forEach(function (r) { if (r.id === 'fgts' && r.nivel === 'enq') fgts = p.saldo; });
-    var mesesFgts = deficit > 0 ? (p.reserva + fgts) / deficit : Infinity;
-    var c5 = deficit === 0 ? 0 : 1 - clamp(meses / prem.refMeses, 0, 1);
-    var c6 = p.cuid ? 1 : 0;
-
-    var comps = [
-      { id: 'renda', nome: 'Renda por pessoa', dado: brl(rpc) + ' por pessoa (' + pct(rpc / prem.sm) + ' do salário mínimo)', v: c1 },
-      { id: 'perda', nome: 'Queda de renda da família', dado: 'queda de ' + pct(perda), v: c2 },
-      { id: 'desp', nome: 'Peso do tratamento na renda', dado: 'gasto com tratamento = ' + pct(clamp(rTrat, 0, 9.99)) + ' da renda', v: c3 },
-      { id: 'div', nome: 'Peso das dívidas na renda', dado: 'parcelas = ' + pct(clamp(rDiv, 0, 9.99)) + ' da renda', v: c4 },
-      { id: 'folego', nome: 'Fôlego da reserva', dado: deficit === 0 ? 'sem déficit mensal' : 'reserva cobre ' + fmt(meses, 1) + ' meses do déficit de ' + brl(deficit), v: c5 },
-      { id: 'cuid', nome: 'Cuidador parou de trabalhar', dado: p.cuid ? 'sim' : 'não', v: c6 }
+  /* a: {faltas,total,antec,desloc,transp,tipo,conf}; w: pesos */
+  function risco(a, w) {
+    var taxa = taxaSuavizada(a.faltas, a.total);
+    var fatores = [
+      { nome: 'Histórico de faltas', valor: a.faltas + ' de ' + Math.max(a.total, a.faltas) + ' (suavizada ' + fmtPct(taxa) + ')', c: w.hist * taxa },
+      { nome: 'Antecedência', valor: a.antec + ' dias', c: w.antec * clamp(a.antec, 0, 60) / 60 },
+      { nome: 'Deslocamento', valor: a.desloc + ' min', c: w.desloc * clamp(a.desloc, 0, 180) / 180 },
+      { nome: 'Transporte', valor: TRANSP[a.transp].label, c: w.transp * TRANSP[a.transp].v },
+      { nome: 'Tipo de atendimento', valor: TIPOS[a.tipo].label, c: w.tipo * TIPOS[a.tipo].v },
+      { nome: 'Confirmação', valor: CONF[a.conf].label, c: w.conf * CONF[a.conf].v }
     ];
-    var total = 0;
-    comps.forEach(function (c) {
-      c.peso = prem.pesos[c.id];
-      c.pontos = 100 * c.peso * c.v;
-      total += c.pontos;
-    });
-    var banda = total >= prem.alto ? 'Alta' : (total >= prem.medio ? 'Média' : 'Baixa');
-    return { total: total, banda: banda, comps: comps, rpc: rpc, deficit: deficit, meses: meses, mesesFgts: mesesFgts, fgts: fgts };
+    var z = w.b0, i;
+    for (i = 0; i < fatores.length; i++) { z += fatores[i].c; }
+    return { z: z, prob: sigmoid(z), taxa: taxa, fatores: fatores };
+  }
+  function faixa(prob, lim) {
+    if (prob >= lim.alto) { return 'alta'; }
+    if (prob >= lim.medio) { return 'media'; }
+    return 'baixa';
+  }
+  var FAIXA_NOME = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
+
+  /* 7.2 plano de contato */
+  function plano(fx, transp, hlib) {
+    var itens = [];
+    if (fx === 'alta') {
+      itens.push('D-3: contato ativo (mensagem e, sem resposta, ligação).');
+      itens.push('D-1: segunda confirmação, com opção de remarcar em um toque.');
+      itens.push('H-' + hlib + ': confirmação final. Sem resposta, o horário entra em pré-oferta à fila.');
+    } else if (fx === 'media') {
+      itens.push('D-2: confirmação ativa por mensagem.');
+      itens.push('H-' + hlib + ': confirmação final.');
+    } else {
+      itens.push('D-1: lembrete simples com o botão "não vou conseguir ir".');
+    }
+    if (fx !== 'baixa' && transp !== 'proprio') {
+      itens.push('Perguntar se há barreira de transporte e encaminhar ao apoio disponível (módulo futuro, D8).');
+    }
+    return itens;
   }
 
-  /* ---------- análise completa de um paciente ---------- */
-  function analisa(p, prem) {
-    var dirs = direitos(p, prem);
-    var ind = indice(p, prem, dirs);
-    var aplic = dirs.filter(function (r) { return r.nivel === 'enq' || r.nivel === 'ver'; });
-    var pront = {};
-    var venc = 0;
-    var pendTotal = 0;
-    dirs.forEach(function (r) {
-      if (r.nivel === 'enq' || r.nivel === 'ver') {
-        pront[r.id] = prontidao(p, r.id, prem);
-        venc += pront[r.id].vencidos;
-        pendTotal += pront[r.id].pend.length;
-      }
-    });
-    var enq = dirs.filter(function (r) { return r.nivel === 'enq'; });
-    var semPedido = enq.length > 0 && p.dias > 14 && enq.every(function (r) { return p.etapas[r.id] === 'nao_iniciado'; });
-    var negado = dirs.filter(function (r) { return p.etapas[r.id] === 'negado'; });
-    var prioridade = ind.total + (venc > 0 ? 15 : 0) + (semPedido ? 10 : 0) + (negado.length ? 10 : 0);
-    var proxima = proximaAcao(p, dirs, pront);
-    return { p: p, dirs: dirs, ind: ind, aplic: aplic, enq: enq, pront: pront, venc: venc, pendTotal: pendTotal,
-      semPedido: semPedido, negado: negado, prioridade: prioridade, proxima: proxima };
-  }
-
-  function proximaAcao(p, dirs, pront) {
-    var i;
-    for (i = 0; i < dirs.length; i++) {
-      if (p.etapas[dirs[i].id] === 'negado') {
-        return 'Avaliar recurso ou Defensoria: ' + direitoNome(dirs[i].id);
-      }
-    }
-    var cand = dirs.filter(function (r) { return r.nivel === 'enq' || r.nivel === 'ver'; });
-    if (!cand.length) return 'Sem direito identificado: revisar os dados ou encaminhar ao serviço social.';
-    /* Primeiro o que ainda não foi protocolado (direitos que enquadram antes dos a verificar),
-       depois o acompanhamento do que já está protocolado. */
-    var abertos = cand.filter(function (r) {
-      var et = p.etapas[r.id];
-      return et !== 'protocolado' && et !== 'concluido';
-    });
-    abertos.sort(function (a, b) { return NIVEIS[a.nivel].ordem - NIVEIS[b.nivel].ordem; });
-    if (abertos.length) {
-      var r = abertos[0];
-      var pr = pront[r.id];
-      if (pr && pr.pct < 100) return 'Completar documentos (' + pr.pend.length + ' pendentes): ' + direitoNome(r.id);
-      return 'Protocolar: ' + direitoNome(r.id);
-    }
-    for (i = 0; i < cand.length; i++) {
-      if (p.etapas[cand[i].id] === 'protocolado') return 'Acompanhar: ' + direitoNome(cand[i].id);
-    }
-    return 'Encerrar o acompanhamento.';
-  }
-
-  /* ---------- formulário do paciente em foco ---------- */
-  var CAMPOS = [
-    { id: 'f-dx', key: 'dx', t: 's' }, { id: 'f-titular', key: 'titular', t: 'tit' },
-    { id: 'f-vinculo', key: 'vinculo', t: 's' }, { id: 'f-contrib', key: 'contribMeses', t: 'n' },
-    { id: 'f-semcontrib', key: 'semContrib', t: 'n' }, { id: 'f-desemp', key: 'desemp', t: 'c' },
-    { id: 'f-saldo', key: 'saldo', t: 'n' }, { id: 'f-incapaz', key: 'incapaz', t: 'c' },
-    { id: 'f-imped', key: 'imped', t: 'c' }, { id: 'f-aposent', key: 'aposent', t: 'c' },
-    { id: 'f-rantes', key: 'rAntes', t: 'n' }, { id: 'f-ratual', key: 'rAtual', t: 'n' },
-    { id: 'f-morad', key: 'morad', t: 'n' }, { id: 'f-desp', key: 'desp', t: 'n' },
-    { id: 'f-trat', key: 'trat', t: 'n' }, { id: 'f-div', key: 'div', t: 'n' },
-    { id: 'f-reserva', key: 'reserva', t: 'n' }, { id: 'f-cuid', key: 'cuid', t: 'c' },
-    { id: 'f-dias', key: 'dias', t: 'n' }, { id: 'f-relmeses', key: 'relMeses', t: 'n' }
+  var EXEMPLOS = [
+    { hora: '07:30', nome: 'Paciente 01', tipo: 'consulta', faltas: 0, total: 8, antec: 10, desloc: 20, transp: 'proprio', conf: 'nao' },
+    { hora: '08:00', nome: 'Paciente 02', tipo: 'retorno', faltas: 1, total: 5, antec: 14, desloc: 45, transp: 'publico', conf: 'confirmou' },
+    { hora: '08:30', nome: 'Paciente 03', tipo: 'consulta', faltas: 2, total: 6, antec: 30, desloc: 90, transp: 'prefeitura', conf: 'nao' },
+    { hora: '09:00', nome: 'Paciente 04', tipo: 'exame', faltas: 2, total: 5, antec: 40, desloc: 110, transp: 'prefeitura', conf: 'nao' },
+    { hora: '09:30', nome: 'Paciente 05', tipo: 'cirurgia', faltas: 0, total: 3, antec: 21, desloc: 60, transp: 'publico', conf: 'confirmou' },
+    { hora: '10:00', nome: 'Paciente 06', tipo: 'consulta', faltas: 0, total: 3, antec: 35, desloc: 120, transp: 'prefeitura', conf: 'nao' },
+    { hora: '10:30', nome: 'Paciente 07', tipo: 'retorno', faltas: 0, total: 10, antec: 7, desloc: 15, transp: 'proprio', conf: 'confirmou' },
+    { hora: '11:00', nome: 'Paciente 08', tipo: 'exame', faltas: 1, total: 4, antec: 25, desloc: 70, transp: 'publico', conf: 'nao' },
+    { hora: '11:30', nome: 'Paciente 09', tipo: 'consulta', faltas: 3, total: 7, antec: 45, desloc: 80, transp: 'publico', conf: 'nao' },
+    { hora: '13:00', nome: 'Paciente 10', tipo: 'retorno', faltas: 0, total: 4, antec: 12, desloc: 30, transp: 'proprio', conf: 'nao' }
   ];
 
-  function carregaCampos() {
-    CAMPOS.forEach(function (c) {
-      var e = $(c.id);
-      if (!e) return;
-      var v = atual[c.key];
-      if (c.t === 'c') e.checked = !!v;
-      else if (c.t === 'tit') e.value = v ? 'titular' : 'dependente';
-      else e.value = v;
-    });
+  function lerAgendamento() {
+    return {
+      faltas: Math.max(0, num('r-faltas', 0)), total: Math.max(0, num('r-total', 0)),
+      antec: Math.max(0, num('r-antec', 0)), desloc: Math.max(0, num('r-desloc', 0)),
+      transp: $('r-transp') ? $('r-transp').value : 'proprio',
+      tipo: $('r-tipo') ? $('r-tipo').value : 'consulta',
+      conf: $('r-conf') ? $('r-conf').value : 'nao'
+    };
+  }
+  function carregarExemplo(i) {
+    var e = EXEMPLOS[i];
+    if (!e) { return; }
+    $('r-faltas').value = e.faltas; $('r-total').value = e.total;
+    $('r-antec').value = e.antec; $('r-desloc').value = e.desloc;
+    $('r-transp').value = e.transp; $('r-tipo').value = e.tipo; $('r-conf').value = e.conf;
   }
 
-  function leCampo(c) {
-    var e = $(c.id);
-    if (!e) return;
-    if (c.t === 'c') atual[c.key] = e.checked;
-    else if (c.t === 'tit') atual[c.key] = e.value === 'titular';
-    else if (c.t === 'n') {
-      var v = parseFloat(String(e.value).replace(',', '.'));
-      atual[c.key] = isNaN(v) ? 0 : Math.max(0, v);
-    } else atual[c.key] = e.value;
+  function renderRisco() {
+    var w = pesos(), lim = limiares(), a = lerAgendamento();
+    var r = risco(a, w), fx = faixa(r.prob, lim);
+    setText('res-prob', fmtPct(r.prob));
+    setText('res-faixa', FAIXA_NOME[fx]);
+    setText('res-taxa', fmtPct(r.taxa));
+    var el = $('res-faixa');
+    if (el) { el.className = 'result-num band-' + fx; }
+
+    var html = '<tr><td>Constante (base do modelo)</td><td class="small">-</td><td class="num">' + fmtSign(w.b0, 2) + '</td></tr>', i;
+    for (i = 0; i < r.fatores.length; i++) {
+      html += '<tr><td>' + esc(r.fatores[i].nome) + '</td><td class="small">' + esc(r.fatores[i].valor) +
+        '</td><td class="num">' + fmtSign(r.fatores[i].c, 2) + '</td></tr>';
+    }
+    html += '<tr><td><strong>Total (z)</strong></td><td class="small">risco = ' + fmtPct(r.prob, 1) + '</td><td class="num"><strong>' + fmtSign(r.z, 2) + '</strong></td></tr>';
+    if ($('fat-body')) { $('fat-body').innerHTML = html; }
+
+    var hlib = Math.max(1, Math.round(num('in-hlib', 3)));
+    var itens = plano(fx, a.transp, hlib), li = '';
+    for (i = 0; i < itens.length; i++) { li += '<li>' + esc(itens[i]) + '</li>'; }
+    if ($('plano-lista')) { $('plano-lista').innerHTML = li; }
+    setText('plano-intro', 'Faixa ' + FAIXA_NOME[fx].toLowerCase() + ': o contato é mais intenso quanto maior o risco. O sistema orienta o contato e não muda a prioridade clínica (RR1).');
+    renderAgenda();
   }
 
-  /* ---------- renderização ---------- */
-  function pill(nivel) {
-    var n = NIVEIS[nivel];
-    return el('span', 'pill ' + n.cls, n.rotulo);
+  function renderAgenda() {
+    var w = pesos(), lim = limiares(), hlib = Math.max(1, Math.round(num('in-hlib', 3)));
+    var linhas = [], i, esperado = 0, altas = 0;
+    for (i = 0; i < EXEMPLOS.length; i++) {
+      var e = EXEMPLOS[i], r = risco(e, w), fx = faixa(r.prob, lim);
+      esperado += r.prob;
+      if (fx === 'alta') { altas++; }
+      linhas.push({ e: e, r: r, fx: fx });
+    }
+    linhas.sort(function (x, y) { return y.r.prob - x.r.prob; });
+    var html = '';
+    for (i = 0; i < linhas.length; i++) {
+      var l = linhas[i], acao = plano(l.fx, l.e.transp, hlib)[0];
+      html += '<tr><td>' + l.e.hora + '</td><td>' + esc(l.e.nome) + '</td><td>' + esc(TIPOS[l.e.tipo].label) +
+        '</td><td class="num">' + fmtPct(l.r.prob) + '</td><td><span class="band-' + l.fx + '">' + FAIXA_NOME[l.fx] +
+        '</span></td><td class="small">' + esc(acao) + '</td></tr>';
+    }
+    if ($('ag-body')) { $('ag-body').innerHTML = html; }
+    setText('ag-n', String(EXEMPLOS.length));
+    setText('ag-alta', String(altas));
+    setText('ag-esp', fmtNum(esperado, 1));
   }
 
-  function bandaCls(b) { return b === 'Alta' ? 'band-alta' : (b === 'Média' ? 'band-media' : 'band-baixa'); }
+  /* ---------- 7.3 oferta à fila ---------- */
+  var FILA = [
+    { nome: 'Paciente A', esp: 'Cardiologia', classe: 1, dias: 120, min: 40, acc: 0.7, aut: true },
+    { nome: 'Paciente B', esp: 'Cardiologia', classe: 2, dias: 200, min: 150, acc: 0.6, aut: true },
+    { nome: 'Paciente C', esp: 'Cardiologia', classe: 2, dias: 310, min: 30, acc: 0.5, aut: false },
+    { nome: 'Paciente D', esp: 'Cardiologia', classe: 3, dias: 400, min: 25, acc: 0.4, aut: true },
+    { nome: 'Paciente E', esp: 'Cardiologia', classe: 1, dias: 60, min: 90, acc: 0.8, aut: true },
+    { nome: 'Paciente F', esp: 'Cardiologia', classe: 3, dias: 90, min: 20, acc: 0.3, aut: false },
+    { nome: 'Paciente G', esp: 'Oftalmologia', classe: 2, dias: 250, min: 35, acc: 0.5, aut: true },
+    { nome: 'Paciente H', esp: 'Oftalmologia', classe: 1, dias: 40, min: 60, acc: 0.7, aut: true },
+    { nome: 'Paciente I', esp: 'Oftalmologia', classe: 3, dias: 500, min: 200, acc: 0.6, aut: false },
+    { nome: 'Paciente J', esp: 'Oftalmologia', classe: 2, dias: 150, min: 15, acc: 0.35, aut: true }
+  ];
 
-  function renderIndice(a, prem) {
-    var ind = a.ind;
-    $('res-indice').textContent = Math.round(ind.total);
-    var rb = $('res-banda');
-    rb.textContent = ind.banda;
-    rb.className = 'result-num ' + bandaCls(ind.banda);
-    $('res-folego').textContent = ind.meses === Infinity ? 'sem déficit' : fmt(ind.meses, 1);
-    $('res-folego-fgts').textContent = ind.mesesFgts === Infinity ? 'sem déficit' : fmt(ind.mesesFgts, 1);
-    $('res-rpc').textContent = brl(ind.rpc);
-    var body = $('comp-body');
-    body.innerHTML = '';
-    ind.comps.forEach(function (c) {
-      var tr = document.createElement('tr');
-      tr.appendChild(el('td', '', c.nome));
-      tr.appendChild(el('td', '', c.dado));
-      var tdm = el('td', '');
-      var m = el('span', 'meter');
-      var f = el('span', 'meter-fill');
-      f.style.width = Math.round(c.v * 100) + '%';
-      m.appendChild(f);
-      tdm.appendChild(m);
-      tdm.appendChild(el('span', 'small', ' ' + pct(c.v)));
-      tr.appendChild(tdm);
-      tr.appendChild(el('td', 'num', pct(c.peso)));
-      tr.appendChild(el('td', 'num', fmt(c.pontos, 1)));
-      body.appendChild(tr);
-    });
-  }
-
-  function renderDireitos(a, prem) {
-    var p = a.p;
-    var body = $('rights-body');
-    body.innerHTML = '';
-    a.dirs.forEach(function (r) {
-      var tr = document.createElement('tr');
-      tr.appendChild(el('td', '', direitoNome(r.id)));
-      var tdn = el('td', '');
-      tdn.appendChild(pill(r.nivel));
-      tr.appendChild(tdn);
-      var tdm = el('td', '', r.motivo);
-      if (r.passos && r.passos.length && (r.nivel === 'enq' || r.nivel === 'ver')) {
-        var ul = el('ul', 'steps-mini');
-        r.passos.forEach(function (s) { ul.appendChild(el('li', '', s)); });
-        tdm.appendChild(ul);
+  /* modo: publico|privado. Retorna {linhas, chance, ofertas, primeiro} */
+  function ofertar(modo, esp, horas, resp, par) {
+    var disp = horas * 60, cand = [], fora = [], i;
+    par = Math.max(1, Math.round(par));
+    for (i = 0; i < FILA.length; i++) {
+      var f = FILA[i];
+      if (f.esp !== esp) { continue; }
+      if (modo === 'privado' && !f.aut) { fora.push({ f: f, sit: 'Fora: sem autorização do convênio', ok: false }); }
+      else { cand.push(f); }
+    }
+    cand.sort(function (a, b) {
+      if (modo === 'publico') {
+        if (a.classe !== b.classe) { return a.classe - b.classe; }
+        return b.dias - a.dias;
       }
-      tr.appendChild(tdm);
-      tr.appendChild(el('td', 'small', r.base));
-      var tde = el('td', '');
-      if (r.nivel === 'enq' || r.nivel === 'ver') {
-        var sel = document.createElement('select');
-        sel.setAttribute('aria-label', 'Etapa: ' + direitoNome(r.id));
-        ETAPAS.forEach(function (x) { sel.appendChild(opt(x[0], x[1])); });
-        sel.value = p.etapas[r.id];
-        sel.addEventListener('change', function () { p.etapas[r.id] = sel.value; render(); });
-        tde.appendChild(sel);
-      } else tde.appendChild(el('span', 'muted', '—'));
-      tr.appendChild(tde);
-      var tdp = el('td', 'num');
-      if (a.pront[r.id]) tdp.textContent = a.pront[r.id].pct + '%';
-      else tdp.textContent = '—';
-      tr.appendChild(tdp);
-      body.appendChild(tr);
+      if (b.dias !== a.dias) { return b.dias - a.dias; }
+      return a.classe - b.classe;
     });
-    var al = $('rights-alert');
-    var msgs = [];
-    if (a.venc > 0) msgs.push('Há documento vencido: o relatório médico tem ' + p.relMeses + ' meses e a validade configurada é de ' + prem.validade + '.');
-    if (a.negado.length) msgs.push('Há pedido negado: avaliar recurso ou Defensoria antes de desistir.');
-    al.textContent = msgs.join(' ');
-    al.hidden = msgs.length === 0;
+    var linhas = [], semFalha = 1, ofertas = 0, primeiro = '-';
+    for (i = 0; i < cand.length; i++) {
+      var c = cand[i], rodada = Math.floor(i / par), fim = (rodada + 1) * resp;
+      var chega = fim + c.min, ok = chega <= disp;
+      if (ok) {
+        ofertas++; semFalha *= (1 - c.acc);
+        if (primeiro === '-') { primeiro = c.nome; }
+        linhas.push({ f: c, ok: true, sit: 'Oferta na rodada ' + (rodada + 1) + ' (responde até ' + fim + ' min; chega em ' + chega + ' min)' });
+      } else {
+        linhas.push({ f: c, ok: false, sit: 'Fora: não chegaria a tempo (' + chega + ' min > ' + Math.round(disp) + ' min)' });
+      }
+    }
+    return { linhas: linhas.concat(fora), chance: ofertas ? 1 - semFalha : 0, ofertas: ofertas, primeiro: primeiro };
   }
 
-  function renderDocs(a, prem) {
-    var p = a.p;
-    var body = $('docs-body');
-    body.innerHTML = '';
-    var tem = false;
-    a.dirs.forEach(function (r) {
-      if (r.nivel !== 'enq' && r.nivel !== 'ver') return;
-      itensDoc(p, r.id).forEach(function (it) {
-        tem = true;
-        var tr = document.createElement('tr');
-        tr.appendChild(el('td', '', direitoNome(r.id)));
-        tr.appendChild(el('td', '', it.nome));
-        tr.appendChild(el('td', 'small', it.nota));
-        var td = el('td', '');
-        var sel = document.createElement('select');
-        sel.setAttribute('aria-label', 'Situação: ' + it.nome);
-        ESTADOS_DOC.forEach(function (x) { sel.appendChild(opt(x[0], x[1])); });
-        var efetivo = estadoDoc(p, r.id, it, prem);
-        sel.value = efetivo;
-        sel.addEventListener('change', function () { p.docs[r.id + ':' + it.k] = sel.value; render(); });
-        td.appendChild(sel);
-        if (efetivo === 'vencido' && (p.docs[r.id + ':' + it.k] || '') === 'pronto') {
-          td.appendChild(el('span', 'warn small', ' vencido pela validade'));
-        } else if (efetivo === 'pronto') td.appendChild(el('span', 'ok small', ' ✓'));
-        tr.appendChild(td);
-        body.appendChild(tr);
-      });
-    });
-    if (!tem) {
-      var tr0 = document.createElement('tr');
-      var td0 = el('td', 'muted', 'Nenhum direito com enquadramento ou a verificar para este paciente.');
-      td0.colSpan = 4;
-      tr0.appendChild(td0);
-      body.appendChild(tr0);
+  function renderFila() {
+    var modo = $('v-modo') ? $('v-modo').value : 'publico';
+    var esp = $('v-esp') ? $('v-esp').value : 'Cardiologia';
+    var r = ofertar(modo, esp, Math.max(0.5, num('v-horas', 5)), Math.max(1, num('v-resp', 20)), num('v-par', 1));
+    setText('v-chance', fmtPct(r.chance));
+    setText('v-ofertas', String(r.ofertas));
+    setText('v-primeiro', r.primeiro);
+    var html = '', i;
+    for (i = 0; i < r.linhas.length; i++) {
+      var l = r.linhas[i];
+      html += '<tr><td>' + esc(l.f.nome) + '</td><td>' + l.f.classe + '</td><td class="num">' + l.f.dias +
+        '</td><td class="num">' + l.f.min + '</td><td class="num">' + Math.round(l.f.acc * 100) +
+        '</td><td class="small ' + (l.ok ? 'ok' : 'muted') + '">' + esc(l.sit) + '</td></tr>';
+    }
+    if ($('v-body')) { $('v-body').innerHTML = html; }
+    var al = $('v-alerta');
+    if (al) {
+      if (r.ofertas === 0) {
+        al.hidden = false;
+        al.textContent = 'Ninguém consegue chegar a tempo: o horário provavelmente não será reocupado. O aviso precisa vir mais cedo, e é isso que a confirmação ativa busca.';
+      } else { al.hidden = true; al.textContent = ''; }
     }
   }
 
-  var filtroBanda = 'todas';
-
-  function renderPainel(prem) {
-    var analises = pacientes.map(function (p) { return analisa(p, prem); });
-    analises.sort(function (x, y) {
-      return y.prioridade - x.prioridade || (x.p.nome < y.p.nome ? -1 : 1);
-    });
-    var body = $('panel-body');
-    body.innerHTML = '';
-    var lista = analises.filter(function (a) { return filtroBanda === 'todas' || a.ind.banda === filtroBanda; });
-    lista.forEach(function (a) {
-      var tr = document.createElement('tr');
-      if (a.p === atual) tr.className = 'row-focus';
-      tr.appendChild(el('td', '', a.p.nome));
-      var tdi = el('td', 'num');
-      tdi.appendChild(el('span', bandaCls(a.ind.banda), Math.round(a.ind.total) + ' · ' + a.ind.banda));
-      tr.appendChild(tdi);
-      var tdd = el('td', '');
-      if (a.enq.length) tdd.textContent = a.enq.map(function (r) { return direitoNome(r.id).split(' (')[0]; }).join('; ');
-      else tdd.appendChild(el('span', 'muted', 'nenhum enquadra'));
-      tr.appendChild(tdd);
-      var foco = a.enq.length ? a.enq : a.aplic;
-      var prs = foco.map(function (r) { return a.pront[r.id].pct; });
-      var media = prs.length ? Math.round(prs.reduce(function (s, x) { return s + x; }, 0) / prs.length) : null;
-      tr.appendChild(el('td', 'num', media === null ? '—' : media + '%'));
-      var tda = el('td', '');
-      var alertas = [];
-      if (a.venc > 0) alertas.push('documento vencido');
-      if (a.semPedido) alertas.push('sem pedido há ' + a.p.dias + ' dias');
-      if (a.negado.length) alertas.push('pedido negado');
-      if (alertas.length) tda.appendChild(el('span', 'warn', alertas.join('; ')));
-      else tda.appendChild(el('span', 'muted', '—'));
-      tr.appendChild(tda);
-      tr.appendChild(el('td', '', a.proxima));
-      var tdb = el('td', '');
-      var btn = el('button', 'btn', 'Abrir');
-      btn.type = 'button';
-      btn.setAttribute('aria-label', 'Abrir ' + a.p.nome);
-      btn.addEventListener('click', function () {
-        atual = a.p;
-        $('sel-paciente').value = a.p.id;
-        carregaCampos();
-        render();
-        var alvo = $('lab-foco');
-        if (alvo && alvo.scrollIntoView) alvo.scrollIntoView();
-      });
-      tdb.appendChild(btn);
-      tr.appendChild(tdb);
-      body.appendChild(tr);
-    });
-
-    var alta = analises.filter(function (a) { return a.ind.banda === 'Alta'; }).length;
-    var enqTotal = analises.reduce(function (s, a) { return s + a.enq.length; }, 0);
-    var fgtsTotal = analises.reduce(function (s, a) {
-      return s + (a.dirs.some(function (r) { return r.id === 'fgts' && r.nivel === 'enq'; }) ? a.p.saldo : 0);
-    }, 0);
-    var vencTotal = analises.filter(function (a) { return a.venc > 0; }).length;
-    var dossies = analises.reduce(function (s, a) { return s + a.aplic.length; }, 0);
-    var horas = dossies * Math.max(0, prem.minSem - prem.minCom) / 60;
-    $('kpi-n').textContent = analises.length;
-    $('kpi-alta').textContent = alta;
-    $('kpi-enq').textContent = enqTotal;
-    $('kpi-fgts').textContent = brl(fgtsTotal);
-    $('kpi-venc').textContent = vencTotal;
-    $('kpi-horas').textContent = fmt(horas, 1);
+  /* ---------- 7.4 retorno financeiro ---------- */
+  function simular(p) {
+    var faltas = p.agenda * p.falta;
+    var evitadas = faltas * p.evit;
+    var restantes = faltas - evitadas;
+    var reoc = restantes * p.aviso * p.reoc;
+    var rec = evitadas + reoc;
+    var rev = rec * p.valor;
+    var preco = p.fixo + p.fee * rev;
+    return {
+      faltas: faltas, evitadas: evitadas, reoc: reoc, rec: rec, rev: rev, preco: preco,
+      liq: rev - preco, razao: preco > 0 ? rev / preco : 0,
+      filaAbs: p.fila > 0 ? Math.min(1, reoc * 12 / p.fila) : 0
+    };
+  }
+  function lerSim() {
+    return {
+      agenda: Math.max(0, num('s-agenda', 0)),
+      falta: clamp(num('s-falta', 0), 0, 100) / 100,
+      evit: clamp(num('s-evit', 0), 0, 100) / 100,
+      aviso: clamp(num('s-aviso', 0), 0, 100) / 100,
+      reoc: clamp(num('s-reoc', 0), 0, 100) / 100,
+      valor: Math.max(0, num('s-valor', 0)),
+      fixo: Math.max(0, num('s-fixo', 0)),
+      fee: clamp(num('s-fee', 0), 0, 100) / 100,
+      fila: Math.max(0, num('s-fila', 0))
+    };
+  }
+  var PRESETS = {
+    privado: {
+      vals: { 's-agenda': 4000, 's-falta': 20, 's-evit': 15, 's-aviso': 50, 's-reoc': 60, 's-valor': 300, 's-fixo': 3000, 's-fee': 8, 's-fila': 5000 },
+      nota: 'Privado: o valor por atendimento (R$ 300) vem de um exemplo editorial, não de medição; troque pelo ticket real da especialidade. A taxa de falta de 20% é de fonte comercial.'
+    },
+    publico: {
+      vals: { 's-agenda': 4000, 's-falta': 25, 's-evit': 15, 's-aviso': 50, 's-reoc': 60, 's-valor': 90, 's-fixo': 3000, 's-fee': 0, 's-fila': 5000 },
+      nota: 'Público: o valor por atendimento é uma estimativa de produção (hipótese), e o ganho principal é capacidade usada e fila menor, não caixa. Sem parte do recuperado por padrão.'
+    }
+  };
+  function aplicarPreset(nome) {
+    var p = PRESETS[nome], k;
+    for (k in p.vals) { if (Object.prototype.hasOwnProperty.call(p.vals, k) && $(k)) { $(k).value = p.vals[k]; } }
+    setText('s-nota', p.nota);
+    renderSim();
+  }
+  function renderSim() {
+    var p = lerSim(), s = simular(p);
+    setText('s-faltas', fmtInt(s.faltas));
+    setText('s-rec', fmtInt(s.rec));
+    setText('s-rev', fmtBRL(s.rev));
+    setText('s-preco', fmtBRL(s.preco));
+    setText('s-liq', fmtBRL(s.liq));
+    setText('s-roi', fmtNum(s.razao, 1) + '×');
+    setText('s-fila-abs', fmtPct(s.filaAbs, 1));
+    var cen = [['Conservador (efeitos × 0,5)', 0.5], ['Base (efeitos × 1)', 1], ['Otimista (efeitos × 1,4)', 1.4]], html = '', i;
+    for (i = 0; i < cen.length; i++) {
+      var q = {}, k;
+      for (k in p) { if (Object.prototype.hasOwnProperty.call(p, k)) { q[k] = p[k]; } }
+      q.evit = clamp(p.evit * cen[i][1], 0, 1); q.aviso = clamp(p.aviso * cen[i][1], 0, 1); q.reoc = clamp(p.reoc * cen[i][1], 0, 1);
+      var r = simular(q);
+      html += '<tr><td>' + cen[i][0] + '</td><td class="num">' + fmtInt(r.rec) + '</td><td class="num">' + fmtBRL(r.rev) +
+        '</td><td class="num">' + fmtBRL(r.liq) + '</td></tr>';
+    }
+    if ($('s-cen')) { $('s-cen').innerHTML = html; }
   }
 
-  function resumoMarkdown() {
-    var prem = premissas();
-    var a = analisa(atual, prem);
-    var ind = a.ind;
-    var l = [];
-    l.push('# Resumo do caso · ' + atual.nome + ' (dados fictícios)');
-    l.push('');
-    l.push('- Diagnóstico: ' + nomeDe(DX, atual.dx) + (atual.titular ? ' (titular)' : ' (dependente)'));
-    l.push('- Índice de vulnerabilidade: ' + Math.round(ind.total) + ' (' + ind.banda + '). É um índice de priorização de fila, não de elegibilidade.');
-    l.push('- Fôlego da reserva: ' + (ind.meses === Infinity ? 'sem déficit mensal' : fmt(ind.meses, 1) + ' meses') +
-      (ind.fgts > 0 ? '; com o saque do FGTS: ' + fmt(ind.mesesFgts, 1) + ' meses' : ''));
-    l.push('');
-    l.push('## Direitos');
-    a.dirs.forEach(function (r) {
-      l.push('- **' + direitoNome(r.id) + ':** ' + NIVEIS[r.nivel].rotulo + '. ' + r.motivo);
-    });
-    l.push('');
-    l.push('## Pendências de documentos');
-    var algum = false;
-    a.aplic.forEach(function (r) {
-      var pr = a.pront[r.id];
-      if (pr.pend.length) {
-        algum = true;
-        l.push('- ' + direitoNome(r.id) + ' (' + pr.pct + '% pronto): ' + pr.pend.join('; '));
+  /* ---------- 7.5 dados sintéticos ---------- */
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function escolher(rnd, opcoes) {
+    var x = rnd(), acc = 0, i;
+    for (i = 0; i < opcoes.length; i++) { acc += opcoes[i][1]; if (x < acc) { return opcoes[i][0]; } }
+    return opcoes[opcoes.length - 1][0];
+  }
+  function gaussiana(rnd) {
+    var u = Math.max(rnd(), 1e-9), v = rnd();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  function gerar(n, seed, wModelo, lim) {
+    var rnd = mulberry32(seed), dados = [], i, j;
+    for (i = 0; i < n; i++) {
+      var total = 1 + Math.floor(rnd() * 12), faltas = 0;
+      for (j = 0; j < total; j++) { if (rnd() < 0.2) { faltas++; } }
+      var a = {
+        faltas: faltas, total: total, antec: Math.floor(rnd() * 61), desloc: Math.floor(rnd() * rnd() * 181),
+        transp: escolher(rnd, [['proprio', 0.5], ['publico', 0.3], ['prefeitura', 0.2]]),
+        tipo: escolher(rnd, [['consulta', 0.4], ['retorno', 0.3], ['exame', 0.2], ['cirurgia', 0.1]]),
+        conf: escolher(rnd, [['nao', 0.5], ['confirmou', 0.35], ['sem', 0.15]])
+      };
+      var real = risco(a, W_PADRAO).z + 0.8 * gaussiana(rnd);
+      var prev = risco(a, wModelo).prob;
+      dados.push({ prob: prev, falta: rnd() < sigmoid(real) ? 1 : 0, faixa: faixa(prev, lim) });
+    }
+    return dados;
+  }
+  function auc(dados) {
+    var pos = [], neg = [], i, j, soma = 0;
+    for (i = 0; i < dados.length; i++) { (dados[i].falta ? pos : neg).push(dados[i].prob); }
+    if (!pos.length || !neg.length) { return null; }
+    for (i = 0; i < pos.length; i++) {
+      for (j = 0; j < neg.length; j++) {
+        if (pos[i] > neg[j]) { soma += 1; } else if (pos[i] === neg[j]) { soma += 0.5; }
       }
-    });
-    if (!algum) l.push('- Nenhuma pendência registrada.');
-    l.push('');
-    l.push('## Próxima ação');
-    l.push('- ' + a.proxima);
-    l.push('');
-    l.push('_Regras simplificadas. Conferir nas fontes e com a assistente social ou um advogado antes de orientar o paciente._');
-    return l.join('\n') + '\n';
+    }
+    return soma / (pos.length * neg.length);
+  }
+  function avaliar(dados) {
+    var n = dados.length, faltas = 0, i;
+    for (i = 0; i < n; i++) { faltas += dados[i].falta; }
+    var ord = dados.slice().sort(function (a, b) { return b.prob - a.prob; });
+    var k = Math.ceil(n * 0.2), cap = 0;
+    for (i = 0; i < k; i++) { cap += ord[i].falta; }
+    var por = { alta: [0, 0, 0], media: [0, 0, 0], baixa: [0, 0, 0] };
+    for (i = 0; i < n; i++) { var g = por[dados[i].faixa]; g[0]++; g[1] += dados[i].prob; g[2] += dados[i].falta; }
+    return {
+      n: n, base: n ? faltas / n : 0, auc: auc(dados), top: faltas ? cap / faltas : 0,
+      precAlta: por.alta[0] ? por.alta[2] / por.alta[0] : null, por: por
+    };
+  }
+  function renderBacktest() {
+    var n = clamp(Math.round(num('b-n', 600)), 100, 5000), seed = Math.max(1, Math.round(num('b-seed', 42)));
+    var m = avaliar(gerar(n, seed, pesos(), limiares()));
+    setText('b-base', fmtPct(m.base, 1));
+    setText('b-auc', m.auc === null ? '-' : fmtNum(m.auc, 2));
+    setText('b-top', fmtPct(m.top));
+    setText('b-prec', m.precAlta === null ? '-' : fmtPct(m.precAlta));
+    var html = '', ks = ['alta', 'media', 'baixa'], i;
+    for (i = 0; i < ks.length; i++) {
+      var g = m.por[ks[i]];
+      html += '<tr><td><span class="band-' + ks[i] + '">' + FAIXA_NOME[ks[i]] + '</span></td><td class="num">' + g[0] +
+        '</td><td class="num">' + (g[0] ? fmtPct(g[1] / g[0], 1) : '-') + '</td><td class="num">' + (g[0] ? fmtPct(g[2] / g[0], 1) : '-') + '</td></tr>';
+    }
+    if ($('b-body')) { $('b-body').innerHTML = html; }
   }
 
-  function render() {
-    var prem = premissas();
-    var a = analisa(atual, prem);
-    renderIndice(a, prem);
-    renderDireitos(a, prem);
-    renderDocs(a, prem);
-    renderPainel(prem);
-    if (resumoOn) renderResumo();
-  }
-
-  var resumoOn = false;
-  function renderResumo() {
-    var pre = $('resumo-out');
-    pre.textContent = resumoMarkdown();
-    pre.hidden = false;
-    $('resumo-copy').hidden = false;
-  }
-
-  function initLab() {
-    if (!$('sel-paciente')) return;
-    var sel = $('sel-paciente');
-    pacientes.forEach(function (p) { sel.appendChild(opt(p.id, p.nome)); });
-    sel.value = atual.id;
-    DX.forEach(function (x) { $('f-dx').appendChild(opt(x.id, x.nome)); });
-    VINCULOS.forEach(function (x) { $('f-vinculo').appendChild(opt(x.id, x.nome)); });
-    $('f-titular').appendChild(opt('titular', 'Titular da conta'));
-    $('f-titular').appendChild(opt('dependente', 'Dependente do titular'));
-    carregaCampos();
-
-    sel.addEventListener('change', function () {
-      for (var i = 0; i < pacientes.length; i++) if (pacientes[i].id === sel.value) atual = pacientes[i];
-      carregaCampos();
-      render();
-    });
-    CAMPOS.forEach(function (c) {
-      var e = $(c.id);
-      var h = function () { leCampo(c); render(); };
-      e.addEventListener('input', h);
-      e.addEventListener('change', h);
-    });
-    ['in-sm', 'in-alto', 'in-medio', 'in-ref', 'in-validade', 'in-min-sem', 'in-min-com']
-      .concat(PESOS_IDS.map(function (x) { return x[1]; }))
-      .forEach(function (id) {
-        $(id).addEventListener('input', render);
-        $(id).addEventListener('change', render);
-      });
-    $('filtro-banda').addEventListener('change', function () { filtroBanda = $('filtro-banda').value; render(); });
-    $('btn-restaurar').addEventListener('click', function () {
-      var id = atual.id;
-      pacientes = clone(PACIENTES_BASE);
-      atual = pacientes[0];
-      for (var i = 0; i < pacientes.length; i++) if (pacientes[i].id === id) atual = pacientes[i];
-      carregaCampos();
-      render();
-    });
-    $('btn-resumo').addEventListener('click', function () { resumoOn = true; renderResumo(); });
-    $('resumo-copy').addEventListener('click', function () {
-      var msg = $('resumo-msg');
-      copyText(resumoMarkdown()).then(
-        function () { msg.textContent = 'Resumo copiado como Markdown.'; },
-        function () { msg.textContent = 'Não foi possível copiar automaticamente.'; }
-      );
-    });
-    render();
-  }
-
-  /* ---------- Diário de bordo ---------- */
-  var STORAGE_KEY = 'amparo-diario';
-
+  /* ---------- 10 diário ---------- */
+  var STORAGE_KEY = 'vagaviva-diario';
   var BASE_ENTRIES = [
-    { quando: '07/11/2026 09:59', tag: 'Intenção',
-      texto: 'Primeira pergunta: como se preparar para o Hackathon da USP. Resultado: checklist geral (time, ferramentas, MVP, pitch).' },
-    { quando: '07/11/2026 12:01', tag: 'Descoberta',
-      texto: 'Tema do desafio recebido pelo slide: "Saúde para todos: soluções para reduzir barreiras no acesso à saúde". O foco do evento é criar um modelo.' },
-    { quando: '07/11/2026 12:19', tag: 'Decisão',
-      texto: 'Primeiro foco: unidade móvel de prevenção no interior (D1 a D3, depois substituídas). O documento foi organizado em intenção, dores, pesquisa, objetivos, requisitos, métricas, lab de UI, decisões, workflow e diário.' },
-    { quando: '07/11/2026 13:56', tag: 'Decisão',
-      texto: 'Tema afunilado para transporte de pacientes em hemodiálise no interior. Em seguida o time reenquadrou o projeto como empresa de rotas e agendamentos para frotas (RotaSaúde), com prioridade e menor tempo de translocação. Essa fase ficou registrada no histórico do repositório (decisões D10 a D21).' },
-    { quando: '07/11/2026 (tarde)', tag: 'Descoberta',
-      texto: 'O orientador do hackathon avaliou que a ideia de rotas para hemodiálise não era boa e recomendou trocar o tema. O time explorou alternativas: baixo letramento em saúde, acessibilidade (Libras e deficiência visual) e ideias de startup no estilo do Capim, onde o pagador e o balcão precisam ser claros.' },
-    { quando: '07/11/2026 16:38', tag: 'Intenção',
-      texto: 'Nova ideia do time: pessoas que reduzem o trabalho por causa do tratamento deixam de se tratar para ajudar nas contas de casa. Proposta inicial: linha de crédito durante a recuperação.' },
-    { quando: '07/11/2026 16:55', tag: 'Pesquisa',
-      texto: 'Avaliação do crédito: risco de endividar quem perdeu renda e exposição à Lei do Superendividamento. Reformulação para um navegador de renda e direitos. Dado de apoio: cerca de metade dos pedidos de benefício por incapacidade foi negada no 1º semestre de 2026 (fontes divergem em alguns pontos).' },
-    { quando: '07/11/2026 17:15', tag: 'Decisão',
-      texto: 'Foco restrito ao saque do FGTS por diagnóstico, sem a hemodiálise. Correção registrada: a lei lista câncer, HIV, estágio terminal e doenças raras; listas mais longas (como nefropatia grave) vêm de fontes secundárias e não foram confirmadas.' },
-    { quando: '07/11/2026 17:39', tag: 'Decisão',
-      texto: 'Seguradoras descartadas como pagadoras. Motivos: cobertura parcial temporária de até 24 meses para doença preexistente (suspende cirurgias, leitos de alta tecnologia e procedimentos de alta complexidade ligados à doença) e a vedação da LGPD ao uso de dado de saúde para seleção de riscos. Alternativas hipotéticas: empresas, hospitais, programas de apoio ao paciente.' },
-    { quando: '07/11/2026 17:45', tag: 'Descoberta',
-      texto: 'Escalonamento pensado como cunha e plataforma: FGTS, depois INSS, BPC, IR, condições fora da lista, novos canais e eventos de vida. Roteiro por fases registrado em um Claude Doc.' },
-    { quando: '07/11/2026 17:55', tag: 'Intenção',
-      texto: 'Definição do produto: plataforma de assistência social e proteção financeira integrada à jornada do paciente hospitalar. Modelo de negócio: SaaS B2B, com o hospital pagando assinatura. Quatro módulos: calculadora de vulnerabilidade financeira, identificador de direitos, organizador documental e painel da assistente social.' },
-    { quando: '07/11/2026 18:10', tag: 'Entrega',
-      texto: 'Documento reorganizado para o novo produto, mantendo as 10 seções. Lab de UI com os quatro módulos sobre pacientes fictícios. Regras e pesos são hipóteses a validar, e o índice de vulnerabilidade não é validado.' }
+    { when: '07/11/2026 · manhã', tag: 'Intenção', text: 'Início da preparação para o Hackathon USP 2026 (tema: Saúde para todos). Primeira ideia: rotas de unidade móvel de prevenção.' },
+    { when: '07/11/2026 · tarde', tag: 'Decisão', text: 'Funil para hemodiálise e transporte; descobrimos obrigação legal municipal de transporte e reavaliamos a novidade.' },
+    { when: '07/11/2026 · tarde', tag: 'Descoberta', text: 'O orientador não aprovou a ideia de rotas. Exploramos crédito, direitos e FGTS por diagnóstico; seguradoras descartadas como pagadoras.' },
+    { when: '07/11/2026 · 18:10', tag: 'Entrega', text: 'Protótipo Amparo (SaaS de assistência social para hospitais) com lab de vulnerabilidade, direitos, documentos e painel.' },
+    { when: '07/11/2026 · 18:20', tag: 'Descoberta', text: 'O orientador rejeitou o Amparo: o interesse do hospital em pagar e o paciente atendido não estavam claros. Novo critério: quem sofre, quem paga e por que paga.' },
+    { when: '07/11/2026 · 18:35', tag: 'Pesquisa', text: 'Pesquisa de faltas e cancelamentos no SUS e no privado, e de alternativas (retinopatia, telessaúde, crônicos para empresas).' },
+    { when: '07/11/2026 · 18:50', tag: 'Decisão', text: 'Escopo final: prever cancelamento de última hora, confirmar ativamente e reocupar o horário com quem está na fila, para hospitais públicos e privados (D1, D2).' },
+    { when: '07/11/2026 · 19:00', tag: 'Entrega', text: 'Documento reorganizado nas dez seções, com lab de risco, plano de confirmação, oferta à fila, retorno financeiro e teste de métricas.' }
   ];
 
   function lerExtras() {
     try {
       var raw = window.localStorage.getItem(STORAGE_KEY);
       var arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
+      return Object.prototype.toString.call(arr) === '[object Array]' ? arr : [];
     } catch (e) { return []; }
   }
-
-  function gravarExtras(arr) {
-    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); return true; }
-    catch (e) { return false; }
+  function salvarExtras(arr) {
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); return true; } catch (e) { return false; }
   }
-
+  function todasEntradas() {
+    var extras = lerExtras(), out = [], i;
+    for (i = 0; i < BASE_ENTRIES.length; i++) { out.push({ when: BASE_ENTRIES[i].when, tag: BASE_ENTRIES[i].tag, text: BASE_ENTRIES[i].text, added: false }); }
+    for (i = 0; i < extras.length; i++) { out.push({ when: extras[i].when, tag: extras[i].tag, text: extras[i].text, added: true }); }
+    return out;
+  }
+  function renderDiario() {
+    var list = $('diary-list');
+    if (!list) { return; }
+    var es = todasEntradas(), html = '', i;
+    for (i = 0; i < es.length; i++) {
+      html += '<li><span class="when">' + esc(es[i].when) + ' · ' + esc(es[i].tag) + '</span>' +
+        (es[i].added ? ' <span class="added">adicionada</span>' : '') + '<p class="what">' + esc(es[i].text) + '</p></li>';
+    }
+    list.innerHTML = html;
+  }
   function agora() {
     var d = new Date();
-    function pad(n) { return (n < 10 ? '0' : '') + n; }
-    return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    function p(x) { return (x < 10 ? '0' : '') + x; }
+    return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear() + ' · ' + p(d.getHours()) + ':' + p(d.getMinutes());
   }
-
-  function renderDiary() {
-    var list = $('diary-list');
-    if (!list) return;
-    list.innerHTML = '';
-    BASE_ENTRIES.concat(lerExtras()).forEach(function (e, i) {
-      var li = document.createElement('li');
-      var when = document.createElement('div');
-      when.className = 'when';
-      when.textContent = e.quando + ' · ' + e.tag;
-      if (i >= BASE_ENTRIES.length) {
-        var added = document.createElement('span');
-        added.className = 'added';
-        added.textContent = 'adicionada';
-        when.appendChild(added);
+  function diarioMarkdown() {
+    var es = todasEntradas(), out = '# Diário de bordo · Vaga Viva\n\n', i;
+    for (i = 0; i < es.length; i++) { out += '- **' + es[i].when + '** [' + es[i].tag + '] ' + es[i].text + '\n'; }
+    return out;
+  }
+  function copiar(texto, msgId) {
+    function ok() { setText(msgId, 'Copiado.'); }
+    function falha() { setText(msgId, 'Não foi possível copiar. Selecione e copie manualmente.'); }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(ok, falha);
+        return;
       }
-      var what = document.createElement('p');
-      what.className = 'what';
-      what.textContent = e.texto;
-      li.appendChild(when);
-      li.appendChild(what);
-      list.appendChild(li);
-    });
-  }
-
-  function diaryMarkdown() {
-    var linhas = ['# Diário de bordo · Amparo (Hackathon USP 2026)', ''];
-    BASE_ENTRIES.concat(lerExtras()).forEach(function (e) {
-      linhas.push('- **' + e.quando + ' · ' + e.tag + '** — ' + e.texto);
-    });
-    return linhas.join('\n') + '\n';
-  }
-
-  function say(msg) {
-    var e = $('diary-msg');
-    if (e) e.textContent = msg;
-  }
-
-  function copyText(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(text);
-    }
-    return new Promise(function (resolve, reject) {
+    } catch (e) { /* segue para o plano B */ }
+    try {
       var ta = document.createElement('textarea');
-      ta.value = text;
-      ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand('copy') ? resolve() : reject(); }
-      catch (e) { reject(e); }
+      ta.value = texto; document.body.appendChild(ta); ta.select();
+      var done = document.execCommand('copy');
       document.body.removeChild(ta);
-    });
+      if (done) { ok(); } else { falha(); }
+    } catch (e2) { falha(); }
   }
 
-  function initDiary() {
-    if (!$('diary-list')) return;
-    renderDiary();
+  /* ---------- inicialização ---------- */
+  function ligar(ids, fn) {
+    var i, el;
+    for (i = 0; i < ids.length; i++) {
+      el = $(ids[i]);
+      if (el) { el.addEventListener('input', fn); el.addEventListener('change', fn); }
+    }
+  }
+  function iniciar() {
+    var sel = $('sel-ag'), i, html = '';
+    if (sel) {
+      for (i = 0; i < EXEMPLOS.length; i++) {
+        html += '<option value="' + i + '">' + EXEMPLOS[i].hora + ' · ' + EXEMPLOS[i].nome + ' · ' + TIPOS[EXEMPLOS[i].tipo].label + '</option>';
+      }
+      sel.innerHTML = html;
+      sel.value = '2';
+      sel.addEventListener('change', function () { carregarExemplo(parseInt(sel.value, 10)); renderRisco(); });
+    }
+    ligar(['r-faltas', 'r-total', 'r-antec', 'r-desloc', 'r-transp', 'r-tipo', 'r-conf',
+      'w-b0', 'w-hist', 'w-antec', 'w-desloc', 'w-transp', 'w-tipo', 'w-conf', 'in-alto', 'in-medio', 'in-hlib'], function () { renderRisco(); renderBacktest(); });
+    ligar(['v-modo', 'v-esp', 'v-horas', 'v-resp', 'v-par'], renderFila);
+    ligar(['s-agenda', 's-falta', 's-evit', 's-aviso', 's-reoc', 's-valor', 's-fixo', 's-fee', 's-fila'], renderSim);
 
-    $('diary-form').addEventListener('submit', function (ev) {
-      ev.preventDefault();
-      var texto = $('diary-text').value.trim();
-      if (!texto) return;
-      var extras = lerExtras();
-      extras.push({ quando: agora(), tag: $('diary-tag').value, texto: texto });
-      var ok = gravarExtras(extras);
-      $('diary-text').value = '';
-      renderDiary();
-      say(ok ? 'Entrada adicionada (salva neste navegador).' : 'Entrada adicionada, mas o navegador não permitiu salvá-la.');
-    });
+    var b1 = $('btn-preset-priv'), b2 = $('btn-preset-pub'), bt = $('btn-bt');
+    if (b1) { b1.addEventListener('click', function () { aplicarPreset('privado'); }); }
+    if (b2) { b2.addEventListener('click', function () { aplicarPreset('publico'); }); }
+    if (bt) { bt.addEventListener('click', renderBacktest); }
 
-    $('diary-copy').addEventListener('click', function () {
-      copyText(diaryMarkdown()).then(
-        function () { say('Diário copiado como Markdown.'); },
-        function () { say('Não foi possível copiar automaticamente.'); }
-      );
-    });
+    var form = $('diary-form');
+    if (form) {
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var t = $('diary-text'), txt = t ? t.value.replace(/^\s+|\s+$/g, '') : '';
+        if (!txt) { return; }
+        var extras = lerExtras();
+        extras.push({ when: agora(), tag: $('diary-tag').value, text: txt });
+        if (!salvarExtras(extras)) { setText('diary-msg', 'Não foi possível salvar neste navegador.'); }
+        t.value = ''; renderDiario();
+      });
+    }
+    var bc = $('diary-copy'), br = $('diary-reset');
+    if (bc) { bc.addEventListener('click', function () { copiar(diarioMarkdown(), 'diary-msg'); }); }
+    if (br) {
+      br.addEventListener('click', function () { salvarExtras([]); renderDiario(); setText('diary-msg', 'Entradas adicionadas apagadas.'); });
+    }
 
-    $('diary-reset').addEventListener('click', function () {
-      gravarExtras([]);
-      renderDiary();
-      say('Entradas adicionadas foram apagadas.');
-    });
+    carregarExemplo(2);
+    aplicarPreset('privado');
+    renderRisco();
+    renderFila();
+    renderBacktest();
+    renderDiario();
   }
 
-  initLab();
-  initDiary();
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', iniciar); }
+  else { iniciar(); }
+
+  /* exposição mínima para testes */
+  window.VagaViva = { risco: risco, faixa: faixa, ofertar: ofertar, simular: simular, avaliar: avaliar, gerar: gerar, pesos: W_PADRAO, taxaSuavizada: taxaSuavizada };
 })();

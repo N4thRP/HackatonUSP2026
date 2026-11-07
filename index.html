@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Amparo · Assistência social e proteção financeira na jornada do paciente hospitalar · Hackathon USP 2026</title>
-  <meta name="description" content="Documento vivo do projeto Amparo (Hackathon USP 2026): plataforma SaaS B2B para hospitais com calculadora de vulnerabilidade financeira, identificador de direitos, organizador documental e painel da assistente social. Primeiro direito: saque do FGTS por diagnóstico.">
+  <title>Vaga Viva · Predição de cancelamento de última hora e reocupação de horários pela fila · Hackathon USP 2026</title>
+  <meta name="description" content="Documento vivo do projeto Vaga Viva (Hackathon USP 2026): prevê cancelamentos e faltas de última hora, confirma ativamente com o paciente e oferece o horário vago a quem está na fila. Para hospitais privados e públicos.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="topbar">
-    <a class="brand" href="#inicio">Amparo</a>
+    <a class="brand" href="#inicio">Vaga Viva</a>
     <nav aria-label="Seções do documento">
       <a href="#intencao">Intenção</a>
       <a href="#dores">Dores</a>
@@ -30,18 +30,17 @@
     <!-- ABERTURA -->
     <section id="inicio" class="hero">
       <p class="eyebrow">Hackathon USP 2026 · Saúde para todos</p>
-      <h1>Proteção financeira e assistência social dentro da jornada do paciente no hospital.</h1>
+      <h1>Nenhum horário de saúde deve ficar vazio enquanto alguém espera na fila.</h1>
       <p class="lead">
-        Material de produto de uma empresa (simulada) que vende ao hospital, por <strong>assinatura
-        (SaaS B2B)</strong>, uma plataforma que ajuda a assistente social e o paciente a
-        <strong>medir a vulnerabilidade financeira, descobrir os direitos aplicáveis, organizar os
-        documentos e acompanhar os pedidos</strong>. O primeiro direito é o saque do FGTS por
-        diagnóstico.
+        Material de produto de uma empresa (simulada) que vende a hospitais, públicos e privados, um
+        sistema que <strong>prevê quais agendamentos têm risco de cair em cima da hora, confirma
+        ativamente com o paciente e, quando o horário vaga, oferece-o a quem está na fila</strong>.
+        O hospital recupera atendimentos que hoje se perdem, e a fila anda mais rápido.
       </p>
       <p class="hero-note">
-        Status: <strong>em construção</strong>. Pagador, preço, regras e pesos do índice são hipóteses
-        a validar e estão marcados como tal. A plataforma é apoio à assistência social e não substitui
-        a análise de uma assistente social, de um advogado ou a decisão do órgão competente.
+        Status: <strong>em construção</strong>. Preços, taxas de falta do cliente, pesos do modelo e taxa de
+        aceite das ofertas são hipóteses a validar e estão marcados como tal. O sistema apoia o gestor e a recepção e
+        não substitui a regulação nem a decisão clínica. Nome provisório.
       </p>
     </section>
 
@@ -51,191 +50,99 @@
       <h2>Visão, produto e cliente</h2>
 
       <blockquote class="intent">
-        Que nenhum paciente deixe de se tratar, ou se endivide, por não saber que direitos tem nem
-        como pedi-los, e que o hospital tenha como ajudar sem sobrecarregar a assistente social.
+        Que cada horário de consulta, exame ou cirurgia que seria perdido vá para quem está esperando,
+        e que isso seja bom negócio para o hospital que o oferece.
       </blockquote>
 
       <p>
-        O tema do desafio é <em>"Saúde para todos: soluções para reduzir barreiras no acesso à
-        saúde"</em>, e a entrega esperada é principalmente <strong>um modelo</strong>. A barreira que
-        atacamos é financeira e burocrática: ao receber um diagnóstico grave, muitas famílias perdem
-        renda, e os direitos que poderiam aliviar essa perda exigem formulários, laudos e prazos que
-        o paciente raramente conhece.
+        O tema do desafio é <em>"Saúde para todos: soluções para reduzir barreiras no acesso à saúde"</em>, e a
+        entrega esperada é principalmente <strong>um modelo</strong> de negócio que escala. A barreira que atacamos é a
+        <strong>espera</strong>: há gente na fila por especialista, ao mesmo tempo em que uma parte dos horários é
+        perdida por faltas e cancelamentos sem aviso.
       </p>
 
-      <h3>O produto, em quatro módulos</h3>
-      <div class="cards">
-        <article class="card focus">
-          <span class="tag">Módulo 1</span>
-          <h3>CALCULADORA DE VULNERABILIDADE</h3>
-          <p>Índice transparente de 0 a 100 que ordena a fila de atendimento a partir de renda, queda de
-            renda, custo do tratamento, dívidas, reserva e cuidador. Não decide direitos.</p>
-        </article>
-        <article class="card focus">
-          <span class="tag">Módulo 2</span>
-          <h3>IDENTIFICADOR DE DIREITOS</h3>
-          <p>Cruza diagnóstico, vínculo e renda com regras versionadas e mostra, para cada direito, se
-            enquadra, o porquê, a base legal e o próximo passo.</p>
-        </article>
-        <article class="card focus">
-          <span class="tag">Módulo 3</span>
-          <h3>ORGANIZADOR DOCUMENTAL</h3>
-          <p>Checklist por direito, com estado de cada documento, validade do relatório médico e
-            prontidão do dossiê antes de protocolar.</p>
-        </article>
-        <article class="card focus">
-          <span class="tag">Módulo 4</span>
-          <h3>PAINEL DA ASSISTENTE SOCIAL</h3>
-          <p>Fila priorizada, alertas de documento vencido ou pedido parado, próxima ação por caso e
-            indicadores agregados para o hospital.</p>
-        </article>
-        <article class="card">
-          <span class="tag tag-muted">Negócio</span>
-          <h3>ASSINATURA DO HOSPITAL</h3>
-          <p>SaaS B2B. O hospital paga e a plataforma não cobra do paciente nem ganha comissão sobre o
-            benefício. Preço a definir com o piloto.</p>
-        </article>
-      </div>
-
-      <h3>Quem são os usuários e o cliente (hipóteses a validar)</h3>
+      <h3>O teste da startup</h3>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>Papel</th><th>O que faz hoje</th><th>O que precisa do produto</th></tr>
-          </thead>
           <tbody>
-            <tr>
-              <td>Hospital (cliente e pagador)</td>
-              <td>Atende o paciente e, em geral, mantém serviço social.</td>
-              <td>Reduzir o trabalho burocrático, ter visibilidade do que acontece com os casos e mostrar valor da assinatura.</td>
-            </tr>
-            <tr>
-              <td>Assistente social (usuária principal)</td>
-              <td>Conversa com o paciente, orienta sobre direitos e acompanha pedidos.</td>
-              <td>Fila priorizada, regras atualizadas, checklist pronto e alertas.</td>
-            </tr>
-            <tr>
-              <td>Paciente e família</td>
-              <td>Tentam descobrir direitos por conta própria, muitas vezes sem apoio.</td>
-              <td>Orientação clara, em linguagem simples, do que pedir, quando e com quais documentos.</td>
-            </tr>
-            <tr>
-              <td>Médico assistente</td>
-              <td>Emite laudos e relatórios.</td>
-              <td>Saber exatamente o que o documento precisa conter, para não refazê-lo.</td>
-            </tr>
+            <tr><th scope="row">Quem sofre</th><td>O paciente que espera meses na fila por consulta, exame ou cirurgia. Em segundo plano, o paciente que falta por falta de transporte, esquecimento ou horário ruim.</td></tr>
+            <tr><th scope="row">Quem paga</th><td>O hospital ou a clínica: gestor financeiro e gestor de agenda no privado; secretaria de saúde, direção do hospital e regulação no público.</td></tr>
+            <tr><th scope="row">Por que paga</th><td>Privado: cada horário vazio é receita perdida, e a equipe e a estrutura já estão pagas. Público: o horário vazio é capacidade desperdiçada e fila que não anda, e há metas de redução de espera.</td></tr>
+            <tr><th scope="row">Onde entra</th><td>Na agenda e na confirmação de consultas que o hospital já faz (recepção, central de agendamento, WhatsApp).</td></tr>
+            <tr><th scope="row">Como escala</th><td>Por especialidade, por hospital, por rede e por município; depois exames de imagem, laboratórios e centrais de regulação.</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>Escopo inicial e o que o produto não é</h3>
+      <h3>O produto, em três movimentos</h3>
+      <div class="cards">
+        <article class="card focus">
+          <span class="tag">1 · Prever</span>
+          <h3>RISCO DE CANCELAR EM CIMA DA HORA</h3>
+          <p>Para cada agendamento, uma probabilidade explicável de falta ou cancelamento tardio, a partir de histórico,
+            antecedência, deslocamento, tipo de atendimento e resposta à confirmação.</p>
+        </article>
+        <article class="card focus">
+          <span class="tag">2 · Confirmar</span>
+          <h3>CONFIRMAÇÃO ATIVA</h3>
+          <p>O contato é mais intenso onde o risco é maior (dias antes, véspera e poucas horas antes). Quem não vai avisa
+            com um toque, e o horário é liberado a tempo.</p>
+        </article>
+        <article class="card focus">
+          <span class="tag">3 · Reocupar</span>
+          <h3>OFERTA À FILA</h3>
+          <p>Ao vagar, o horário é oferecido a quem está na fila e consegue chegar a tempo, seguindo a regra do serviço
+            (regulação no público, autorização no privado). A primeira aceitação ocupa a vaga.</p>
+        </article>
+      </div>
+
+      <h3>Público e privado: mesmo motor, regras diferentes</h3>
       <div class="two-col">
         <div>
-          <h4>Escopo inicial</h4>
-          <ul class="check">
-            <li>Hospitais que atendem pacientes com câncer e HIV, onde o saque do FGTS tem hipótese própria na lei.</li>
-            <li>Quatro direitos no protótipo: saque do FGTS, auxílio por incapacidade temporária, BPC e isenção de IR.</li>
-            <li>Dados sintéticos e regras simplificadas, para demonstrar o modelo.</li>
+          <h4>Hospitais e clínicas privados</h4>
+          <ul>
+            <li>Ganho direto: receita do atendimento recuperado.</li>
+            <li>Fila: lista de espera própria, filtrada por autorização do convênio.</li>
+            <li>Cobrança: mensalidade e parte do que for recuperado (hipótese).</li>
           </ul>
         </div>
         <div>
-          <h4>O que não é</h4>
-          <ul class="cross">
-            <li>Não é crédito, e não ganha dinheiro com dívida do paciente.</li>
-            <li>Não vende nem compartilha dados de diagnóstico com terceiros.</li>
-            <li>Não indica planos de saúde, e seguradoras não são pagadoras (D28).</li>
-            <li>Não é aconselhamento jurídico, e não garante o deferimento de nenhum pedido.</li>
+          <h4>Hospitais e ambulatórios públicos</h4>
+          <ul>
+            <li>Ganho: capacidade usada, mais produção e fila menor.</li>
+            <li>Fila: segue a ordem da regulação; o sistema sugere e a regulação valida.</li>
+            <li>Cobrança: contrato por serviço ou por município (hipótese a validar).</li>
           </ul>
         </div>
       </div>
+
+      <h3>O que não somos</h3>
+      <ul class="cross">
+        <li>Não somos um sistema que pune quem falta: sem multa ao paciente do SUS e sem queda de prioridade clínica por risco alto.</li>
+        <li>Não somos overbooking disfarçado: o MVP não agenda acima da capacidade.</li>
+        <li>Não somos um lembrete genérico por WhatsApp: o diferencial é prever, escolher a intensidade do contato e fechar o ciclo com a fila.</li>
+      </ul>
     </section>
 
     <!-- 2. DORES -->
     <section id="dores" class="alt">
       <p class="kicker">2 · Dores</p>
       <h2>Quem sente o problema, e como</h2>
-      <p>
-        <span class="badge st-validar">A validar</span>
-        A coluna "Base" mostra o que tem alguma fonte e o que é só hipótese do time. Nenhuma dor foi
-        confirmada em campo ainda (ver perguntas Q1 a Q12).
-      </p>
+      <p>Cada dor aponta para uma pessoa real e para o que ela perde. O status diz o quanto já está sustentado por fonte (seção 3).</p>
 
       <div class="table-wrap">
-        <table>
+        <table class="draft-table">
           <thead>
-            <tr><th>ID</th><th>Quem</th><th>Dor</th><th>Efeito no produto</th><th>Base</th></tr>
+            <tr><th>#</th><th>Quem</th><th>A dor</th><th>O que perde</th><th>Status</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td>P1</td>
-              <td>Paciente e família</td>
-              <td>A renda cai quando a pessoa se afasta do trabalho, e o tratamento e as dívidas continuam.</td>
-              <td>A calculadora mede essa queda e o fôlego da reserva.</td>
-              <td>Estudos de toxicidade financeira em doença renal crônica (Brasil) e em oncologia. Hipótese para o hospital piloto.</td>
-            </tr>
-            <tr>
-              <td>P2</td>
-              <td>Paciente e família</td>
-              <td>Não sabem que direitos têm nem em que ordem pedir.</td>
-              <td>O identificador lista direitos e próximos passos.</td>
-              <td>Hipótese do time.</td>
-            </tr>
-            <tr>
-              <td>P3</td>
-              <td>Paciente e médico</td>
-              <td>O pedido exige documentos específicos (formulário da Caixa, exame comprobatório, assinatura e prazo), e um laudo comum não basta.</td>
-              <td>O organizador dá o checklist exato e controla a validade.</td>
-              <td>Página da Caixa sobre saque por doença grave; auditoria do TCU cita atestados e documentos antigos entre as falhas.</td>
-            </tr>
-            <tr>
-              <td>P4</td>
-              <td>Paciente</td>
-              <td>Pedidos de benefício por incapacidade são negados com frequência, e poucos recorrem.</td>
-              <td>Dossiê completo, alerta de negativa e encaminhamento para recurso ou Defensoria.</td>
-              <td>Cerca de metade dos pedidos por incapacidade foi negada no 1º semestre de 2026 (fontes divergem nos números); o TCU aponta que muitos segurados não recorrem.</td>
-            </tr>
-            <tr>
-              <td>P5</td>
-              <td>Assistente social</td>
-              <td>Tempo gasto em burocracia por caso, com regras que mudam.</td>
-              <td>Checklist pronto e base de regras atualizada pela plataforma.</td>
-              <td>Hipótese a medir no piloto (Q2).</td>
-            </tr>
-            <tr>
-              <td>P6</td>
-              <td>Assistente social</td>
-              <td>Sem visão do conjunto de pacientes: quem está em maior risco, quem tem pedido parado.</td>
-              <td>Painel com fila priorizada e alertas.</td>
-              <td>Hipótese do time.</td>
-            </tr>
-            <tr>
-              <td>P7</td>
-              <td>Médico assistente</td>
-              <td>Não conhece o formulário exigido e refaz o relatório.</td>
-              <td>O organizador mostra o que o documento deve conter.</td>
-              <td>Hipótese a validar (Q5).</td>
-            </tr>
-            <tr>
-              <td>P8</td>
-              <td>Cuidador familiar</td>
-              <td>Reduz ou deixa o trabalho para acompanhar o paciente, e não há benefício direto para ele.</td>
-              <td>A calculadora conta o cuidador como fator de vulnerabilidade.</td>
-              <td>Hipótese do time.</td>
-            </tr>
-            <tr>
-              <td>P9</td>
-              <td>Pessoas sem vínculo formal</td>
-              <td>Sem FGTS e sem contribuição ao INSS, ficam fora do saque e do auxílio por incapacidade.</td>
-              <td>O identificador sinaliza o BPC como caminho a avaliar e declara o limite do produto.</td>
-              <td>Regras de qualidade de segurado e carência do INSS; cartilha do BPC.</td>
-            </tr>
-            <tr>
-              <td>P10</td>
-              <td>Hospital</td>
-              <td>Risco de tratar dado de saúde de forma inadequada e dúvida sobre o que pode orientar.</td>
-              <td>Consentimento, perfis de acesso, métricas agregadas e parecer jurídico.</td>
-              <td>LGPD (dado sensível, art. 11).</td>
-            </tr>
+            <tr><td>P1</td><td>Paciente na fila</td><td>Espera meses por especialista, exame ou cirurgia enquanto horários ficam vazios.</td><td>Saúde, tempo e renda.</td><td>Sustentada (3.1, 3.3)</td></tr>
+            <tr><td>P2</td><td>Paciente que falta</td><td>Falta por transporte, esquecimento, horário inoportuno ou não consegue avisar.</td><td>Perde o lugar e volta ao fim da fila.</td><td>Parcial (3.2)</td></tr>
+            <tr><td>P3</td><td>Gestor do hospital privado</td><td>Horário vazio é custo fixo sem receita; a perda quase não é medida.</td><td>Receita e produtividade.</td><td>Parcial (3.1); validar</td></tr>
+            <tr><td>P4</td><td>Gestor do hospital público e regulação</td><td>Faltas sem aviso desperdiçam oferta limitada e aumentam a fila.</td><td>Capacidade, metas de espera.</td><td>Sustentada (3.1)</td></tr>
+            <tr><td>P5</td><td>Recepção e central de agendamento</td><td>Confirma por telefone, manualmente, e não sabe quem priorizar.</td><td>Horas de trabalho.</td><td>Hipótese (H5)</td></tr>
+            <tr><td>P6</td><td>Médico e equipe</td><td>Ociosidade e agenda irregular; dificuldade de planejar.</td><td>Tempo clínico.</td><td>Hipótese</td></tr>
+            <tr><td>P7</td><td>Paciente da fila</td><td>Não é avisado quando surge vaga e não consegue chegar em poucas horas sem apoio.</td><td>A vaga que surgiu.</td><td>Hipótese (H4)</td></tr>
           </tbody>
         </table>
       </div>
@@ -246,219 +153,107 @@
       <p class="kicker">3 · Pesquisa</p>
       <h2>O que sabemos, o que supomos e o que falta descobrir</h2>
 
-      <h3>3.1 FGTS por diagnóstico (verificado em fontes)</h3>
-      <ul>
-        <li>
-          <strong>Hipóteses da lei:</strong> o art. 20 da Lei 8.036/1990 permite o saque quando o
-          trabalhador ou um dependente tem neoplasia maligna (câncer), é portador do HIV ou está em
-          estágio terminal por doença grave. Câncer e HIV não exigem estágio terminal. Há também uma
-          hipótese para doenças raras reconhecidas pelo Ministério da Saúde, cujo regulamento ainda
-          precisa ser conferido. O saque alcança o saldo de todas as contas, inclusive a do contrato
-          atual.
-        </li>
-        <li>
-          <strong>Documentos:</strong> a Caixa exige o formulário "Relatório Médico de Doenças Graves",
-          assinado sobre carimbo ou com certificado digital, com CRM do médico assistente, mais o
-          exame comprobatório (anatomopatológico no câncer; carga viral ou sorologia no HIV). Uma
-          cartilha acadêmica cita validade de até um ano para o relatório, a confirmar na Caixa. Para
-          dependentes, é preciso comprovar a dependência.
-        </li>
-        <li>
-          <strong>Como pedir:</strong> pelo app FGTS (Saques, Solicitar saque, "Doença Grave, Estágio
-          terminal de vida ou Órtese/Prótese"), informando se o doente é titular ou dependente e
-          anexando os documentos.
-        </li>
-        <li>
-          <strong>Doenças fora da lista:</strong> o STJ entende que o rol do art. 20 é exemplificativo, e há
-          decisões que liberaram o saldo em casos como cardiopatia grave. Mas a Caixa trata as
-          hipóteses como restritas (uma sentença de 2026 menciona a Circular Caixa 1.081/2025), e um
-          acórdão exigiu provar a necessidade do saldo para o tratamento. É um caminho judicial.
-        </li>
-        <li>
-          <strong>Correção importante:</strong> listas mais longas (por exemplo, com nefropatia grave)
-          aparecem em sites e cartilhas, mas não foram confirmadas em fonte oficial e se confundem com
-          a lista de doenças graves da isenção de imposto de renda. O produto parte da lei e da página
-          da Caixa.
-        </li>
-      </ul>
-
-      <h3>3.2 INSS, BPC e IR (verificado em fontes, regras simplificadas no lab)</h3>
-      <ul>
-        <li>
-          <strong>Negativas:</strong> no 1º semestre de 2026 o INSS registrou cerca de 4,3 milhões de
-          indeferimentos, mais que as concessões no período, e 2,76 milhões foram em benefícios por
-          incapacidade. Uma fonte aponta 50,8% de recusa em auxílio-doença e BPC de janeiro a julho, e
-          outra, 53% no grupo de incapacidade. Os números divergem, mas apontam na mesma direção. O TCU
-          identificou negativas manuais sem justificativa válida, inconsistências no CNIS e documentos
-          antigos entre os motivos.
-        </li>
-        <li>
-          <strong>Auxílio por incapacidade temporária:</strong> exige qualidade de segurado, carência de
-          12 contribuições (dispensada para uma lista de doenças, que inclui câncer e AIDS, a conferir)
-          e incapacidade comprovada. A perícia decide a incapacidade, e não o diagnóstico. Desde 2026 há
-          análise documental por até 90 dias em alguns casos.
-        </li>
-        <li>
-          <strong>BPC:</strong> um salário mínimo para pessoa com deficiência (impedimento de longo prazo)
-          ou idosa com 65 anos ou mais, com renda familiar por pessoa de até 1/4 do salário mínimo e
-          avaliação médica e social pelo INSS. A lei prevê flexibilização até 1/2, dependente de
-          regulamentação. O salário mínimo de 2026 usado como referência é R$ 1.621.
-        </li>
-        <li>
-          <strong>Isenção de IR:</strong> a lista de doenças graves da Lei 7.713/1988 vale para rendimentos
-          de aposentadoria, pensão ou reforma, com laudo. Exigências atuais a conferir.
-        </li>
-      </ul>
-
-      <h3>3.3 Evidência sobre navegação de benefícios</h3>
-      <ul>
-        <li>
-          Parcerias entre saúde e direito reportam ganhos financeiros: mais de US$ 700 mil obtidos em um
-          projeto oncológico em Washington e retorno de 319% em um programa rural.
-        </li>
-        <li>
-          O resultado clínico é menos claro: um ensaio randomizado em Boston, com pacientes com câncer, não
-          encontrou efeito da navegação reforçada por apoio jurídico sobre o início do tratamento nem
-          sobre o sofrimento do paciente. Por isso as métricas do produto são de renda e tempo, e não de
-          desfecho clínico.
-        </li>
-      </ul>
-
-      <h3>3.4 Quem paga (hipóteses, não verificadas)</h3>
+      <h3>3.1 Tamanho da perda</h3>
       <div class="table-wrap">
-        <table>
-          <thead><tr><th>Pagador</th><th>Por que pagaria</th><th>Cuidado</th></tr></thead>
+        <table class="draft-table">
+          <thead><tr><th>#</th><th>Achado</th><th>Fonte</th><th>Confiança</th></tr></thead>
           <tbody>
-            <tr>
-              <td>Hospital (escolhido)</td>
-              <td>Reduz trabalho da assistente social, dá visibilidade dos casos e pode melhorar a adesão.</td>
-              <td>Hospital público compra devagar. Filantrópico e privado tendem a decidir mais rápido.</td>
-            </tr>
-            <tr>
-              <td>Empresas (RH)</td>
-              <td>Benefício ao funcionário diagnosticado, cobrado por colaborador.</td>
-              <td>A empresa não pode saber quem usa nem o diagnóstico.</td>
-            </tr>
-            <tr>
-              <td>Programas de apoio ao paciente e ONGs</td>
-              <td>Já financiam apoio ao paciente.</td>
-              <td>Separação clara de qualquer promoção de medicamento.</td>
-            </tr>
-            <tr>
-              <td>Seguradoras (descartadas)</td>
-              <td>Pagariam por leads de diagnóstico.</td>
-              <td>Cobertura parcial temporária de até 24 meses para doença preexistente; a LGPD veda às operadoras o uso de dado de saúde para seleção de riscos (art. 11 §5º). Ver D28.</td>
-            </tr>
+            <tr><td>A1</td><td>No SUS, as faltas em consultas e exames agendados giram em torno de 25% em levantamentos nacionais antigos.</td><td>[2], [3]</td><td>Média (dado antigo)</td></tr>
+            <tr><td>A2</td><td>Campo Largo (PR), 1º semestre de 2026: 26,85% de faltas, 7.172 horários perdidos entre terapias, consultas e exames.</td><td>[1]</td><td>Média (secretaria municipal)</td></tr>
+            <tr><td>A3</td><td>Região metropolitana do Espírito Santo, 2014 a 2016: 38,6% de faltas em consultas especializadas, com desperdício estimado em R$ 3,56 milhões.</td><td>[4]</td><td>Média (estudo acadêmico)</td></tr>
+            <tr><td>A4</td><td>Há variação grande: Santa Maria (RS) teve média anual de 9,4% em consultas especializadas (2016 a 2021). A taxa depende do serviço e da especialidade.</td><td>[5]</td><td>Média</td></tr>
+            <tr><td>A5</td><td>Carreta do programa Agora Tem Especialistas em Mauá: faltas de até 20% em ultrassom; num sábado, 27 de 80 agendados não vieram.</td><td>[6]</td><td>Média (notícia)</td></tr>
+            <tr><td>A6</td><td>Privado: o no-show chega a 32% da agenda em algumas clínicas (software de gestão) e seria de cerca de 20% em hospitais privados (empresa de chatbot, que vende a solução).</td><td>[7], [8]</td><td>Baixa (fonte comercial)</td></tr>
+            <tr><td>A7</td><td>Uma estimativa editorial indica perda de até R$ 144 mil por ano numa clínica de São Paulo com 30 faltas por mês a R$ 300 cada. É conta de exemplo, não medição.</td><td>[9]</td><td>Baixa</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>3.5 O que ainda não sabemos</h3>
+      <h3>3.2 Por que os pacientes faltam</h3>
       <ul>
-        <li>Concorrência: não pesquisamos plataformas semelhantes no Brasil. Alternativas de fato incluem o app FGTS, o Meu INSS, advocacia previdenciária, ONGs e serviços sociais hospitalares.</li>
-        <li>Tamanho do mercado: não há dado confiável de quantos pacientes deixam de pedir o saque ou o benefício.</li>
-        <li>Prazo entre a aprovação do saque e o pagamento, e taxa de recusa administrativa da Caixa por documentação.</li>
-        <li>Se o módulo de direitos se enquadra como informação ou como orientação jurídica.</li>
+        <li>Estudos internacionais e brasileiros listam transporte, comunicação, esquecimento e horários inoportunos como causas frequentes <span class="small">[10]</span>.</li>
+        <li>Revisões sobre lembretes apontam redução de faltas, mas a efetividade varia com o contexto e o canal <span class="small">[11]</span>. Esperamos ganho da confirmação ativa, não um número mágico.</li>
+        <li>A causa importa: quem falta por transporte precisa de ajuda, não só de lembrete (ideia de módulo futuro, D8).</li>
       </ul>
 
-      <h3>3.6 Perguntas de pesquisa</h3>
+      <h3>3.3 O contexto do SUS</h3>
+      <ul>
+        <li>O programa Agora Tem Especialistas credencia hospitais privados e filantrópicos para atender pacientes do SUS e dá crédito financeiro em troca de procedimentos <span class="small">[12]</span>. Quem é chamado vem da fila da regulação; o paciente sem cadastro prévio não tem atendimento direto <span class="small">[13]</span>.</li>
+        <li>Consequência para o produto: no público, a reocupação precisa respeitar a regulação (RR2). Isso é restrição, mas também oportunidade, porque a regulação enfrenta a fila e as faltas.</li>
+      </ul>
+
+      <h3>3.4 Concorrência e alternativas</h3>
+      <p>
+        Existem ferramentas de confirmação e lembrete para clínicas, de software de gestão a empresas de chatbot
+        <span class="small">[7], [8]</span>. <strong>Não mapeamos quais fazem predição, lista de espera ou reocupação.</strong>
+        Isso é prioridade antes do pitch (Q8). A hipótese é que o diferencial está em fechar o ciclo (prever, confirmar e reocupar) e em respeitar regras de fila pública.
+      </p>
+
+      <h3>3.5 Hipóteses</h3>
       <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Pergunta</th><th>Como responder</th></tr></thead>
+        <table class="draft-table">
+          <thead><tr><th>#</th><th>Hipótese</th><th>Como validar</th></tr></thead>
           <tbody>
-            <tr><td>Q1</td><td>Quantos pacientes novos por mês chegam ao hospital piloto e quantos têm FGTS?</td><td>Entrevista com o serviço social.</td></tr>
-            <tr><td>Q2</td><td>Quanto tempo a assistente social gasta por caso hoje?</td><td>Entrevista e observação.</td></tr>
-            <tr><td>Q3</td><td>Quais são os motivos de recusa de saque na Caixa e de negativa no INSS vistos no hospital?</td><td>Entrevista e casos anonimizados.</td></tr>
-            <tr><td>Q4</td><td>Quem recorre e quem desiste?</td><td>Entrevista.</td></tr>
-            <tr><td>Q5</td><td>Os médicos conhecem o formulário da Caixa? Quanto tempo gastam?</td><td>Entrevista com médico assistente.</td></tr>
-            <tr><td>Q6</td><td>Quem decide a compra de software social no hospital e com que orçamento?</td><td>Entrevista com gestão.</td></tr>
-            <tr><td>Q7</td><td>Quais sistemas o hospital já usa (prontuário, ERP) e como integrar?</td><td>Entrevista com TI.</td></tr>
-            <tr><td>Q8</td><td>Que dados o hospital aceita coletar e com qual consentimento?</td><td>Parecer jurídico e encarregado de dados.</td></tr>
-            <tr><td>Q9</td><td>Quantos pacientes há por assistente social, em oncologia?</td><td>Entrevista.</td></tr>
-            <tr><td>Q10</td><td>O índice de vulnerabilidade concorda com o julgamento da assistente social?</td><td>Teste cego com casos anonimizados.</td></tr>
-            <tr><td>Q11</td><td>Qual é o prazo do pagamento do saque após aprovação?</td><td>Caixa e relatos de pacientes.</td></tr>
-            <tr><td>Q12</td><td>A orientação sobre direitos é informação ou aconselhamento jurídico?</td><td>Parecer de advogado e Defensoria.</td></tr>
+            <tr><td>H1</td><td>Gestores aceitam pagar mensalidade mais parte do recuperado se o piloto mostrar horários reocupados.</td><td>Entrevistas com gestores e piloto (Q3)</td></tr>
+            <tr><td>H2</td><td>Grande parte da perda vem de faltas e cancelamentos feitos em cima da hora, não com semanas de antecedência.</td><td>Distribuição do aviso do cancelamento na base real (Q1)</td></tr>
+            <tr><td>H3</td><td>A confirmação ativa reduz as faltas, mais onde o risco é alto.</td><td>Teste com grupo de controle</td></tr>
+            <tr><td>H4</td><td>Há paciente na fila que aceita e chega em poucas horas.</td><td>Taxa de aceite e tempo de chegada em piloto (Q5)</td></tr>
+            <tr><td>H5</td><td>A recepção gasta muito tempo ligando e aceitaria uma lista priorizada.</td><td>Observar a rotina</td></tr>
+            <tr><td>H6</td><td>Um modelo simples com poucos dados de agenda já separa bem quem tende a faltar.</td><td>AUC em base real (M4)</td></tr>
+            <tr><td>H7</td><td>A regulação pública aceita reocupar horários dinamicamente a partir da própria fila.</td><td>Conversa com regulação (Q6)</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>3.7 Hipóteses de negócio</h3>
+      <h3>3.6 Perguntas em aberto</h3>
       <ol>
-        <li><strong>H1:</strong> o hospital paga a assinatura se a plataforma reduzir trabalho e melhorar a adesão.</li>
-        <li><strong>H2:</strong> um dossiê completo aumenta a aprovação na primeira tentativa.</li>
-        <li><strong>H3:</strong> a triagem estruturada identifica pacientes em risco que a conversa não identifica.</li>
-        <li><strong>H4:</strong> assistentes sociais adotam o painel se ele economiza tempo sem tirar a autonomia delas.</li>
-        <li><strong>H5:</strong> manter a base de regras atualizada é uma barreira de entrada.</li>
+        <li><strong>Q1.</strong> Quantas faltas e cancelamentos ocorrem com menos de 24 horas e menos de 4 horas de aviso?</li>
+        <li><strong>Q2.</strong> Que dados de agenda o hospital tem (histórico por paciente, deslocamento, canal de contato)?</li>
+        <li><strong>Q3.</strong> Quanto vale um horário vazio por especialidade e como o hospital quer pagar?</li>
+        <li><strong>Q4.</strong> Qual a base legal e o consentimento adequados para contatar por WhatsApp (LGPD)? Precisa de parecer jurídico.</li>
+        <li><strong>Q5.</strong> Qual a taxa de aceite de uma oferta com 3 a 6 horas de antecedência?</li>
+        <li><strong>Q6.</strong> A regulação e a secretaria aceitam o fluxo de reocupação? Que regras de prioridade se aplicam?</li>
+        <li><strong>Q7.</strong> Cirurgias e exames de preparo têm regras próprias (jejum, preparo, autorização)? Quais entram no piloto?</li>
+        <li><strong>Q8.</strong> Quais concorrentes já fazem predição ou reocupação no Brasil?</li>
+        <li><strong>Q9.</strong> Como integrar com os sistemas de agenda do hospital (API, arquivo ou planilha)?</li>
+        <li><strong>Q10.</strong> Qual o risco de viés (a ajuda ir só a quem responde mais rápido)?</li>
       </ol>
 
-      <details>
-        <summary>3.8 Fontes consultadas</summary>
-        <ol class="sources">
-          <li><a href="https://www.caixa.gov.br/beneficios-trabalhador/fgts/saque-FGTS/doencas-graves/Paginas/default.aspx">Saque do FGTS por doenças graves (Caixa)</a></li>
-          <li><a href="https://blog.econeteditora.com.br/saque-fgts-doenca-grave/">Doença grave e saque do FGTS: hipóteses e documentos (Econet)</a></li>
-          <li><a href="https://www.migalhas.com.br/depeso/312148/e-possivel-o-saque-do-fgts-em-casos-de-doencas-graves-de-dependentes">Saque do FGTS em doenças de dependentes (Migalhas)</a></li>
-          <li><a href="https://uit.br/site/wp-content/uploads/2026/06/CARTILHA-CIENCIAS-CONTABEIS-FGTS-E-DOENCAS-GRAVES.pdf">Cartilha sobre FGTS e doenças graves (Universidade de Itaúna)</a></li>
-          <li><a href="https://www.trf2.jus.br/sites/default/publico/2026-06/sentenca-levantamento-de-fgts-tdah-e-deficiencia-intelectual-1.pdf">Sentença TRF2 de 2026 (diagnósticos fora do rol da Caixa)</a></li>
-          <li><a href="https://wagner.adv.br/stj-entende-que-doenca-grave-nao-prevista-em-lei-justifica-saque-do-fgts/">STJ: rol de doenças do FGTS não é taxativo (Wagner Advogados)</a></li>
-          <li><a href="https://web.trf3.jus.br/noticias-sjsp/Noticiar/ExibirNoticia/383-justica-federal-libera-fgts-para-trabalhador-com-doenca">TRF3: FGTS para cardiopatia grave</a></li>
-          <li><a href="https://www.dgabc.com.br/Noticia/4350655/negativas-do-inss-disparam-e-ja-superam-as-concessoes">Negativas do INSS superam as concessões (DGABC)</a></li>
-          <li><a href="https://previdenciarista.com/blog/inss-nega-51-dos-pedidos-no-1o-semestre-de-2026/">INSS nega 51% dos pedidos no 1º semestre de 2026 (Previdenciarista)</a></li>
-          <li><a href="https://www.dgabc.com.br/Noticia/4215182/inss-nega-beneficios-injustamente-e-prejudica-pessoas-aponta-tcu">Auditoria do TCU sobre indeferimentos (DGABC)</a></li>
-          <li><a href="https://www.gov.br/inss/pt-br/media/cartilha-bpc_atualizado-novembro-2024.pdf">Cartilha do BPC (gov.br/INSS)</a></li>
-          <li><a href="https://atlaspublico.com.br/camara/noticias/deputado-apresenta-pl-para-mudar-criterio-de-renda-per-68680">Critério de renda do BPC e valor em 2026 (Atlas Público)</a></li>
-          <li><a href="https://jornalcontabil.com.br/noticia/mudanca-no-inss-passa-para-18-as-condicoes-que-isentam-carencia/">Doenças que dispensam carência (Jornal Contábil)</a></li>
-          <li><a href="https://www.legisweb.com.br/legislacao/?id=105065">RN ANS 162/2007: doenças preexistentes e cobertura parcial temporária</a></li>
-          <li><a href="https://www.healthbit.com.br/wp-content/uploads/2023/05/Cartilha-de-Protecao-de-Dados.pdf">LGPD art. 11 §§4º e 5º, setor de saúde</a></li>
-          <li><a href="https://idec.org.br/sites/default/files/carta_idec_abramge.pdf">Carta do Idec sobre LGPD e seleção de riscos</a></li>
-          <li><a href="https://www.medical-legalpartnership.org/mlp-resources/cancer-patients-mlp-financial-benefits">Parceria saúde-direito em câncer (Georgetown)</a></li>
-          <li><a href="https://cmfdn.thehcn.net/promisepractice/index/view?pid=30473">Parceria saúde-direito rural, retorno de 319%</a></li>
-          <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10476517/">Toxicidade financeira em pessoas em hemodiálise (Rev. Bras. Enferm., 2023)</a></li>
-        </ol>
-      </details>
+      <h3>3.7 Fontes</h3>
+      <ol class="sources">
+        <li id="f1">[1] Band B: faltas no SUS em Campo Largo, 1º semestre de 2026 · <a href="https://www.bandab.com.br/regiao-metropolitana-de-curitiba/pacientes-faltam-consultas-exames-sus-grande-curitiba-campo-largo/">bandab.com.br</a></li>
+        <li id="f2">[2] UNA-SUS/UNIFESP, trabalho sobre absenteísmo (cita ~25% no SUS) · <a href="https://ares.unasus.gov.br/acervo/bitstream/ARES/22594/1/41420_RAFAEL%2520MARTINS%2520PEREIRA.pdf">ares.unasus.gov.br</a></li>
+        <li id="f3">[3] Estudo de Santa Maria (cita ~25% no Brasil) · <a href="https://publicacoeseventos.unijui.edu.br/index.php/conintsau/article/download/23176/21917/58432">unijui.edu.br</a></li>
+        <li id="f4">[4] Beltrame et al., Saúde em Debate, 2019 · <a href="https://scielosp.org/pdf/sdeb/2019.v43n123/1015-1030/pt">scielosp.org</a></li>
+        <li id="f5">[5] Mesmo estudo de Santa Maria (9,4% de média, perda de R$ 146.590) · <a href="https://publicacoeseventos.unijui.edu.br/index.php/conintsau/article/download/23176/21917/58432">unijui.edu.br</a></li>
+        <li id="f6">[6] DGABC: carreta com especialistas em Mauá · <a href="https://www.dgabc.com.br/Noticia/4287157/carreta-com-especialistas-realizou-mais-de-1-4-mil-exames-em-maua">dgabc.com.br</a></li>
+        <li id="f7">[7] Conclínica, calculadora de no-show (jan/2026) · <a href="https://acontecendoaqui.com.br/empreendedorismo/alerta-falta-de-pacientes-pode-comprometer-ate-32-da-agenda-de-clinicas-no-pais/">acontecendoaqui.com.br</a></li>
+        <li id="f8">[8] Botdesigner, no-show em hospitais privados (fonte comercial) · <a href="https://www.bnews.com.br/noticias/economia-e-mercado/atendimento-virtual-aumenta-receita-de-hospitais-revela-pesquisa-veja-numeros.html">bnews.com.br</a></li>
+        <li id="f9">[9] Medicina S/A, estimativa de perda por faltas · <a href="https://medicinasa.com.br/agendamento-consultas/">medicinasa.com.br</a></li>
+        <li id="f10">[10] Costa et al., Revista de Medicina de Ribeirão Preto/USP, absenteísmo em oncologia · <a href="https://revistas.usp.br/rmrp/article/download/159626/154332/356524">revistas.usp.br</a></li>
+        <li id="f11">[11] Digisac, como reduzir faltas (cita revisões sobre lembretes) · <a href="https://digisac.com.br/blog/como-reduzir-faltas-de-pacientes">digisac.com.br</a></li>
+        <li id="f12">[12] Tribuna Online: hospitais privados no programa e créditos financeiros · <a href="https://tribunaonline.com.br/saude/cirurgias-liberadas-em-hospitais-particulares-para-reduzir-fila-do-sus-284819">tribunaonline.com.br</a></li>
+        <li id="f13">[13] Correio: 259 hospitais credenciados; acesso pela fila da regulação · <a href="https://www.correio24horas.com.br/economia/com-r-1-bilhao-programa-do-sus-aciona-259-hospitais-privados-para-realizar-600-mil-procedimentos-veja-os-prioritarios-0826">correio24horas.com.br</a></li>
+      </ol>
     </section>
 
     <!-- 4. OBJETIVOS -->
     <section id="objetivos" class="alt">
       <p class="kicker">4 · Objetivos</p>
       <h2>O que o produto precisa alcançar</h2>
-      <ol class="steps">
-        <li id="o1">
-          <h3>O1 · Identificar cedo a vulnerabilidade financeira</h3>
-          <p>Triar o paciente nos primeiros dias da jornada e ordenar a fila com um índice transparente.</p>
-        </li>
-        <li id="o2">
-          <h3>O2 · Mostrar os direitos aplicáveis, com base legal</h3>
-          <p>Dizer, para cada direito, se enquadra, por quê, com que fonte e qual o próximo passo, sem
-            prometer deferimento.</p>
-        </li>
-        <li id="o3">
-          <h3>O3 · Reduzir erro e retrabalho documental</h3>
-          <p>Entregar o checklist exato, controlar a validade e medir a prontidão do dossiê antes de
-            protocolar.</p>
-        </li>
-        <li id="o4">
-          <h3>O4 · Dar à assistente social uma fila e alertas</h3>
-          <p>Mostrar quem precisa de ação primeiro, por quê, e qual é a próxima ação, mantendo a
-            decisão com ela.</p>
-        </li>
-        <li id="o5">
-          <h3>O5 · Acompanhar pedidos e negativas</h3>
-          <p>Registrar a etapa de cada pedido e sinalizar negativa para recurso ou Defensoria.</p>
-        </li>
-        <li id="o6">
-          <h3>O6 · Proteger dados e autonomia do paciente</h3>
-          <p>Consentimento, perfis de acesso, métricas agregadas e nenhuma venda de dado de saúde.</p>
-        </li>
-        <li id="o7">
-          <h3>O7 · Sustentar o modelo SaaS B2B</h3>
-          <p>Gerar valor mensurável para o hospital: tempo economizado, casos acompanhados e
-            dossiês completos.</p>
-        </li>
-        <li id="o8">
-          <h3>O8 · Entregar um protótipo demonstrável e honesto</h3>
-          <p>Mostrar os quatro módulos com dados fictícios, premissas visíveis e limites declarados.</p>
-        </li>
-      </ol>
+      <div class="table-wrap">
+        <table class="draft-table">
+          <thead><tr><th>#</th><th>Objetivo</th><th>Para quem</th><th>Métrica</th></tr></thead>
+          <tbody>
+            <tr><td>O1</td><td>Antecipar quem tem risco alto de faltar ou cancelar tarde.</td><td>Gestor e recepção</td><td>M2, M3, M4</td></tr>
+            <tr><td>O2</td><td>Reduzir faltas sem aviso com confirmação ativa proporcional ao risco.</td><td>Hospital e paciente</td><td>M1, M5, M6</td></tr>
+            <tr><td>O3</td><td>Reocupar o horário que vagar, a tempo, com quem espera.</td><td>Paciente da fila</td><td>M7, M8</td></tr>
+            <tr><td>O4</td><td>Mostrar o retorno financeiro ou de capacidade ao gestor.</td><td>Gestor</td><td>M9, M10</td></tr>
+            <tr><td>O5</td><td>Garantir que a ferramenta não piora a equidade nem a prioridade clínica.</td><td>Paciente e regulação</td><td>M11</td></tr>
+            <tr><td>O6</td><td>Operar com a rotina atual (planilha ou sistema de agenda).</td><td>Recepção</td><td>M12</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <!-- 5. REQUISITOS -->
@@ -466,342 +261,260 @@
       <p class="kicker">5 · Requisitos</p>
       <h2>O que o sistema precisa fazer e respeitar</h2>
 
-      <h3>Vulnerabilidade (RV)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
-          <tbody>
-            <tr><td>RV1</td><td>Coletar com consentimento os dados mínimos: renda antes e agora, moradores, despesas, custo do tratamento, dívidas, reserva e se há cuidador sem trabalhar.</td><td>O1, O6</td></tr>
-            <tr><td>RV2</td><td>Calcular um índice de 0 a 100 mostrando cada componente, seu peso e sua contribuição.</td><td>O1</td></tr>
-            <tr><td>RV3</td><td>Permitir ajustar o salário mínimo, os pesos, os limites de banda e o fôlego de referência.</td><td>O1</td></tr>
-            <tr><td>RV4</td><td>Usar o índice apenas para ordenar a fila. Nunca para negar atendimento, direito ou benefício.</td><td>O1, O4</td></tr>
-            <tr><td>RV5</td><td>Mostrar o fôlego da reserva em meses, com e sem o saque do FGTS.</td><td>O1</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <h3>Valor (RV)</h3>
+      <ul>
+        <li><strong>RV1.</strong> O gestor enxerga quanto custa cada horário vazio e quanto o produto recupera.</li>
+        <li><strong>RV2.</strong> A recepção trabalha com uma lista simples: a quem confirmar, e para quem oferecer a vaga.</li>
+      </ul>
 
-      <h3>Identificador de direitos (RI)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
-          <tbody>
-            <tr><td>RI1</td><td>Manter regras versionadas por direito, com base legal e data de revisão.</td><td>O2</td></tr>
-            <tr><td>RI2</td><td>Devolver quatro situações: Enquadra, Verificar, Não enquadra, Não se aplica agora, sempre com o motivo.</td><td>O2</td></tr>
-            <tr><td>RI3</td><td>Separar a via administrativa da via judicial e orientar o encaminhamento.</td><td>O2, O5</td></tr>
-            <tr><td>RI4</td><td>Declarar que o resultado é estimativa pelos dados informados. A elegibilidade é decidida pelo órgão competente.</td><td>O2, O6</td></tr>
-            <tr><td>RI5</td><td>Apontar o que depende de dado externo (CNIS, perícia, regulamento) em vez de afirmar certeza.</td><td>O2</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <h3>Funcionais (RF)</h3>
+      <ul>
+        <li><strong>RF1.</strong> Importar agenda e fila (planilha ou integração).</li>
+        <li><strong>RF2.</strong> Calcular o risco por agendamento, com os fatores que pesaram.</li>
+        <li><strong>RF3.</strong> Montar o plano de confirmação por faixa de risco (canal e momento).</li>
+        <li><strong>RF4.</strong> Registrar a resposta: confirma, cancela ou sem resposta.</li>
+        <li><strong>RF5.</strong> Ao cancelar, ou ao fim da janela sem resposta, gerar a lista de candidatos pela regra do serviço.</li>
+        <li><strong>RF6.</strong> Fazer ofertas em rodadas (uma ou mais pessoas por vez) com tempo de resposta; a primeira aceitação ocupa; os demais são avisados.</li>
+        <li><strong>RF7.</strong> Atualizar agenda e fila, com registro de auditoria.</li>
+        <li><strong>RF8.</strong> Painel do gestor com faltas, reocupação, receita ou capacidade recuperada e tempo de espera.</li>
+      </ul>
 
-      <h3>Organizador documental (RO)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
-          <tbody>
-            <tr><td>RO1</td><td>Gerar o checklist de documentos por direito, conforme o perfil do paciente.</td><td>O3</td></tr>
-            <tr><td>RO2</td><td>Registrar o estado de cada documento: faltando, recebido, em revisão, pronto ou vencido.</td><td>O3</td></tr>
-            <tr><td>RO3</td><td>Marcar como vencido o relatório médico mais antigo que a validade configurada.</td><td>O3</td></tr>
-            <tr><td>RO4</td><td>Calcular a prontidão do dossiê e listar o que falta, antes de protocolar.</td><td>O3</td></tr>
-            <tr><td>RO5</td><td>Gerar um resumo do caso e as pendências em linguagem simples (leitura automática de documentos fica fora do MVP).</td><td>O3, O4</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <h3>Regras e ética (RR)</h3>
+      <ul>
+        <li><strong>RR1.</strong> O risco só orienta o contato; nunca reduz prioridade clínica nem nega horário.</li>
+        <li><strong>RR2.</strong> No público, a ordem da oferta segue a regulação; o sistema sugere e a regulação valida.</li>
+        <li><strong>RR3.</strong> Dados de saúde são sensíveis (LGPD): minimização, base legal definida, opt-out e retenção limitada. Requer parecer jurídico (Q4).</li>
+        <li><strong>RR4.</strong> Sem multa de falta ao paciente do SUS. No privado, qualquer cobrança é decisão do hospital, com aviso prévio.</li>
+        <li><strong>RR5.</strong> Overbooking fora do MVP.</li>
+        <li><strong>RR6.</strong> Revisão periódica de viés: taxa de reocupação e de falta por território e renda.</li>
+      </ul>
 
-      <h3>Painel da assistente social (RA)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
-          <tbody>
-            <tr><td>RA1</td><td>Listar os pacientes por prioridade, com o índice, os direitos que enquadram e a prontidão.</td><td>O4</td></tr>
-            <tr><td>RA2</td><td>Mostrar a regra da prioridade: índice mais acréscimos por documento vencido, falta de pedido há mais de 14 dias e pedido negado.</td><td>O4</td></tr>
-            <tr><td>RA3</td><td>Indicar a próxima ação de cada caso.</td><td>O4, O5</td></tr>
-            <tr><td>RA4</td><td>Registrar a etapa de cada pedido: não iniciado, reunindo documentos, protocolado, concluído ou negado.</td><td>O5</td></tr>
-            <tr><td>RA5</td><td>Exibir indicadores agregados do serviço para o hospital, sem identificar pacientes.</td><td>O7</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Transversais (RX) e não funcionais (RNF)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
-          <tbody>
-            <tr><td>RX1</td><td>Consentimento explícito para tratar dados de saúde, com finalidade declarada.</td><td>O6</td></tr>
-            <tr><td>RX2</td><td>Perfis de acesso: a assistente social vê o caso, o hospital vê apenas agregados, o empregador (se houver) não vê diagnóstico.</td><td>O6</td></tr>
-            <tr><td>RX3</td><td>Nenhuma venda ou compartilhamento de dado de diagnóstico com terceiros.</td><td>O6</td></tr>
-            <tr><td>RX4</td><td>Registro de auditoria das ações e das versões das regras.</td><td>O2, O6</td></tr>
-            <tr><td>RNF1</td><td>Linguagem simples para o paciente e acessibilidade.</td><td>O2</td></tr>
-            <tr><td>RNF2</td><td>Dados fictícios no protótipo. Dado real só com consentimento e parecer jurídico.</td><td>O6, O8</td></tr>
-            <tr><td>RNF3</td><td>Funcionar offline no navegador, sem servidor, no protótipo.</td><td>O8</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <h3>Não funcionais (RNF)</h3>
+      <ul>
+        <li><strong>RNF1.</strong> A oferta sai em minutos depois da vaga, pois o tempo é o limite do produto.</li>
+        <li><strong>RNF2.</strong> Funciona com poucos dados no começo e melhora com o uso.</li>
+        <li><strong>RNF3.</strong> Modelo explicável e auditável.</li>
+        <li><strong>RNF4.</strong> Respeitar as regras do canal de mensagens escolhido (WhatsApp, SMS, ligação).</li>
+      </ul>
     </section>
 
     <!-- 6. MÉTRICAS -->
     <section id="metricas" class="alt">
       <p class="kicker">6 · Métricas</p>
       <h2>Como saberemos se funcionou</h2>
-      <p>
-        As metas ficam <strong>a definir</strong> até termos um hospital piloto e medidas reais. Definimos
-        antes o que medir, para não escolher a métrica depois de ver o resultado. As métricas são de
-        renda, tempo e processo, e não de desfecho clínico, porque a evidência clínica é incerta.
-      </p>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>ID</th><th>Métrica</th><th>Definição</th><th>Objetivo</th><th>Meta</th></tr>
-          </thead>
+        <table class="draft-table">
+          <thead><tr><th>#</th><th>Métrica</th><th>Como se calcula</th></tr></thead>
           <tbody>
-            <tr><td>M1</td><td>Cobertura da triagem</td><td>Pacientes novos triados nos primeiros dias, divididos pelos pacientes novos.</td><td>O1</td><td>A definir no piloto</td></tr>
-            <tr><td>M2</td><td>Concordância do índice</td><td>Casos em que a faixa do índice coincide com o julgamento da assistente social (Q10).</td><td>O1</td><td>A definir</td></tr>
-            <tr><td>M3</td><td>Direitos identificados por paciente</td><td>Direitos que enquadram ou a verificar, dividido pelos pacientes atendidos.</td><td>O2</td><td>Sem meta (descritiva)</td></tr>
-            <tr><td>M4</td><td>Dossiês completos na primeira submissão</td><td>Pedidos protocolados com prontidão de 100%, divididos pelos pedidos protocolados.</td><td>O3</td><td>A definir</td></tr>
-            <tr><td>M5</td><td>Tempo até a primeira solicitação</td><td>Dias entre o diagnóstico e o primeiro pedido de direito.</td><td>O3, O5</td><td>Menor que antes do piloto</td></tr>
-            <tr><td>M6</td><td>Aprovação na primeira tentativa</td><td>Pedidos concluídos sem negativa, divididos pelos pedidos decididos. Depende de dado do órgão.</td><td>O3</td><td>A definir</td></tr>
-            <tr><td>M7</td><td>Horas de assistente social por caso</td><td>Tempo médio medido antes e depois do uso da plataforma.</td><td>O4, O7</td><td>Menor que antes do piloto</td></tr>
-            <tr><td>M8</td><td>Valor liberado por paciente</td><td>Saque do FGTS e benefícios concedidos, em agregado.</td><td>O2, O5</td><td>Sem meta (descritiva)</td></tr>
-            <tr><td>M9</td><td>Fôlego financeiro</td><td>Meses de déficit cobertos pela reserva, com e sem os direitos obtidos.</td><td>O1, O2</td><td>Sem meta (descritiva)</td></tr>
-            <tr><td>M10</td><td>Recursos após negativa</td><td>Negativas seguidas de recurso ou encaminhamento, divididas pelas negativas.</td><td>O5</td><td>A definir</td></tr>
-            <tr><td>M11</td><td>Custo por dossiê e retenção do hospital</td><td>Horas de equipe por dossiê e renovação da assinatura.</td><td>O7</td><td>A definir</td></tr>
+            <tr><td>M1</td><td>Taxa de falta sem aviso</td><td>Faltas sem aviso ÷ agendamentos elegíveis. Mesmos critérios ao longo do tempo.</td></tr>
+            <tr><td>M2</td><td>Cobertura do modelo</td><td>Faltas que estavam nas faixas alta e média ÷ todas as faltas.</td></tr>
+            <tr><td>M3</td><td>Precisão na faixa alta</td><td>Faltas na faixa alta ÷ agendamentos na faixa alta.</td></tr>
+            <tr><td>M4</td><td>Discriminação</td><td>AUC e captura dos 20% de maior risco (base real, nunca a sintética).</td></tr>
+            <tr><td>M5</td><td>Resposta à confirmação</td><td>Pacientes que responderam ÷ contatados, por faixa e canal.</td></tr>
+            <tr><td>M6</td><td>Faltas evitadas</td><td>Diferença de M1 entre grupo com confirmação ativa e grupo de controle.</td></tr>
+            <tr><td>M7</td><td>Taxa de reocupação</td><td>Horários vagos reocupados ÷ horários vagos com aviso.</td></tr>
+            <tr><td>M8</td><td>Tempo de reocupação</td><td>Mediana de minutos entre o aviso e a aceitação.</td></tr>
+            <tr><td>M9</td><td>Receita ou produção recuperada</td><td>(Faltas evitadas + horários reocupados) × valor por atendimento.</td></tr>
+            <tr><td>M10</td><td>Fila</td><td>Mediana de dias de espera e pacientes atendidos a mais por mês.</td></tr>
+            <tr><td>M11</td><td>Equidade (trava)</td><td>M1 e M7 por faixa de renda e território; não pode haver piora de quem já tem menos acesso.</td></tr>
+            <tr><td>M12</td><td>Adoção</td><td>Uso pela recepção; opt-out e reclamações dos pacientes.</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- 7. LAB DE UI -->
+    <!-- 7. LAB -->
     <section id="lab">
       <p class="kicker">7 · Lab de UI</p>
-      <h2>Vulnerabilidade, direitos, documentos e painel: testando o modelo</h2>
+      <h2>Risco, confirmação, reocupação e retorno: testando o modelo</h2>
       <p>
-        Este laboratório é um protótipo da interface que uma assistente social usaria. Os pacientes, valores,
-        prazos e pesos são <strong>fictícios e ilustrativos</strong>. Escolha um paciente, altere os
-        dados e veja o índice, os direitos que enquadram, os documentos pendentes e o painel de todos os casos.
+        Este laboratório é um protótipo do que a recepção e o gestor veriam. Pacientes, taxas, valores e pesos são
+        <strong>fictícios e ilustrativos</strong>. Altere os dados e veja como o risco, o plano de contato, a oferta à fila e o
+        retorno financeiro respondem.
       </p>
       <p class="alert" role="note">
-        As regras estão simplificadas e o índice de vulnerabilidade não foi validado. O resultado é
-        uma estimativa pelos dados informados, não decide nem garante nenhum direito. Confira nas fontes (seção 3) e com
-        uma assistente social ou um advogado antes de orientar uma pessoa de verdade.
+        Os pesos do modelo são hipóteses e não foram calibrados com dados reais. O resultado do laboratório mostra
+        a mecânica do produto, não uma previsão do seu hospital. A seção 7.4 usa dados sintéticos só para testar o cálculo das métricas.
       </p>
 
-      <h3>Premissas</h3>
-      <div class="lab-controls" aria-label="Premissas do laboratório">
-        <label>
-          Salário mínimo de referência (R$)
-          <input id="in-sm" type="number" min="1" step="1" value="1621">
-        </label>
-        <label>
-          Peso: renda por pessoa
-          <input id="in-w-renda" type="number" min="0" max="100" step="5" value="25">
-        </label>
-        <label>
-          Peso: queda de renda
-          <input id="in-w-perda" type="number" min="0" max="100" step="5" value="20">
-        </label>
-        <label>
-          Peso: custo do tratamento
-          <input id="in-w-desp" type="number" min="0" max="100" step="5" value="15">
-        </label>
-        <label>
-          Peso: dívidas
-          <input id="in-w-div" type="number" min="0" max="100" step="5" value="10">
-        </label>
-        <label>
-          Peso: fôlego da reserva
-          <input id="in-w-folego" type="number" min="0" max="100" step="5" value="20">
-        </label>
-        <label>
-          Peso: cuidador sem trabalhar
-          <input id="in-w-cuid" type="number" min="0" max="100" step="5" value="10">
-        </label>
-        <label>
-          Faixa Alta a partir de (pontos)
-          <input id="in-alto" type="number" min="0" max="100" step="5" value="60">
-        </label>
-        <label>
-          Faixa Média a partir de (pontos)
-          <input id="in-medio" type="number" min="0" max="100" step="5" value="35">
-        </label>
-        <label>
-          Fôlego de referência (meses)
-          <input id="in-ref" type="number" min="1" max="24" step="1" value="6">
-        </label>
-        <label>
-          Validade do relatório médico (meses)
-          <input id="in-validade" type="number" min="0" max="36" step="1" value="12">
-        </label>
-        <label>
-          Minutos por dossiê sem a plataforma (suposição)
-          <input id="in-min-sem" type="number" min="0" max="600" step="5" value="90">
-        </label>
-        <label>
-          Minutos por dossiê com a plataforma (suposição)
-          <input id="in-min-com" type="number" min="0" max="600" step="5" value="30">
-        </label>
-      </div>
-      <p class="small">
-        Os pesos são normalizados para somar 100%. Todos são hipóteses do time. O fôlego de referência de 6
-        meses e a validade de 12 meses (cartilha acadêmica, a confirmar na Caixa) também. Os minutos por
-        dossiê são suposições ilustrativas, sem fonte: servem só para mostrar como o ganho de
-        tempo seria calculado, e devem ser medidos no piloto (M7).
-      </p>
-
-      <h3 id="lab-foco">Paciente em foco</h3>
+      <h3>7.1 Risco de cancelar em cima da hora</h3>
       <div class="lab-actions">
         <label>
-          Paciente (fictício)
-          <select id="sel-paciente"></select>
+          Carregar agendamento de exemplo
+          <select id="sel-ag"></select>
         </label>
-        <button type="button" id="btn-restaurar" class="btn">Restaurar pacientes fictícios</button>
-      </div>
-      <div class="lab-controls" aria-label="Dados do paciente">
-        <label>Diagnóstico <select id="f-dx"></select></label>
-        <label>O doente é <select id="f-titular"></select></label>
-        <label>Vínculo do titular <select id="f-vinculo"></select></label>
-        <label>Meses de contribuição <input id="f-contrib" type="number" min="0" max="600" step="1" value="0"></label>
-        <label>Meses desde o último recolhimento <input id="f-semcontrib" type="number" min="0" max="600" step="1" value="0"></label>
-        <label>Saldo de FGTS (R$) <input id="f-saldo" type="number" min="0" step="100" value="0"></label>
-        <label>Renda da família antes (R$/mês) <input id="f-rantes" type="number" min="0" step="100" value="0"></label>
-        <label>Renda da família agora (R$/mês) <input id="f-ratual" type="number" min="0" step="100" value="0"></label>
-        <label>Pessoas na casa <input id="f-morad" type="number" min="1" max="15" step="1" value="1"></label>
-        <label>Despesas da casa (R$/mês) <input id="f-desp" type="number" min="0" step="100" value="0"></label>
-        <label>Gasto com o tratamento (R$/mês) <input id="f-trat" type="number" min="0" step="50" value="0"></label>
-        <label>Parcelas de dívidas (R$/mês) <input id="f-div" type="number" min="0" step="50" value="0"></label>
-        <label>Reserva disponível (R$) <input id="f-reserva" type="number" min="0" step="100" value="0"></label>
-        <label>Dias desde o diagnóstico <input id="f-dias" type="number" min="0" max="3650" step="1" value="0"></label>
-        <label>Idade do relatório médico (meses) <input id="f-relmeses" type="number" min="0" max="120" step="1" value="0"></label>
-        <label class="inline"><input id="f-desemp" type="checkbox"> Desemprego involuntário</label>
-        <label class="inline"><input id="f-incapaz" type="checkbox"> Incapacidade para o trabalho atestada</label>
-        <label class="inline"><input id="f-imped" type="checkbox"> Impedimento de longo prazo (a avaliar)</label>
-        <label class="inline"><input id="f-aposent" type="checkbox"> Recebe aposentadoria ou pensão</label>
-        <label class="inline"><input id="f-cuid" type="checkbox"> Cuidador parou de trabalhar</label>
       </div>
 
-      <h3>7.1 Calculadora de vulnerabilidade financeira</h3>
-      <p class="small">
-        Índice de 0 a 100 para ordenar a fila. Cada componente vai de 0% (sem vulnerabilidade) a 100% e
-        é multiplicado pelo seu peso. Foi inspirado em instrumentos de toxicidade financeira, mas não é
-        um instrumento validado e não mede elegibilidade.
-      </p>
-      <div class="results" aria-live="polite">
-        <div class="result">
-          <span class="result-num" id="res-indice">0</span>
-          <span class="result-label">índice de vulnerabilidade (0 a 100)</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="res-banda">-</span>
-          <span class="result-label">faixa de prioridade</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="res-rpc">0</span>
-          <span class="result-label">renda atual por pessoa</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="res-folego">0</span>
-          <span class="result-label">fôlego da reserva, em meses</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="res-folego-fgts">0</span>
-          <span class="result-label">fôlego com o saque do FGTS, em meses</span>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead>
-            <tr><th>Componente</th><th>Dado</th><th>Vulnerabilidade</th><th>Peso</th><th>Pontos</th></tr>
-          </thead>
-          <tbody id="comp-body"></tbody>
-        </table>
-      </div>
-
-      <h3>7.2 Identificador de direitos</h3>
-      <p class="small">
-        Enquadra: pelos dados informados, os requisitos parecem atendidos. Verificar: falta dado ou depende
-        de regra externa. Não enquadra: algum requisito falha. Não se aplica agora: o direito não cabe
-        na situação atual. A coluna Etapa registra o andamento do pedido.
-      </p>
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead>
-            <tr><th>Direito</th><th>Situação</th><th>Por quê e próximos passos</th><th>Base</th><th>Etapa</th><th>Prontidão</th></tr>
-          </thead>
-          <tbody id="rights-body"></tbody>
-        </table>
-      </div>
-      <p id="rights-alert" class="alert" role="status" hidden></p>
-
-      <h3>7.3 Organizador documental</h3>
-      <p class="small">
-        Mude a situação de cada documento e veja a prontidão no módulo 7.2 e no painel. O relatório
-        médico do FGTS passa a Vencido quando a idade informada supera a validade configurada.
-      </p>
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead>
-            <tr><th>Direito</th><th>Documento</th><th>Observação</th><th>Situação</th></tr>
-          </thead>
-          <tbody id="docs-body"></tbody>
-        </table>
-      </div>
-
-      <div class="lab-actions">
-        <button type="button" id="btn-resumo" class="btn btn-primary">Gerar resumo do caso</button>
-        <button type="button" id="resumo-copy" class="btn" hidden>Copiar como Markdown</button>
-        <span id="resumo-msg" class="small" role="status"></span>
-      </div>
-      <pre id="resumo-out" class="draft-pre" hidden></pre>
-
-      <h3>7.4 Painel da assistente social</h3>
-      <p class="small">
-        Prioridade = índice + 15 se houver documento vencido + 10 se nenhum pedido foi iniciado há mais
-        de 14 dias e algum direito enquadra + 10 se há pedido negado. A regra é visível para que a
-        assistente social possa discordar dela. O painel ordena, e a decisão é dela.
-      </p>
-      <div class="lab-actions">
-        <label>
-          Mostrar faixa
-          <select id="filtro-banda">
-            <option value="todas">Todas</option>
-            <option value="Alta">Alta</option>
-            <option value="Média">Média</option>
-            <option value="Baixa">Baixa</option>
+      <div class="lab-controls" aria-label="Dados do agendamento">
+        <label>Faltas nos últimos 12 meses<input id="r-faltas" type="number" min="0" step="1" value="2"></label>
+        <label>Agendamentos anteriores no período<input id="r-total" type="number" min="0" step="1" value="6"></label>
+        <label>Antecedência do agendamento (dias)<input id="r-antec" type="number" min="0" step="1" value="30"></label>
+        <label>Tempo de deslocamento (min)<input id="r-desloc" type="number" min="0" step="5" value="90"></label>
+        <label>Transporte
+          <select id="r-transp">
+            <option value="proprio">Meio próprio ou a pé</option>
+            <option value="publico">Transporte público</option>
+            <option value="prefeitura" selected>Depende de transporte da prefeitura ou de terceiros</option>
+          </select>
+        </label>
+        <label>Tipo de atendimento
+          <select id="r-tipo">
+            <option value="consulta" selected>Consulta (primeira vez)</option>
+            <option value="retorno">Retorno</option>
+            <option value="exame">Exame</option>
+            <option value="cirurgia">Cirurgia</option>
+          </select>
+        </label>
+        <label>Situação da confirmação
+          <select id="r-conf">
+            <option value="nao" selected>Ainda não contatado</option>
+            <option value="confirmou">Confirmou ativamente</option>
+            <option value="sem">Contatado, sem resposta</option>
           </select>
         </label>
       </div>
+
+      <details>
+        <summary>Pesos do modelo e faixas (hipóteses editáveis)</summary>
+        <div class="lab-controls" aria-label="Pesos do modelo">
+          <label>Constante (log-odds)<input id="w-b0" type="number" step="0.1" value="-3"></label>
+          <label>Peso: taxa de faltas<input id="w-hist" type="number" step="0.1" value="3"></label>
+          <label>Peso: antecedência (até 60 dias)<input id="w-antec" type="number" step="0.1" value="0.9"></label>
+          <label>Peso: deslocamento (até 180 min)<input id="w-desloc" type="number" step="0.1" value="0.9"></label>
+          <label>Multiplicador: transporte<input id="w-transp" type="number" step="0.1" value="1"></label>
+          <label>Multiplicador: tipo de atendimento<input id="w-tipo" type="number" step="0.1" value="1"></label>
+          <label>Multiplicador: confirmação<input id="w-conf" type="number" step="0.1" value="1"></label>
+          <label>Faixa alta a partir de (%)<input id="in-alto" type="number" min="1" max="99" step="1" value="40"></label>
+          <label>Faixa média a partir de (%)<input id="in-medio" type="number" min="1" max="99" step="1" value="20"></label>
+          <label>Horas antes para a decisão final<input id="in-hlib" type="number" min="1" max="24" step="1" value="3"></label>
+        </div>
+      </details>
+
+      <div class="formula">
+        <span class="formula-label">Modelo (logístico, transparente)</span>
+        <div class="formula-body">risco = 1 ÷ (1 + e<sup>−z</sup>), onde z = constante + peso·taxa de faltas suavizada + peso·antecedência + peso·deslocamento + efeito do transporte + efeito do tipo + efeito da confirmação</div>
+      </div>
+
+      <div class="results" aria-live="polite">
+        <div class="result"><span class="result-num" id="res-prob">0%</span><span class="result-label">risco de falta ou cancelamento tardio</span></div>
+        <div class="result"><span class="result-num" id="res-faixa">-</span><span class="result-label">faixa de risco</span></div>
+        <div class="result"><span class="result-num" id="res-taxa">0%</span><span class="result-label">taxa de faltas suavizada do paciente</span></div>
+      </div>
+
       <div class="table-wrap">
         <table class="lab-table">
-          <thead>
-            <tr><th>Paciente</th><th>Índice</th><th>Direitos que enquadram</th><th>Prontidão média</th><th>Alertas</th><th>Próxima ação</th><th></th></tr>
-          </thead>
-          <tbody id="panel-body"></tbody>
+          <thead><tr><th>Fator</th><th>Valor informado</th><th class="num">Efeito no risco (log-odds)</th></tr></thead>
+          <tbody id="fat-body"></tbody>
+        </table>
+      </div>
+
+      <h3>7.2 Plano de confirmação ativa</h3>
+      <p id="plano-intro" class="small"></p>
+      <ol class="steps-mini" id="plano-lista"></ol>
+
+      <h3>Agenda do dia (exemplo)</h3>
+      <p class="small">A recepção vê quem contatar primeiro. A ordem é por risco; isso não muda a prioridade clínica de ninguém.</p>
+      <div class="table-wrap">
+        <table class="lab-table">
+          <thead><tr><th>Horário</th><th>Paciente (fictício)</th><th>Tipo</th><th class="num">Risco</th><th>Faixa</th><th>Próxima ação</th></tr></thead>
+          <tbody id="ag-body"></tbody>
         </table>
       </div>
       <div class="results" aria-live="polite">
-        <div class="result">
-          <span class="result-num" id="kpi-n">0</span>
-          <span class="result-label">pacientes no painel</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="kpi-alta">0</span>
-          <span class="result-label">pacientes na faixa Alta</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="kpi-enq">0</span>
-          <span class="result-label">direitos que enquadram (M3)</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="kpi-fgts">0</span>
-          <span class="result-label">FGTS potencialmente liberável (M8)</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="kpi-venc">0</span>
-          <span class="result-label">pacientes com documento vencido</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="kpi-horas">0</span>
-          <span class="result-label">horas de equipe economizadas (suposição ilustrativa)</span>
-        </div>
+        <div class="result"><span class="result-num" id="ag-n">0</span><span class="result-label">horários na agenda de exemplo</span></div>
+        <div class="result"><span class="result-num" id="ag-alta">0</span><span class="result-label">na faixa alta</span></div>
+        <div class="result"><span class="result-num" id="ag-esp">0,0</span><span class="result-label">faltas esperadas no dia</span></div>
+      </div>
+
+      <h3>7.3 Oferta à fila: reocupando o horário vago</h3>
+      <p>Simule um horário que vagou. O sistema ordena a fila pela regra do serviço, filtra quem consegue chegar a tempo e oferece em rodadas.</p>
+      <div class="lab-controls" aria-label="Horário vago">
+        <label>Modo
+          <select id="v-modo">
+            <option value="publico" selected>Hospital público (ordem da regulação)</option>
+            <option value="privado">Hospital privado (convênio autorizado)</option>
+          </select>
+        </label>
+        <label>Especialidade do horário
+          <select id="v-esp">
+            <option value="Cardiologia" selected>Cardiologia</option>
+            <option value="Oftalmologia">Oftalmologia</option>
+          </select>
+        </label>
+        <label>Horas até o atendimento<input id="v-horas" type="number" min="0.5" step="0.5" value="5"></label>
+        <label>Tempo de resposta por oferta (min)<input id="v-resp" type="number" min="1" step="1" value="20"></label>
+        <label>Pessoas contatadas por rodada<input id="v-par" type="number" min="1" max="10" step="1" value="1"></label>
+      </div>
+
+      <div class="results" aria-live="polite">
+        <div class="result"><span class="result-num" id="v-chance">0%</span><span class="result-label">chance de reocupar o horário</span></div>
+        <div class="result"><span class="result-num" id="v-ofertas">0</span><span class="result-label">pessoas que recebem oferta a tempo</span></div>
+        <div class="result"><span class="result-num" id="v-primeiro">-</span><span class="result-label">primeira oferta vai para</span></div>
+      </div>
+      <p class="alert" id="v-alerta" hidden></p>
+      <div class="table-wrap">
+        <table class="lab-table">
+          <thead><tr><th>Paciente (fictício)</th><th>Classe</th><th class="num">Dias na fila</th><th class="num">Chega em (min)</th><th class="num">Aceita (%)</th><th>Situação na oferta</th></tr></thead>
+          <tbody id="v-body"></tbody>
+        </table>
+      </div>
+
+      <h3>7.4 Retorno para o hospital</h3>
+      <div class="lab-actions">
+        <button type="button" class="btn" id="btn-preset-priv">Padrões: hospital privado</button>
+        <button type="button" class="btn" id="btn-preset-pub">Padrões: hospital público</button>
+      </div>
+      <div class="lab-controls" aria-label="Premissas do retorno">
+        <label>Atendimentos agendados por mês<input id="s-agenda" type="number" min="1" step="100" value="4000"></label>
+        <label>Taxa de falta ou cancelamento tardio (%)<input id="s-falta" type="number" min="0" max="100" step="1" value="20"></label>
+        <label>Faltas evitadas pela confirmação ativa (%)<input id="s-evit" type="number" min="0" max="100" step="1" value="15"></label>
+        <label>Das restantes, viram aviso a tempo (%)<input id="s-aviso" type="number" min="0" max="100" step="1" value="50"></label>
+        <label>Dos avisos, reocupados pela fila (%)<input id="s-reoc" type="number" min="0" max="100" step="1" value="60"></label>
+        <label>Valor por atendimento (R$)<input id="s-valor" type="number" min="0" step="10" value="300"></label>
+        <label>Mensalidade da plataforma (R$)<input id="s-fixo" type="number" min="0" step="500" value="3000"></label>
+        <label>Parte do recuperado (%)<input id="s-fee" type="number" min="0" max="100" step="1" value="8"></label>
+        <label>Pacientes na fila<input id="s-fila" type="number" min="1" step="100" value="5000"></label>
+      </div>
+      <p class="small" id="s-nota"></p>
+
+      <div class="results" aria-live="polite">
+        <div class="result"><span class="result-num" id="s-faltas">0</span><span class="result-label">horários perdidos por mês hoje</span></div>
+        <div class="result"><span class="result-num" id="s-rec">0</span><span class="result-label">atendimentos recuperados por mês</span></div>
+        <div class="result"><span class="result-num" id="s-rev">R$ 0</span><span class="result-label">valor recuperado por mês</span></div>
+        <div class="result"><span class="result-num" id="s-preco">R$ 0</span><span class="result-label">preço da plataforma por mês</span></div>
+        <div class="result"><span class="result-num" id="s-liq">R$ 0</span><span class="result-label">ganho líquido do hospital por mês</span></div>
+        <div class="result"><span class="result-num" id="s-roi">0×</span><span class="result-label">valor recuperado para cada R$ 1 pago</span></div>
+        <div class="result"><span class="result-num" id="s-fila-abs">0%</span><span class="result-label">da fila atual atendida em 1 ano pelos horários reocupados (sem novas entradas)</span></div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="lab-table">
+          <thead><tr><th>Cenário (muda os três percentuais de efeito)</th><th class="num">Atendimentos recuperados / mês</th><th class="num">Valor recuperado / mês</th><th class="num">Ganho líquido / mês</th></tr></thead>
+          <tbody id="s-cen"></tbody>
+        </table>
+      </div>
+
+      <h3>7.5 Teste das métricas com dados sintéticos</h3>
+      <p class="small">
+        Geramos agendamentos fictícios e comparamos a previsão com o resultado simulado. Como os dados vêm do nosso próprio modelo
+        com ruído, isso só confere se o cálculo das métricas (M2 a M4) funciona. <strong>Não prova que o modelo acerta.</strong>
+      </p>
+      <div class="lab-actions">
+        <label>Semente<input id="b-seed" type="number" min="1" step="1" value="42"></label>
+        <label>Quantidade<input id="b-n" type="number" min="100" max="5000" step="100" value="600"></label>
+        <button type="button" class="btn btn-primary" id="btn-bt">Gerar e avaliar</button>
+      </div>
+      <div class="results" aria-live="polite">
+        <div class="result"><span class="result-num" id="b-base">-</span><span class="result-label">taxa de falta simulada</span></div>
+        <div class="result"><span class="result-num" id="b-auc">-</span><span class="result-label">AUC</span></div>
+        <div class="result"><span class="result-num" id="b-top">-</span><span class="result-label">das faltas nos 20% de maior risco</span></div>
+        <div class="result"><span class="result-num" id="b-prec">-</span><span class="result-label">precisão na faixa alta</span></div>
+      </div>
+      <div class="table-wrap">
+        <table class="lab-table">
+          <thead><tr><th>Faixa</th><th class="num">Agendamentos</th><th class="num">Risco previsto médio</th><th class="num">Falta observada</th></tr></thead>
+          <tbody id="b-body"></tbody>
+        </table>
       </div>
     </section>
 
@@ -809,94 +522,77 @@
     <section id="decisoes" class="alt">
       <p class="kicker">8 · Decisões</p>
       <h2>Registro de decisões</h2>
-      <p>
-        Cada decisão guarda o contexto, as alternativas e o status. As decisões substituídas
-        continuam registradas, para que quem ler depois entenda o caminho percorrido.
-      </p>
+      <p>Cada decisão guarda contexto, alternativas e status. As decisões substituídas continuam registradas.</p>
 
       <div class="adr-list">
         <article class="adr">
-          <header><h3>D22 · Produto: plataforma de assistência social e proteção financeira na jornada hospitalar</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
-          <p><strong>Contexto:</strong> a barreira financeira e burocrática leva famílias a perder renda e
-            direitos. O hospital já é o ponto de contato do paciente com diagnóstico.</p>
-          <p><strong>Alternativas:</strong> crédito durante a recuperação (descartado por risco de endividar quem perdeu renda).</p>
+          <header><h3>D1 · Escopo final: prever cancelamento tardio, confirmar e reocupar pela fila</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> o orientador pediu um problema com sofredor claro e um comprador que lucra. Aqui o paciente espera e o hospital perde com o horário vazio.</p>
+          <p><strong>Alternativas:</strong> rotas de unidade móvel, hemodiálise, direitos e FGTS, SaaS de assistência social (ver histórico).</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D23 · Modelo de negócio: SaaS B2B, o hospital paga assinatura</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Contexto:</strong> o hospital é o balcão e quem sente a carga de trabalho. Preço e comprador
-            são hipóteses (Q6, H1).</p>
-          <p><strong>Alternativas:</strong> empresas (RH), programas de apoio ao paciente, setor público.</p>
+          <header><h3>D2 · Clientes: hospitais privados e públicos, mesmo motor e regras de fila diferentes</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> o público tem a regulação como regra; o privado tem convênio e receita direta.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D24 · Cunha: saque do FGTS por diagnóstico</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> regra clara na lei para câncer, HIV e estágio terminal, documentos definidos
-            e resultado mensurável. Os demais direitos entram depois.</p>
-          <p><strong>Alternativas:</strong> começar pelo INSS (maior dor, regra mais complexa).</p>
+          <header><h3>D3 · Cobrança: mensalidade mais parte do recuperado</h3><span class="badge st-proposta">Proposta</span></header>
+          <p><strong>Contexto:</strong> alinha o preço ao valor entregue; o público pode exigir contrato por serviço ou licitação. Valores são hipóteses (Q3).</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D25 · MVP com quatro módulos</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> calculadora de vulnerabilidade, identificador de direitos, organizador
-            documental e painel da assistente social, com pacientes fictícios.</p>
-          <p><strong>Alternativas:</strong> só o identificador de direitos.</p>
+          <header><h3>D4 · O risco só orienta o contato, nunca a prioridade clínica</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> usar o risco para negar ou adiar atendimento puniria quem tem mais barreiras de acesso. Contraria o tema do desafio.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D26 · O índice ordena a fila e não decide direitos</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> o índice não está validado (Q10). Usá-lo para negar atendimento ou
-            benefício seria injusto e arriscado.</p>
-          <p><strong>Alternativas:</strong> usar o índice como critério de elegibilidade.</p>
+          <header><h3>D5 · Sem multa de falta ao paciente do SUS</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> a solução é facilitar o aviso, não cobrar. No privado, a política é do hospital.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D27 · Sem crédito, sem venda de dados, sem comissão sobre o benefício</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> o público é vulnerável. Crédito pode endividar, e dado de saúde é sensível.</p>
-          <p><strong>Alternativas:</strong> comissão sobre o valor obtido; ponte de renda; venda de leads.</p>
+          <header><h3>D6 · Modelo inicial transparente (logístico, pesos editáveis)</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> sem dados reais, um modelo explicável é defensável. Será calibrado com a base do piloto.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D28 · Seguradoras não são pagadoras nem destino de indicação</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> a cobertura parcial temporária (até 24 meses) suspende cirurgias, leitos
-            de alta tecnologia e procedimentos de alta complexidade ligados à doença declarada, e a LGPD
-            veda às operadoras o uso de dado de saúde para seleção de riscos.</p>
-          <p><strong>Alternativas:</strong> módulo informativo neutro sobre a cobertura do plano atual, pago por hospital ou empresa.</p>
+          <header><h3>D7 · Overbooking fora do MVP</h3><span class="badge st-proposta">Proposta</span></header>
+          <p><strong>Contexto:</strong> agendar acima da capacidade pode lotar a espera e prejudicar o paciente. Reocupar é o caminho mais seguro.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D29 · Pessoas sem vínculo formal: o limite do produto</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Contexto:</strong> sem FGTS nem contribuição, o saque e o auxílio não se aplicam. O BPC é o
-            caminho a avaliar, e o produto declara esse limite.</p>
-          <p><strong>Alternativas:</strong> ampliar o escopo para programas de renda do governo.</p>
+          <header><h3>D8 · Transporte como módulo futuro (reaproveita o trabalho de rotas)</h3><span class="badge st-proposta">Proposta</span></header>
+          <p><strong>Contexto:</strong> transporte é causa frequente de falta. Pode ser um segundo produto, depois de provar o ciclo principal.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D30 · Primeiro cenário: oncologia</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Contexto:</strong> câncer é a hipótese própria da lei, sem depender de via judicial, e é um
-            contexto com serviço social estruturado (a confirmar em Q9).</p>
-          <p><strong>Alternativas:</strong> começar por HIV; ampliar para outras doenças crônicas.</p>
+          <header><h3>D9 · Nome do produto</h3><span class="badge st-pendente">Pendente</span></header>
+          <p><strong>Contexto:</strong> "Vaga Viva" é provisório.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D6 · Dados agregados, públicos ou sintéticos (LGPD)</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> dado de saúde é sensível. O protótipo usa pacientes fictícios, e dado real
-            exigiria consentimento e parecer jurídico.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D9 · Nome do projeto</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Em aberto:</strong> "Amparo" é um nome provisório e não foi verificado quanto a marcas já registradas.</p>
-        </article>
-        <article class="adr archived">
-          <header><h3>D1 a D21 · Temas anteriores</h3><span class="badge st-pendente">Substituídas</span></header>
-          <p><strong>Histórico:</strong> unidade móvel de prevenção (D1 a D4), transporte de pacientes em
-            hemodiálise, ferramenta de pactuação e produto de rotas e agendamentos para frotas (D5 a D21,
-            chamado RotaSaúde). Foram substituídas depois que o orientador recomendou trocar o tema. O
-            conteúdo permanece no histórico do repositório.</p>
+          <header><h3>D10 · Primeiro piloto: um ambulatório de especialidade com fila e muita falta</h3><span class="badge st-pendente">Pendente</span></header>
+          <p><strong>Contexto:</strong> escolher a especialidade e o hospital certos define os dados e a prova de valor (Q1, Q2).</p>
           <p class="adr-date">07/11/2026</p>
         </article>
       </div>
+
+      <details>
+        <summary>Histórico de pivôs (decisões arquivadas)</summary>
+        <div class="adr-list">
+          <article class="adr archived"><header><h3>H1 · Unidade móvel de prevenção e rotas</h3><span class="badge st-pendente">Arquivada</span></header>
+            <p>O orientador não aprovou a ideia. Rota não deixava claro quem paga.</p></article>
+          <article class="adr archived"><header><h3>H2 · Transporte para hemodiálise</h3><span class="badge st-pendente">Arquivada</span></header>
+            <p>Já existe obrigação legal de transporte pelos municípios, o que reduzia o espaço da novidade.</p></article>
+          <article class="adr archived"><header><h3>H3 · Crédito durante o tratamento</h3><span class="badge st-pendente">Arquivada</span></header>
+            <p>Risco de endividar quem perdeu renda.</p></article>
+          <article class="adr archived"><header><h3>H4 · Navegador de direitos e FGTS por diagnóstico</h3><span class="badge st-pendente">Arquivada</span></header>
+            <p>Pagador fraco: seguradoras trazem conflito (seleção de risco).</p></article>
+          <article class="adr archived"><header><h3>H5 · Amparo: SaaS de assistência social para hospitais</h3><span class="badge st-pendente">Arquivada</span></header>
+            <p>O orientador apontou que o interesse do hospital em pagar e o paciente atendido não estavam claros.</p></article>
+        </div>
+      </details>
     </section>
 
     <!-- 9. WORKFLOW -->
@@ -904,120 +600,63 @@
       <p class="kicker">9 · Workflow</p>
       <h2>Como o trabalho flui</h2>
 
-      <h3>9.1 Jornada do paciente no produto</h3>
-      <p>Como o paciente e a assistente social usariam a plataforma, do diagnóstico ao resultado.</p>
+      <h3>9.1 Vida de um horário no produto</h3>
       <ol class="flow">
-        <li class="flow-step">
-          <h3>1 · Entrada</h3>
-          <p><strong>Entra:</strong> diagnóstico e primeiro contato com o serviço social.<br>
-             <strong>Sai:</strong> paciente cadastrado, com consentimento.</p>
-        </li>
-        <li class="flow-step">
-          <h3>2 · Triagem financeira</h3>
-          <p><strong>Entra:</strong> renda, despesas, dívidas, reserva e cuidador.<br>
-             <strong>Sai:</strong> índice, faixa e fôlego.</p>
-        </li>
-        <li class="flow-step">
-          <h3>3 · Direitos</h3>
-          <p><strong>Entra:</strong> diagnóstico, vínculo e renda.<br>
-             <strong>Sai:</strong> direitos que enquadram, a verificar, com motivo e base legal.</p>
-        </li>
-        <li class="flow-step">
-          <h3>4 · Documentos</h3>
-          <p><strong>Entra:</strong> checklist por direito.<br>
-             <strong>Sai:</strong> dossiê com prontidão e pendências.</p>
-        </li>
-        <li class="flow-step">
-          <h3>5 · Pedido e acompanhamento</h3>
-          <p><strong>Entra:</strong> dossiê pronto.<br>
-             <strong>Sai:</strong> pedido protocolado e etapa registrada.</p>
-        </li>
-        <li class="flow-step">
-          <h3>6 · Resultado</h3>
-          <p><strong>Entra:</strong> decisão do órgão.<br>
-             <strong>Sai:</strong> concluído, ou recurso e encaminhamento em caso de negativa.</p>
-        </li>
+        <li class="flow-step"><h3>1 · Importação</h3>
+          <p><strong>Entra:</strong> agenda, fila e histórico.<br><strong>Sai:</strong> agendamentos com risco calculado.</p></li>
+        <li class="flow-step"><h3>2 · Plano de contato</h3>
+          <p><strong>Entra:</strong> faixa de risco.<br><strong>Sai:</strong> contatos previstos, por canal e momento.</p></li>
+        <li class="flow-step"><h3>3 · Confirmação ativa</h3>
+          <p><strong>Entra:</strong> mensagem ao paciente.<br><strong>Sai:</strong> confirma, cancela ou sem resposta.</p></li>
+        <li class="flow-step"><h3>4 · Vaga aberta</h3>
+          <p><strong>Entra:</strong> cancelamento ou fim da janela sem resposta.<br><strong>Sai:</strong> horário marcado como disponível.</p></li>
+        <li class="flow-step"><h3>5 · Oferta à fila</h3>
+          <p><strong>Entra:</strong> fila ordenada pela regra do serviço.<br><strong>Sai:</strong> primeira aceitação ocupa; os demais são avisados.</p></li>
+        <li class="flow-step"><h3>6 · Aprendizado</h3>
+          <p><strong>Entra:</strong> quem compareceu ou faltou.<br><strong>Sai:</strong> métricas e calibração do modelo.</p></li>
       </ol>
 
-      <h3>9.2 Nosso ciclo de desenvolvimento</h3>
-      <p>
-        Seis etapas, cada uma com entradas, saídas e uma definição de pronto. As etapas 1 a 4 estão
-        encaminhadas nesta versão.
-      </p>
-      <ol class="flow">
-        <li class="flow-step done">
-          <h3>1 · Entender</h3>
-          <p><strong>Entra:</strong> tema do desafio e fontes.<br>
-             <strong>Sai:</strong> intenção, dores, perguntas de pesquisa.<br>
-             <strong>Pronto quando:</strong> o problema está formulado e as perguntas Q1 a Q12 têm responsável.</p>
-          <span class="badge st-decidida">Em andamento</span>
-        </li>
-        <li class="flow-step done">
-          <h3>2 · Definir</h3>
-          <p><strong>Entra:</strong> intenção e dores.<br>
-             <strong>Sai:</strong> objetivos, requisitos, métricas.<br>
-             <strong>Pronto quando:</strong> cada requisito aponta para um objetivo e cada objetivo tem métrica.</p>
-          <span class="badge st-decidida">Em andamento</span>
-        </li>
-        <li class="flow-step done">
-          <h3>3 · Modelar</h3>
-          <p><strong>Entra:</strong> requisitos e regras das fontes.<br>
-             <strong>Sai:</strong> índice, regras de direitos, checklist e fila de prioridade.<br>
-             <strong>Pronto quando:</strong> casos de teste cobrem cada regra.</p>
-          <span class="badge st-decidida">Primeira versão</span>
-        </li>
-        <li class="flow-step done">
-          <h3>4 · Prototipar</h3>
-          <p><strong>Entra:</strong> modelo e lab de UI.<br>
-             <strong>Sai:</strong> os quatro módulos interativos com pacientes fictícios.<br>
-             <strong>Pronto quando:</strong> a assistente social altera dados e vê o efeito.</p>
-          <span class="badge st-decidida">Primeira versão</span>
-        </li>
-        <li class="flow-step">
-          <h3>5 · Validar</h3>
-          <p><strong>Entra:</strong> protótipo.<br>
-             <strong>Sai:</strong> revisão por uma assistente social, parecer jurídico e de dados, e teste do índice (Q10).<br>
-             <strong>Pronto quando:</strong> os limites do modelo estão declarados.</p>
-          <span class="badge st-pendente">Pendente</span>
-        </li>
-        <li class="flow-step">
-          <h3>6 · Apresentar</h3>
-          <p><strong>Entra:</strong> resultados e protótipo.<br>
-             <strong>Sai:</strong> pitch de 5 minutos e demo.<br>
-             <strong>Pronto quando:</strong> o time ensaiou com cronômetro.</p>
-          <span class="badge st-pendente">Pendente</span>
-        </li>
+      <h3>9.2 Escopo do MVP do hackathon</h3>
+      <div class="two-col">
+        <div>
+          <h4>Entra</h4>
+          <ul class="check">
+            <li>Risco explicável por agendamento (lab 7.1).</li>
+            <li>Plano de confirmação por faixa (7.2).</li>
+            <li>Simulação de oferta à fila, pública e privada (7.3).</li>
+            <li>Simulador de retorno com cenários (7.4).</li>
+            <li>Dados fictícios e métricas conferidas (7.5).</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Fica fora</h4>
+          <ul class="cross">
+            <li>Envio real de mensagens.</li>
+            <li>Integração com sistema de agenda.</li>
+            <li>Modelo treinado com dados reais.</li>
+            <li>Transporte e overbooking.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>9.3 Roteiro do pitch (5 minutos)</h3>
+      <ol class="steps">
+        <li><h3>O problema, com duas pessoas</h3><p>Uma paciente que espera meses por um cardiologista, e um horário de cardiologia que fica vazio na manhã de hoje.</p></li>
+        <li><h3>O tamanho</h3><p>Faltas de cerca de 9% a 39% em serviços do SUS, conforme o serviço, e perda de receita no privado (A1 a A7).</p></li>
+        <li><h3>A solução em três passos</h3><p>Prever, confirmar, reocupar. Demonstração no lab: um agendamento de risco alto, o plano de contato e a oferta à fila.</p></li>
+        <li><h3>Quem paga e por quê</h3><p>O hospital recupera atendimentos (simulador 7.4). Mensalidade mais parte do recuperado.</p></li>
+        <li><h3>Como escala</h3><p>De uma especialidade para o hospital, depois rede e município; exames de imagem; central de regulação; transporte como segundo módulo.</p></li>
+        <li><h3>Equidade e cuidados</h3><p>O risco nunca reduz prioridade; sem multa; fila pública segue a regulação; LGPD.</p></li>
+        <li><h3>O que pedimos</h3><p>Um hospital piloto e acesso a uma base de agenda anonimizada.</p></li>
       </ol>
 
-      <details>
-        <summary>Roteiro do pitch (5 minutos)</summary>
-        <ol class="timeline">
-          <li><strong>Problema:</strong> quem recebe um diagnóstico grave perde renda, e os direitos que
-            ajudariam exigem formulários e laudos que quase ninguém conhece. Cerca de metade dos pedidos
-            por incapacidade foi negada no INSS no 1º semestre de 2026.</li>
-          <li><strong>Usuária:</strong> a assistente social do hospital, que faz esse trabalho sem
-            ferramenta própria (hipótese a confirmar em Q2).</li>
-          <li><strong>Produto:</strong> quatro módulos: vulnerabilidade, direitos, documentos e painel.
-            Começamos pelo saque do FGTS por diagnóstico, que a lei prevê para câncer, HIV e estágio terminal.</li>
-          <li><strong>Demo:</strong> escolher um paciente, ver o índice, os direitos que enquadram, o
-            relatório vencido, a prontidão e o painel ordenado.</li>
-          <li><strong>Negócio e limites:</strong> o hospital paga assinatura, sem crédito, sem venda de dados
-            e sem comissão. Dados fictícios, regras simplificadas, índice não validado. Escala: INSS, BPC,
-            IR, doenças fora da lista, empresas e novos eventos de vida.</li>
-        </ol>
-      </details>
-
-      <details>
-        <summary>Cuidados a declarar na apresentação</summary>
-        <ul>
-          <li>A plataforma é apoio à assistência social. Não garante deferimento nem substitui advogado ou perícia.</li>
-          <li>Os dados do protótipo são fictícios, e as regras estão simplificadas.</li>
-          <li>O índice de vulnerabilidade não foi validado e ordena a fila, sem decidir direitos.</li>
-          <li>O saque do FGTS só ajuda quem tem ou teve vínculo formal e saldo.</li>
-          <li>Não temos dado de mercado nem de concorrência verificados. Pagador e preço são hipóteses.</li>
-          <li>Seguradoras não são pagadoras, e dado de diagnóstico não é vendido ou compartilhado.</li>
-        </ul>
-      </details>
+      <h3>9.4 Cuidados do trabalho</h3>
+      <ul>
+        <li>Toda taxa e todo valor do pitch deve citar a fonte ou ser dito como hipótese.</li>
+        <li>Antes de dizer que somos diferentes, mapear concorrentes (Q8).</li>
+        <li>Evitar prometer redução da fila sem dado do hospital; o simulador mostra cenários, não garantia.</li>
+        <li>Parecer jurídico sobre LGPD e contato por mensagem antes de qualquer piloto (Q4).</li>
+      </ul>
     </section>
 
     <!-- 10. DIÁRIO -->
@@ -1026,8 +665,7 @@
       <h2>Registro do processo de produção</h2>
       <p>
         Linha do tempo do que fizemos e decidimos, para permitir a transcrição do processo.
-        Você pode acrescentar entradas (ficam salvas só neste navegador) e copiar tudo como
-        Markdown.
+        Você pode acrescentar entradas (ficam salvas só neste navegador) e copiar tudo como Markdown.
       </p>
 
       <ol class="diary" id="diary-list"></ol>
@@ -1046,7 +684,7 @@
         </label>
         <label class="grow">
           O que aconteceu
-          <input id="diary-text" type="text" maxlength="400" placeholder="Ex.: Conversamos com a assistente social do hospital sobre ..." required>
+          <input id="diary-text" type="text" maxlength="400" placeholder="Ex.: Conversamos com a regulação do município sobre a fila ..." required>
         </label>
         <button type="submit" class="btn btn-primary">Adicionar</button>
       </form>
@@ -1061,7 +699,7 @@
   </main>
 
   <footer>
-    <p>Hackathon USP 2026 · Amparo (nome provisório) · documento vivo</p>
+    <p>Hackathon USP 2026 · Vaga Viva (nome provisório) · documento vivo</p>
   </footer>
 
   <script src="script.js"></script>
