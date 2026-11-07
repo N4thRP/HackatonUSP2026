@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RotaSaúde · Hackathon USP 2026</title>
+  <meta name="description" content="Otimização de rotas de unidade móvel para medicina preventiva em cidades do interior. Hackathon USP 2026: Saúde para todos.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="#inicio">RotaSaúde</a>
+    <nav aria-label="Seções">
+      <a href="#problema">Problema</a>
+      <a href="#solucao">Solução</a>
+      <a href="#modelo">Modelo</a>
+      <a href="#simulador">Simulador</a>
+      <a href="#dados">Dados</a>
+      <a href="#plano">Plano</a>
+      <a href="#limites">Limites</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="inicio" class="hero">
+      <p class="eyebrow">Hackathon USP 2026 · Saúde para todos</p>
+      <h1>Levar a prevenção até onde as pessoas estão, na hora em que elas podem.</h1>
+      <p class="lead">
+        Um modelo que decide <strong>onde e quando</strong> uma unidade móvel de saúde deve parar,
+        e com qual pacote de serviços, para maximizar as ações preventivas em cidades pequenas
+        do interior.
+      </p>
+      <p class="theme-note">
+        Tema do desafio: <em>soluções para reduzir barreiras no acesso à saúde.</em>
+      </p>
+      <p class="hero-note">Nome provisório do projeto: RotaSaúde.</p>
+    </section>
+
+    <!-- PROBLEMA -->
+    <section id="problema">
+      <h2>O problema</h2>
+      <p>
+        Em cidades pequenas e áreas rurais, abrir novas unidades fixas costuma ser inviável:
+        falta capacidade financeira e há poucos profissionais. Além disso, parte da população
+        <strong>não procura o serviço de saúde por conta própria</strong>, seja por distância,
+        horário de trabalho, falta de informação ou desconfiança.
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>Barreira geográfica</h3>
+          <p>Moradores de bairros rurais e distantes ficam longe de UBS e de exames.</p>
+        </article>
+        <article class="card">
+          <h3>Barreira de tempo</h3>
+          <p>O horário dos serviços coincide com o do trabalho, e o trabalhador não consegue ir.</p>
+        </article>
+        <article class="card">
+          <h3>Barreira comportamental</h3>
+          <p>Quem não tem sintomas tende a não procurar o médico, e a prevenção se perde.</p>
+        </article>
+      </div>
+      <p>
+        Pergunta central: <strong>com uma unidade móvel e recursos limitados, quais paradas geram
+        mais prevenção?</strong>
+      </p>
+    </section>
+
+    <!-- SOLUÇÃO -->
+    <section id="solucao" class="alt">
+      <h2>A solução</h2>
+      <p>
+        Em vez de perguntar <em>onde construir</em>, o RotaSaúde pergunta <em>onde e quando ir</em>.
+        O sistema escolhe um cronograma semanal ou mensal de paradas, com o pacote de serviços de
+        cada uma, para a unidade móvel de uma microrregião.
+      </p>
+      <ul class="check">
+        <li><strong>Vai até as pessoas:</strong> feiras, igrejas, escolas, cooperativas, praças e
+          UBS rurais como pontos candidatos.</li>
+        <li><strong>No horário certo:</strong> fora do expediente da lida e da roça.</li>
+        <li><strong>Com aviso prévio:</strong> agente comunitário de saúde ou bot de WhatsApp
+          avisa quando a unidade chega, priorizando quem tem maior risco.</li>
+        <li><strong>Pacote enxuto:</strong> triagens de baixo atrito, como pressão, glicemia, vacinas
+          e coleta simples, sem consulta formal.</li>
+      </ul>
+      <p>
+        Tecnicamente, é um <strong>problema de roteamento com prêmios</strong>
+        (<em>Team Orienteering Problem</em> periódico, com janelas de horário): não é preciso visitar
+        todos os pontos, apenas os que valem a pena, no dia certo.
+      </p>
+    </section>
+
+    <!-- MODELO -->
+    <section id="modelo">
+      <h2>O modelo em quatro componentes</h2>
+      <ol class="steps">
+        <li>
+          <h3>Demanda e lacuna de cobertura</h3>
+          <p>
+            Estima, por localidade, quantas pessoas são elegíveis para cada ação preventiva
+            (por faixa etária e sexo) e onde a cobertura está mais baixa. Usa um modelo
+            (regressão ou XGBoost) com perfil demográfico e indicadores de saúde. As internações
+            por condições sensíveis à atenção primária (ICSAP) servem como proxy de acesso ruim.
+          </p>
+        </li>
+        <li>
+          <h3>Modelo de adesão</h3>
+          <p>
+            Estima a probabilidade de a pessoa comparecer: cai com a distância do ponto e varia
+            com dia, horário e aviso prévio. Começa como uma função de decaimento com a distância
+            e pode virar regressão logística se houver dados reais de campanhas.
+          </p>
+        </li>
+        <li>
+          <h3>Valor de cada parada</h3>
+          <p>
+            Combina os componentes anteriores em uma estimativa de benefício preventivo por parada
+            e por dia (fórmula abaixo).
+          </p>
+        </li>
+        <li>
+          <h3>Otimizador de rotas</h3>
+          <p>
+            Escolhe paradas, dias e ordem de visita para maximizar o valor total, respeitando
+            limite de horas por dia, combustível, equipe e tempo de atendimento. Implementado com
+            OR-Tools (VRP com prêmios e janelas de horário), com planejamento periódico para
+            ações que pedem retorno, como vacinas de várias doses e seguimento de hipertensos.
+          </p>
+        </li>
+      </ol>
+
+      <div class="formula" role="figure" aria-label="Fórmula do valor da parada">
+        <p class="formula-label">Valor de uma parada</p>
+        <p class="formula-body">
+          valor(parada, dia) =
+          &Sigma;<sub>serviço</sub>
+          [ elegíveis &times; lacuna &times; P(comparecer) &times; ganho ]
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Termo</th><th>Como estimar</th><th>Dados</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Elegíveis</strong></td>
+              <td>Por faixa etária e sexo: mulheres 25&ndash;64 (Papanicolau), 50&ndash;74 (mamografia), adultos 40+ (pressão e glicemia), crianças (vacinas)</td>
+              <td>Censo IBGE, setores rurais</td>
+            </tr>
+            <tr>
+              <td><strong>Lacuna de cobertura</strong></td>
+              <td>Onde a prevenção está pior: cobertura vacinal, exames de rastreio e ICSAP como proxy</td>
+              <td>SI-PNI, SISCAN, SIH/DATASUS</td>
+            </tr>
+            <tr>
+              <td><strong>P(comparecer)</strong></td>
+              <td>Modelo de adesão: decai com a distância e varia com dia, horário e aviso prévio</td>
+              <td>Hipóteses calibradas com literatura, com análise de sensibilidade</td>
+            </tr>
+            <tr>
+              <td><strong>Ganho</strong></td>
+              <td>Peso por serviço, de acordo com o efeito preventivo esperado</td>
+              <td>Literatura e diretrizes do SUS</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SIMULADOR -->
+    <section id="simulador" class="alt">
+      <h2>Simulador do valor de uma parada</h2>
+      <p>
+        Ajuste os valores para ver como cada fator muda o valor de uma parada.
+        <strong>Os números são ilustrativos</strong>, apenas para mostrar a lógica do modelo.
+      </p>
+
+      <form id="calc" class="calc" onsubmit="return false" aria-label="Simulador de valor da parada">
+        <label>
+          Pessoas elegíveis no ponto
+          <input id="in-elegiveis" type="range" min="0" max="500" step="10" value="120">
+          <output id="out-elegiveis">120</output>
+        </label>
+        <label>
+          Lacuna de cobertura (%)
+          <input id="in-lacuna" type="range" min="0" max="100" step="5" value="60">
+          <output id="out-lacuna">60%</output>
+        </label>
+        <label>
+          Probabilidade de comparecer (%)
+          <input id="in-adesao" type="range" min="0" max="100" step="5" value="40">
+          <output id="out-adesao">40%</output>
+        </label>
+        <label>
+          Ganho do serviço (peso de 1 a 5)
+          <input id="in-ganho" type="range" min="1" max="5" step="1" value="3">
+          <output id="out-ganho">3</output>
+        </label>
+      </form>
+
+      <div class="results" aria-live="polite">
+        <div class="result">
+          <span class="result-num" id="res-pessoas">0</span>
+          <span class="result-label">pessoas atendidas esperadas</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="res-valor">0</span>
+          <span class="result-label">valor ponderado da parada</span>
+        </div>
+      </div>
+
+      <p class="small">
+        Exemplo de leitura: se aumentamos a adesão com aviso prévio de 40% para 60%,
+        o valor da parada sobe na mesma proporção. É por isso que a camada de aviso (agente
+        comunitário ou WhatsApp) faz parte da solução.
+      </p>
+    </section>
+
+    <!-- DADOS -->
+    <section id="dados">
+      <h2>Dados e ferramentas</h2>
+      <div class="two-col">
+        <div>
+          <h3>Fontes de dados</h3>
+          <ul>
+            <li><strong>Censo IBGE:</strong> população, idade e sexo por setor censitário rural.</li>
+            <li><strong>CNES:</strong> unidades de saúde existentes, para evitar sobreposição.</li>
+            <li><strong>OpenStreetMap:</strong> rede viária (estradas de terra costumam estar mal
+              mapeadas, então aplicamos um fator de lentidão e declaramos isso).</li>
+            <li><strong>SI-PNI e SISCAN:</strong> cobertura vacinal e rastreios.</li>
+            <li><strong>SIH/DATASUS:</strong> internações, incluindo ICSAP.</li>
+            <li><strong>Base dos Dados:</strong> acesso padronizado a várias bases públicas.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Ferramentas</h3>
+          <ul>
+            <li><strong>Python:</strong> geopandas, osmnx, scikit-learn ou XGBoost.</li>
+            <li><strong>Otimização:</strong> OR-Tools (VRP com prêmios e janelas de horário).</li>
+            <li><strong>Visualização:</strong> Folium ou Streamlit, com mapa e controles
+              interativos.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLANO -->
+    <section id="plano" class="alt">
+      <h2>Escopo e plano de execução</h2>
+      <p>
+        Para caber em um hackathon, o escopo inicial é <strong>uma microrregião com 5 a 10
+        municípios pequenos, uma unidade, um pacote de 3 a 4 serviços e um horizonte de 4
+        semanas</strong>.
+      </p>
+      <ol class="timeline">
+        <li><strong>Base:</strong> definir a região, baixar Censo, CNES e rede viária e juntar tudo
+          em um GeoDataFrame.</li>
+        <li><strong>Valor:</strong> estimar elegíveis, lacuna e adesão e calcular o valor por parada.</li>
+        <li><strong>Rota:</strong> rodar o otimizador e comparar com roteiros de referência.</li>
+        <li><strong>Demo:</strong> montar o mapa interativo e o pitch.</li>
+      </ol>
+      <p class="small">
+        Se o tempo apertar, o núcleo é <em>valor por parada + otimizador + comparação com o roteiro
+        ingênuo</em>. O modelo de adesão refinado e a camada de aviso entram como extras.
+      </p>
+
+      <h3>Validação por simulação</h3>
+      <ul>
+        <li>Comparar o roteiro otimizado com um <strong>rodízio igual entre cidades</strong> e com um
+          roteiro <strong>por proximidade</strong>.</li>
+        <li>Medir ações preventivas esperadas por semana e <strong>custo por pessoa atendida</strong>.</li>
+        <li>Fazer análise de sensibilidade: o ranking das paradas se mantém se a adesão for 20%
+          menor?</li>
+      </ul>
+
+      <h3>O que mostrar na demo</h3>
+      <ul>
+        <li>Mapa com a rota semanal e as paradas escolhidas.</li>
+        <li>Quadro de quem é atendido em cada parada e com qual pacote.</li>
+        <li>Controles de número de dias, pacote de serviços e número de unidades.</li>
+      </ul>
+    </section>
+
+    <!-- LIMITES -->
+    <section id="limites">
+      <h2>Limites e cuidados</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Adesão é a maior incerteza</h3>
+          <p>Por isso o plano é testado com análise de sensibilidade, e não apresentado como
+            previsão exata.</p>
+        </article>
+        <article class="card">
+          <h3>Móvel não é automaticamente mais barato</h3>
+          <p>Só vale se o custo por pessoa atendida for competitivo, e isso é comparado na
+            simulação.</p>
+        </article>
+        <article class="card">
+          <h3>Privacidade (LGPD)</h3>
+          <p>O modelo usa dados agregados por setor. A lista de quem avisar fica com o agente
+            comunitário de saúde, não no sistema.</p>
+        </article>
+        <article class="card">
+          <h3>Qualidade dos dados</h3>
+          <p>O CNES tem erros de cadastro, e a malha viária rural é imprecisa. Esses limites são
+            declarados nos resultados.</p>
+        </article>
+        <article class="card">
+          <h3>Equidade</h3>
+          <p>A priorização não deve favorecer só as áreas mais densas. A vulnerabilidade entra na
+            ponderação.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- PITCH -->
+    <section id="pitch" class="alt">
+      <h2>Roteiro do pitch (5 minutos)</h2>
+      <ol class="timeline">
+        <li><strong>Problema:</strong> uma pessoa real do interior que nunca fez prevenção
+          porque o serviço está longe ou aberto só quando ela trabalha.</li>
+        <li><strong>Ideia:</strong> a unidade vai até onde as pessoas estão, na hora em que
+          podem.</li>
+        <li><strong>Modelo:</strong> valor por parada = elegíveis &times; lacuna &times; adesão
+          &times; ganho, otimizado como roteamento com prêmios.</li>
+        <li><strong>Demo:</strong> mapa, rota e comparação com o roteiro ingênuo.</li>
+        <li><strong>Impacto e limites:</strong> custo por pessoa atendida, sensibilidade,
+          LGPD e próximos passos com a secretaria de saúde.</li>
+      </ol>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Hackathon USP 2026 · RotaSaúde (nome provisório)</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
