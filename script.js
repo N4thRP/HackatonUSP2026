@@ -182,75 +182,170 @@
     setText('ag-esp', fmtNum(esperado, 1));
   }
 
-  /* ---------- 7.3 oferta à fila ---------- */
-  var FILA = [
-    { nome: 'Paciente A', esp: 'Cardiologia', classe: 1, dias: 120, min: 40, acc: 0.7, aut: true },
-    { nome: 'Paciente B', esp: 'Cardiologia', classe: 2, dias: 200, min: 150, acc: 0.6, aut: true },
-    { nome: 'Paciente C', esp: 'Cardiologia', classe: 2, dias: 310, min: 30, acc: 0.5, aut: false },
-    { nome: 'Paciente D', esp: 'Cardiologia', classe: 3, dias: 400, min: 25, acc: 0.4, aut: true },
-    { nome: 'Paciente E', esp: 'Cardiologia', classe: 1, dias: 60, min: 90, acc: 0.8, aut: true },
-    { nome: 'Paciente F', esp: 'Cardiologia', classe: 3, dias: 90, min: 20, acc: 0.3, aut: false },
-    { nome: 'Paciente G', esp: 'Oftalmologia', classe: 2, dias: 250, min: 35, acc: 0.5, aut: true },
-    { nome: 'Paciente H', esp: 'Oftalmologia', classe: 1, dias: 40, min: 60, acc: 0.7, aut: true },
-    { nome: 'Paciente I', esp: 'Oftalmologia', classe: 3, dias: 500, min: 200, acc: 0.6, aut: false },
-    { nome: 'Paciente J', esp: 'Oftalmologia', classe: 2, dias: 150, min: 15, acc: 0.35, aut: true }
+  /* ---------- 7.3 motor de reoferta ---------- */
+  var URG_NOME = { 1: '1 · Urgente', 2: '2 · Prioritário', 3: '3 · Eletivo' };
+  /* origem: 'fila' (sem data) ou 'agendado' (consulta futura em 'futura' dias). hab: hora habitual.
+     canc/total: cancelamentos e agendamentos em 12 meses. resp: taxa de resposta a mensagens. */
+  var CANDIDATOS = [
+    { nome: 'Ana', esp: 'Cardiologia', urg: 1, origem: 'fila', dias: 95, hab: 9, canc: 0, total: 3, min: 35, resp: 0.8, aut: true },
+    { nome: 'Bruno', esp: 'Cardiologia', urg: 1, origem: 'agendado', futura: 25, dias: 40, hab: 14, canc: 2, total: 5, min: 50, resp: 0.6, aut: true },
+    { nome: 'Carla', esp: 'Cardiologia', urg: 1, origem: 'fila', dias: 130, hab: 15, canc: 0, total: 6, min: 170, resp: 0.9, aut: true },
+    { nome: 'Davi', esp: 'Cardiologia', urg: 2, origem: 'agendado', futura: 60, dias: 30, hab: 14, canc: 0, total: 4, min: 20, resp: 0.9, aut: true },
+    { nome: 'Elisa', esp: 'Cardiologia', urg: 2, origem: 'fila', dias: 210, hab: 8, canc: 1, total: 2, min: 60, resp: 0.5, aut: false },
+    { nome: 'Fábio', esp: 'Cardiologia', urg: 2, origem: 'agendado', futura: 15, dias: 70, hab: 13, canc: 3, total: 6, min: 30, resp: 0.7, aut: true },
+    { nome: 'Gisele', esp: 'Cardiologia', urg: 3, origem: 'fila', dias: 320, hab: 14, canc: 0, total: 5, min: 15, resp: 0.95, aut: true },
+    { nome: 'Hugo', esp: 'Cardiologia', urg: 3, origem: 'agendado', futura: 80, dias: 20, hab: 16, canc: 1, total: 8, min: 45, resp: 0.8, aut: true },
+    { nome: 'Íris', esp: 'Oftalmologia', urg: 1, origem: 'fila', dias: 60, hab: 10, canc: 1, total: 3, min: 40, resp: 0.7, aut: true },
+    { nome: 'João', esp: 'Oftalmologia', urg: 2, origem: 'agendado', futura: 45, dias: 50, hab: 14, canc: 0, total: 5, min: 25, resp: 0.85, aut: true },
+    { nome: 'Lívia', esp: 'Oftalmologia', urg: 2, origem: 'fila', dias: 240, hab: 15, canc: 0, total: 2, min: 140, resp: 0.6, aut: false },
+    { nome: 'Marcos', esp: 'Oftalmologia', urg: 3, origem: 'agendado', futura: 30, dias: 90, hab: 9, canc: 2, total: 4, min: 20, resp: 0.5, aut: true }
   ];
-
-  /* modo: publico|privado. Retorna {linhas, chance, ofertas, primeiro} */
-  function ofertar(modo, esp, horas, resp, par) {
-    var disp = horas * 60, cand = [], fora = [], i;
-    par = Math.max(1, Math.round(par));
-    for (i = 0; i < FILA.length; i++) {
-      var f = FILA[i];
-      if (f.esp !== esp) { continue; }
-      if (modo === 'privado' && !f.aut) { fora.push({ f: f, sit: 'Fora: sem autorização do convênio', ok: false }); }
-      else { cand.push(f); }
-    }
-    cand.sort(function (a, b) {
-      if (modo === 'publico') {
-        if (a.classe !== b.classe) { return a.classe - b.classe; }
-        return b.dias - a.dias;
-      }
-      if (b.dias !== a.dias) { return b.dias - a.dias; }
-      return a.classe - b.classe;
-    });
-    var linhas = [], semFalha = 1, ofertas = 0, primeiro = '-';
-    for (i = 0; i < cand.length; i++) {
-      var c = cand[i], rodada = Math.floor(i / par), fim = (rodada + 1) * resp;
-      var chega = fim + c.min, ok = chega <= disp;
-      if (ok) {
-        ofertas++; semFalha *= (1 - c.acc);
-        if (primeiro === '-') { primeiro = c.nome; }
-        linhas.push({ f: c, ok: true, sit: 'Oferta na rodada ' + (rodada + 1) + ' (responde até ' + fim + ' min; chega em ' + chega + ' min)' });
-      } else {
-        linhas.push({ f: c, ok: false, sit: 'Fora: não chegaria a tempo (' + chega + ' min > ' + Math.round(disp) + ' min)' });
-      }
-    }
-    return { linhas: linhas.concat(fora), chance: ofertas ? 1 - semFalha : 0, ofertas: ofertas, primeiro: primeiro };
+  var A_PADRAO = { b0: -1.5, hor: 1.2, canc: -2.5, dist: 1, antec: 0.8, ganho: 0.8, resp: 1 };
+  function pesosAceite() {
+    return {
+      b0: num('a-b0', A_PADRAO.b0), hor: num('a-hor', A_PADRAO.hor), canc: num('a-canc', A_PADRAO.canc),
+      dist: num('a-dist', A_PADRAO.dist), antec: num('a-antec', A_PADRAO.antec), ganho: num('a-ganho', A_PADRAO.ganho), resp: num('a-resp', A_PADRAO.resp)
+    };
   }
-
+  /* chance de aceitar a oferta; vaga: {hora, horas} */
+  function aceite(c, vaga, w) {
+    var dif = Math.abs(vaga.hora - c.hab), taxa = taxaSuavizada(c.canc, c.total);
+    var ganhoDias = c.origem === 'agendado' ? c.futura : 90;
+    var f = [
+      { nome: 'Horário parecido com o habitual', valor: 'habitual ' + c.hab + 'h, vaga ' + vaga.hora + 'h', c: w.hor * (1 - Math.min(dif, 6) / 6) },
+      { nome: 'Taxa de cancelamento', valor: c.canc + ' de ' + Math.max(c.total, c.canc) + ' (suavizada ' + fmtPct(taxa) + ')', c: w.canc * taxa },
+      { nome: 'Proximidade', valor: c.min + ' min de deslocamento', c: w.dist * (1 - Math.min(c.min, 120) / 120) },
+      { nome: 'Antecedência da oferta', valor: fmtNum(vaga.horas, 1) + ' h antes', c: w.antec * Math.min(vaga.horas, 24) / 24 },
+      { nome: 'Tempo que o paciente ganha', valor: c.origem === 'agendado' ? 'antecipa ' + c.futura + ' dias' : 'na fila, sem data', c: w.ganho * Math.min(ganhoDias, 90) / 90 },
+      { nome: 'Costuma responder mensagens', valor: fmtPct(c.resp), c: w.resp * (c.resp - 0.5) * 2 }
+    ];
+    var z = w.b0, i;
+    for (i = 0; i < f.length; i++) { z += f[i].c; }
+    return { p: sigmoid(z), z: z, fatores: f };
+  }
+  /* cfg: {modo, esp, hora, horas, resp, par, desempate} */
+  function reofertar(cfg, w) {
+    var disp = cfg.horas * 60, par = Math.max(1, Math.round(cfg.par)), cand = [], fora = [], i;
+    for (i = 0; i < CANDIDATOS.length; i++) {
+      var c = CANDIDATOS[i];
+      if (c.esp !== cfg.esp) { continue; }
+      var a = aceite(c, cfg, w);
+      var item = { c: c, p: a.p, fatores: a.fatores, z: a.z };
+      if (cfg.modo === 'privado' && !c.aut) { item.sit = 'Fora: sem autorização do convênio'; item.ok = false; fora.push(item); }
+      else { cand.push(item); }
+    }
+    cand.sort(function (x, y) {
+      if (x.c.urg !== y.c.urg) { return x.c.urg - y.c.urg; }
+      if (cfg.desempate === 'espera') { return y.c.dias - x.c.dias; }
+      if (y.p !== x.p) { return y.p - x.p; }
+      return y.c.dias - x.c.dias;
+    });
+    var pos = 0, rodadas = [], linhas = [];
+    for (i = 0; i < cand.length; i++) {
+      var it = cand[i], rod = Math.floor(pos / par), fim = (rod + 1) * cfg.resp, chega = fim + it.c.min;
+      if (chega <= disp) {
+        it.ok = true; it.rodada = rod; it.fim = fim; pos++;
+        if (!rodadas[rod]) { rodadas[rod] = []; }
+        rodadas[rod].push(it);
+        it.sit = 'Rodada ' + (rod + 1) + ': responde até ' + fim + ' min, chega em ' + chega + ' min';
+      } else {
+        it.ok = false; it.sit = 'Fora: não chegaria a tempo (' + chega + ' > ' + Math.round(disp) + ' min)';
+      }
+      linhas.push(it);
+    }
+    /* probabilidade de cada um ficar com a vaga: ninguém antes aceitou e ele aceita */
+    var semAceite = 1, tempo = 0, cascata = 0, r, j;
+    for (r = 0; r < rodadas.length; r++) {
+      for (j = 0; j < rodadas[r].length; j++) {
+        var x = rodadas[r][j];
+        x.fica = semAceite * x.p;
+        tempo += x.fica * rodadas[r][j].fim;
+        if (x.c.origem === 'agendado') { cascata += x.fica; }
+        semAceite *= (1 - x.p);
+      }
+    }
+    for (i = 0; i < fora.length; i++) { fora[i].fica = 0; linhas.push(fora[i]); }
+    for (i = 0; i < linhas.length; i++) { if (!linhas[i].ok) { linhas[i].fica = 0; } }
+    var chance = 1 - semAceite, ofertados = pos;
+    return {
+      linhas: linhas, chance: ofertados ? chance : 0, ofertas: ofertados,
+      tempo: chance > 0 ? tempo / chance : null, cascata: cascata,
+      primeiro: rodadas[0] ? rodadas[0][0].c.nome : '-', rodadas: rodadas.length
+    };
+  }
+  function lerVaga() {
+    return {
+      modo: $('v-modo') ? $('v-modo').value : 'publico',
+      esp: $('v-esp') ? $('v-esp').value : 'Cardiologia',
+      hora: clamp(Math.round(num('v-hora', 14)), 0, 23),
+      horas: Math.max(0.5, num('v-horas', 6)),
+      resp: Math.max(1, num('v-resp', 20)),
+      par: clamp(num('v-par', 2), 1, 10),
+      desempate: $('v-desempate') ? $('v-desempate').value : 'aceite'
+    };
+  }
+  var selecionado = null;
+  function mensagens(it, cfg) {
+    var c = it.c, hh = (cfg.hora < 10 ? '0' : '') + cfg.hora + ':00';
+    var quando = cfg.horas < 24 ? 'hoje' : 'amanhã';
+    var situ = c.origem === 'agendado' ? 'antes da sua consulta marcada para daqui a ' + c.futura + ' dias' : 'e você está na lista de espera';
+    var manter = c.origem === 'agendado' ? 'sua consulta atual continua igual' : 'sua posição na lista continua igual';
+    return [
+      ['Oferta (rodada ' + (it.rodada + 1) + ')', c.nome, 'Olá, ' + c.nome + '! Abriu um horário de ' + cfg.esp + ' ' + quando + ' às ' + hh + ' no Hospital Exemplo, ' + situ +
+        '. Quer ficar com ele? Responda SIM em até ' + cfg.resp + ' minutos. Se não puder, tudo bem: ' + manter + '.'],
+      ['Aceite confirmado', c.nome, 'Pronto, ' + c.nome + '! Sua consulta de ' + cfg.esp + ' ficou para ' + quando + ' às ' + hh + '. Leve documento e pedido médico.' +
+        (c.origem === 'agendado' ? ' Sua consulta antiga foi liberada para outro paciente.' : '')],
+      ['Vaga preenchida', 'Demais contatados', 'Obrigado pela resposta! Esse horário já foi preenchido. Nada mudou para você: ' + manter + '.'],
+      ['Liberação da vaga (caso 1)', 'Quem cancelou', 'Recebemos seu aviso. Sua consulta foi cancelada sem nenhuma penalidade. Quer remarcar? Responda REMARCAR.']
+    ];
+  }
   function renderFila() {
-    var modo = $('v-modo') ? $('v-modo').value : 'publico';
-    var esp = $('v-esp') ? $('v-esp').value : 'Cardiologia';
-    var r = ofertar(modo, esp, Math.max(0.5, num('v-horas', 5)), Math.max(1, num('v-resp', 20)), num('v-par', 1));
+    var cfg = lerVaga(), w = pesosAceite(), r = reofertar(cfg, w), i, html = '';
     setText('v-chance', fmtPct(r.chance));
+    setText('v-tempo', r.tempo === null ? '-' : fmtInt(r.tempo) + ' min');
     setText('v-ofertas', String(r.ofertas));
     setText('v-primeiro', r.primeiro);
-    var html = '', i;
+    setText('v-cascata', fmtPct(r.cascata));
+    var idx = 0;
     for (i = 0; i < r.linhas.length; i++) {
       var l = r.linhas[i];
-      html += '<tr><td>' + esc(l.f.nome) + '</td><td>' + l.f.classe + '</td><td class="num">' + l.f.dias +
-        '</td><td class="num">' + l.f.min + '</td><td class="num">' + Math.round(l.f.acc * 100) +
+      html += '<tr data-nome="' + esc(l.c.nome) + '" tabindex="0" style="cursor:pointer"' + (selecionado === l.c.nome ? ' class="row-focus"' : '') + '><td>' + (l.ok ? ++idx : '-') + '</td><td>' + esc(l.c.nome) +
+        '</td><td>' + URG_NOME[l.c.urg] + '</td><td>' + (l.c.origem === 'agendado' ? 'Antecipa (+' + l.c.futura + ' d)' : 'Fila (' + l.c.dias + ' d)') +
+        '</td><td class="num">' + l.c.hab + 'h</td><td class="num">' + l.c.canc + '/' + Math.max(l.c.total, l.c.canc) +
+        '</td><td class="num">' + l.c.min + '</td><td class="num">' + Math.round(l.p * 100) + '</td><td class="num">' + Math.round(l.fica * 100) +
         '</td><td class="small ' + (l.ok ? 'ok' : 'muted') + '">' + esc(l.sit) + '</td></tr>';
     }
-    if ($('v-body')) { $('v-body').innerHTML = html; }
+    var body = $('v-body');
+    if (body) { body.innerHTML = html; }
     var al = $('v-alerta');
     if (al) {
       if (r.ofertas === 0) {
         al.hidden = false;
-        al.textContent = 'Ninguém consegue chegar a tempo: o horário provavelmente não será reocupado. O aviso precisa vir mais cedo, e é isso que a confirmação ativa busca.';
+        al.textContent = 'Ninguém consegue chegar a tempo: o horário provavelmente não será reocupado. O aviso do caso 1 precisa vir mais cedo, e é isso que a confirmação ativa busca.';
       } else { al.hidden = true; al.textContent = ''; }
     }
+    /* detalhe do selecionado (padrão: primeiro ofertado) */
+    var sel = null;
+    for (i = 0; i < r.linhas.length; i++) { if (r.linhas[i].c.nome === selecionado) { sel = r.linhas[i]; } }
+    if (!sel) { for (i = 0; i < r.linhas.length; i++) { if (r.linhas[i].ok) { sel = r.linhas[i]; break; } } }
+    if (!sel && r.linhas.length) { sel = r.linhas[0]; }
+    var det = '', msgs = '';
+    if (sel) {
+      setText('v-det-tit', 'Fatores do aceite: ' + sel.c.nome);
+      det = '<tr><td>Constante</td><td class="small">-</td><td class="num">' + fmtSign(w.b0, 2) + '</td></tr>';
+      for (i = 0; i < sel.fatores.length; i++) {
+        det += '<tr><td>' + esc(sel.fatores[i].nome) + '</td><td class="small">' + esc(sel.fatores[i].valor) + '</td><td class="num">' + fmtSign(sel.fatores[i].c, 2) + '</td></tr>';
+      }
+      det += '<tr><td><strong>Chance de aceite</strong></td><td class="small">z = ' + fmtSign(sel.z, 2) + '</td><td class="num"><strong>' + fmtPct(sel.p) + '</strong></td></tr>';
+      if (sel.ok) {
+        var ms = mensagens(sel, cfg);
+        for (i = 0; i < ms.length; i++) { msgs += '<tr><td>' + esc(ms[i][0]) + '</td><td>' + esc(ms[i][1]) + '</td><td class="small">' + esc(ms[i][2]) + '</td></tr>'; }
+      } else {
+        msgs = '<tr><td colspan="3" class="small">' + esc(sel.c.nome) + ' não recebe oferta: ' + esc(sel.sit.replace(/^Fora: /, '')) + '.</td></tr>';
+      }
+    }
+    if ($('v-det')) { $('v-det').innerHTML = det; }
+    if ($('v-msgs')) { $('v-msgs').innerHTML = msgs; }
   }
 
   /* ---------- 7.4 retorno financeiro ---------- */
@@ -306,6 +401,17 @@
     setText('s-liq', fmtBRL(s.liq));
     setText('s-roi', fmtNum(s.razao, 1) + '×');
     setText('s-fila-abs', fmtPct(s.filaAbs, 1));
+    var aviso = s.faltas - s.evitadas, c1 = aviso * p.aviso, c4 = aviso - c1;
+    var casos = [
+      ['3 · Vai e confirma', p.agenda - s.faltas, 'Atendido como previsto.'],
+      ['2 · Esqueceu, é lembrado e vai', s.evitadas, 'Falta evitada: atendimento recuperado.'],
+      ['1 · Avisa que não vai', c1, 'Vaga liberada; ' + fmtInt(s.reoc) + ' reocupadas pelo motor (' + fmtPct(p.reoc) + ').'],
+      ['4 · Não vai e não responde', c4, 'Horário perdido (política do hospital, D13).']
+    ], ch = '', ci;
+    for (ci = 0; ci < casos.length; ci++) {
+      ch += '<tr><td>' + casos[ci][0] + '</td><td class="num">' + fmtInt(casos[ci][1]) + '</td><td class="small">' + esc(casos[ci][2]) + '</td></tr>';
+    }
+    if ($('s-casos')) { $('s-casos').innerHTML = ch; }
     var cen = [['Conservador (efeitos × 0,5)', 0.5], ['Base (efeitos × 1)', 1], ['Otimista (efeitos × 1,4)', 1.4]], html = '', i;
     for (i = 0; i < cen.length; i++) {
       var q = {}, k;
@@ -403,7 +509,9 @@
     { when: '07/11/2026 · 18:20', tag: 'Descoberta', text: 'O orientador rejeitou o Amparo: o interesse do hospital em pagar e o paciente atendido não estavam claros. Novo critério: quem sofre, quem paga e por que paga.' },
     { when: '07/11/2026 · 18:35', tag: 'Pesquisa', text: 'Pesquisa de faltas e cancelamentos no SUS e no privado, e de alternativas (retinopatia, telessaúde, crônicos para empresas).' },
     { when: '07/11/2026 · 18:50', tag: 'Decisão', text: 'Escopo final: prever cancelamento de última hora, confirmar ativamente e reocupar o horário com quem está na fila, para hospitais públicos e privados (D1, D2).' },
-    { when: '07/11/2026 · 19:00', tag: 'Entrega', text: 'Documento reorganizado nas dez seções, com lab de risco, plano de confirmação, oferta à fila, retorno financeiro e teste de métricas.' }
+    { when: '07/11/2026 · 19:00', tag: 'Entrega', text: 'Documento reorganizado nas dez seções, com lab de risco, plano de confirmação, oferta à fila, retorno financeiro e teste de métricas.' },
+    { when: '07/11/2026 · 19:49', tag: 'Decisão', text: 'O grupo avaliou um incentivo de comparecimento (desconto ou crédito) e decidiu tirá-lo do escopo. Fica arquivado como H6 e pode voltar após o piloto.' },
+    { when: '07/11/2026 · 20:05', tag: 'Decisão', text: 'O produto passa a ser pensado pelos quatro casos de paciente. Foco no caso 1: motor de reoferta com urgência primeiro e, dentro dela, chance de aceite (horário parecido, sem histórico de cancelamento, proximidade); mensagens automáticas e cascata (D11 a D14).' }
   ];
 
   function lerExtras() {
@@ -480,7 +588,20 @@
     }
     ligar(['r-faltas', 'r-total', 'r-antec', 'r-desloc', 'r-transp', 'r-tipo', 'r-conf',
       'w-b0', 'w-hist', 'w-antec', 'w-desloc', 'w-transp', 'w-tipo', 'w-conf', 'in-alto', 'in-medio', 'in-hlib'], function () { renderRisco(); renderBacktest(); });
-    ligar(['v-modo', 'v-esp', 'v-horas', 'v-resp', 'v-par'], renderFila);
+    ligar(['v-modo', 'v-esp', 'v-hora', 'v-horas', 'v-resp', 'v-par', 'v-desempate', 'a-b0', 'a-hor', 'a-canc', 'a-dist', 'a-antec', 'a-ganho', 'a-resp'], renderFila);
+    var vb = $('v-body');
+    if (vb) {
+      var escolher = function (ev) {
+        var tr = ev.target;
+        while (tr && tr.tagName !== 'TR') { tr = tr.parentNode; }
+        if (!tr || !tr.getAttribute) { return; }
+        if (ev.type === 'keydown' && ev.key !== 'Enter' && ev.key !== ' ') { return; }
+        selecionado = tr.getAttribute('data-nome'); renderFila();
+      };
+      vb.addEventListener('click', escolher); vb.addEventListener('keydown', escolher);
+    }
+    var ve = $('v-esp');
+    if (ve) { ve.addEventListener('change', function () { selecionado = null; renderFila(); }); }
     ligar(['s-agenda', 's-falta', 's-evit', 's-aviso', 's-reoc', 's-valor', 's-fixo', 's-fee', 's-fila'], renderSim);
 
     var b1 = $('btn-preset-priv'), b2 = $('btn-preset-pub'), bt = $('btn-bt');
@@ -518,5 +639,5 @@
   else { iniciar(); }
 
   /* exposição mínima para testes */
-  window.VagaViva = { risco: risco, faixa: faixa, ofertar: ofertar, simular: simular, avaliar: avaliar, gerar: gerar, pesos: W_PADRAO, taxaSuavizada: taxaSuavizada };
+  window.VagaViva = { risco: risco, faixa: faixa, reofertar: reofertar, aceite: aceite, candidatos: CANDIDATOS, simular: simular, avaliar: avaliar, gerar: gerar, pesos: W_PADRAO, taxaSuavizada: taxaSuavizada };
 })();
