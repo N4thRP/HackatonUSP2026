@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RotaSaúde · Hemodiálise no interior: rotas de transporte · Hackathon USP 2026</title>
-  <meta name="description" content="Documento vivo do projeto RotaSaúde (Hackathon USP 2026): como garantir hemodiálise no interior com rotas de transporte disponíveis, pontuais e seguras.">
+  <title>RotaSaúde · Rotas e agendamentos para transporte de pacientes em hemodiálise · Hackathon USP 2026</title>
+  <meta name="description" content="Documento vivo do projeto RotaSaúde (Hackathon USP 2026): plataforma de demanda, prioridade, rotas e agendamentos para frotas que levam pessoas em hemodiálise, com foco no menor tempo de translocação.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -30,99 +30,137 @@
     <!-- ABERTURA -->
     <section id="inicio" class="hero">
       <p class="eyebrow">Hackathon USP 2026 · Saúde para todos</p>
-      <h1>Hemodiálise no interior: quais rotas, e em que horários?</h1>
+      <h1>O menor tempo de translocação possível para quem faz hemodiálise.</h1>
       <p class="lead">
-        Documento vivo do projeto <strong>RotaSaúde</strong> (nome provisório). Ele organiza o
-        nosso raciocínio sobre como oferecer uma base sólida de atendimento a quem precisa de
-        hemodiálise no interior, com foco na <strong>disponibilidade das rotas de transporte</strong>.
+        Material de produto de uma empresa (simulada) que desenvolve um <strong>sistema de rotas e
+        agendamentos para frotas</strong> que levam pessoas em hemodiálise às capitais e aos centros
+        de referência. O núcleo do produto é: <strong>demanda, prioridade e cálculo de rotas</strong>.
+        A hemodiálise é o primeiro caso, e o núcleo é desenhado para se abrir a outras rotas.
       </p>
       <p class="hero-note">
-        Status: <strong>em construção</strong>. Partes são hipóteses a validar e estão marcadas como
-        tal. Este documento é apoio logístico e não substitui decisões clínicas.
+        Status: <strong>em construção</strong>. Clientes, modelo de negócio e regras de prioridade são
+        hipóteses a validar e estão marcados como tal. O sistema é apoio logístico e não substitui
+        decisões clínicas.
       </p>
     </section>
 
     <!-- 1. INTENÇÃO -->
     <section id="intencao">
       <p class="kicker">1 · Intenção</p>
-      <h2>O que queremos fazer, e por quê</h2>
+      <h2>Visão, produto e cliente</h2>
 
       <blockquote class="intent">
-        Garantir que cada pessoa em hemodiálise no interior consiga chegar ao centro de diálise em
-        todas as sessões, com transporte regular, pontual e seguro, usando bem os veículos e os
-        horários disponíveis.
+        Reduzir ao mínimo possível o tempo de translocação de quem faz hemodiálise e precisa viajar
+        para se tratar, sem faltar a nenhuma sessão e com as frotas bem utilizadas.
       </blockquote>
 
       <p>
         O tema do desafio é <em>"Saúde para todos: soluções para reduzir barreiras no acesso à
-        saúde"</em>, e a entrega esperada é principalmente <strong>um modelo</strong>. Afunilamos o
-        tema para a hemodiálise porque ela é um tratamento contínuo: a rotina típica é de cerca de
-        três sessões por semana, de três a quatro horas cada, e o centro de diálise costuma ficar
-        em outra cidade. Nesse caso, a barreira de acesso é, em grande parte, <strong>chegar lá</strong>.
+        saúde"</em>, e a entrega esperada é principalmente <strong>um modelo</strong>. A hemodiálise é
+        um tratamento contínuo (cerca de três sessões por semana), e o paciente que mora longe do
+        centro de diálise repete a viagem a cada sessão. Para essa pessoa, o tempo de translocação é
+        a barreira de acesso mais concreta.
       </p>
 
-      <h3>Por que levar o paciente, e não o serviço</h3>
-      <p>
-        <span class="badge st-validar">A confirmar</span>
-        Na ideia anterior (unidade móvel de prevenção), o serviço ia até as pessoas. Na hemodiálise
-        de rotina, nossa hipótese é que isso não funciona bem, porque o tratamento depende de
-        máquinas, de tratamento de água e de equipe especializada, em estrutura fixa. Por isso o
-        modelo atua em <strong>levar a pessoa ao serviço</strong>. Essa hipótese precisa ser
-        confirmada com um nefrologista (pergunta Q10).
-      </p>
-
-      <h3>O problema central, decomposto</h3>
-      <p>
-        "Quais rotas e em que horários" é a pergunta que o modelo precisa responder. As outras
-        dimensões entram como parâmetros ou restrições.
-      </p>
+      <h3>O produto, em cinco blocos</h3>
       <div class="cards">
         <article class="card focus">
-          <span class="tag">Foco agora</span>
-          <h3>ONDE</h3>
-          <p>Quais municípios e pontos de embarque entram em cada rota, e para qual centro de
-            diálise cada rota segue?</p>
+          <span class="tag">Núcleo</span>
+          <h3>DEMANDA</h3>
+          <p>Quem precisa ir, de onde, para onde, em que dias e turnos, com ou sem acompanhante e com
+            quais necessidades de acessibilidade. Inclui a previsão de crescimento.</p>
         </article>
         <article class="card focus">
-          <span class="tag">Foco agora</span>
-          <h3>QUANDO</h3>
-          <p>Em quais dias e turnos cada grupo de pacientes é atendido, e a que horas o veículo sai
-            e volta?</p>
+          <span class="tag">Núcleo</span>
+          <h3>PRIORIDADE</h3>
+          <p>Regras transparentes, definidas com as equipes de saúde, que ordenam a alocação de
+            horários e rotas e a ordem de replanejamento. Nunca para excluir alguém.</p>
         </article>
         <article class="card focus">
-          <span class="tag">Foco agora</span>
+          <span class="tag">Núcleo</span>
+          <h3>ROTAS E AGENDA</h3>
+          <p>Calcula rotas e horários que minimizam o tempo de translocação do paciente, respeitando
+            as agendas do centro, a capacidade e a acessibilidade dos veículos.</p>
+        </article>
+        <article class="card">
+          <span class="tag tag-muted">Operação</span>
           <h3>CONTINUIDADE</h3>
-          <p>O que acontece se o veículo quebrar ou a estrada fechar? Há reserva e plano de
-            contingência?</p>
+          <p>Reserva, replanejamento quando algo falha e aviso ao centro em caso de atraso.</p>
         </article>
         <article class="card">
-          <span class="tag tag-muted">Parâmetro</span>
-          <h3>COM O QUÊ</h3>
-          <p>Tipo de veículo (van acessível, micro-ônibus), assentos e acessibilidade.</p>
-        </article>
-        <article class="card">
-          <span class="tag tag-muted">Parâmetro</span>
-          <h3>PARA QUEM</h3>
-          <p>Pacientes por município, mobilidade reduzida e necessidade de acompanhante.</p>
+          <span class="tag tag-muted">Conformidade</span>
+          <h3>PACTUAÇÃO</h3>
+          <p>Saídas no formato exigido pela política: gestor da frota, abrangência, itinerário, total
+            de pessoas e articulação com o agendamento.</p>
         </article>
       </div>
+
+      <h3>Quem são os clientes (hipóteses a validar)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Cliente</th><th>O que faz hoje</th><th>O que precisa do produto</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gestor da frota (município, estado ou consórcio)</td>
+              <td>Recebe ou compra veículos, define rotas e horários e registra a produção.</td>
+              <td>Rotas e agendas de menor tempo para o paciente, com custo e frota justificáveis.</td>
+            </tr>
+            <tr>
+              <td>Comissões regionais e estaduais (CIR e CIB)</td>
+              <td>Pactuam o arranjo regional da frota.</td>
+              <td>Rascunho de pactuação conferido pelas regras e comparação de arranjos.</td>
+            </tr>
+            <tr>
+              <td>Centro de diálise</td>
+              <td>Organiza turnos e máquinas.</td>
+              <td>Chegadas pontuais, previsão de demanda e aviso de atrasos.</td>
+            </tr>
+            <tr>
+              <td>Empresa de transporte contratada</td>
+              <td>Opera os veículos.</td>
+              <td>Rotas executáveis, com horários e paradas claros.</td>
+            </tr>
+            <tr>
+              <td>Pacientes e famílias (usuários, não pagantes)</td>
+              <td>Dependem do transporte oferecido.</td>
+              <td>Menos tempo na estrada, previsibilidade e aviso quando algo muda.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">
+        <strong>Modelo de negócio (hipótese não validada):</strong> assinatura por frota, município ou
+        consórcio, somada a um projeto de implantação. Preços não foram definidos.
+      </p>
+
+      <h3>Destino: capitais e centros de referência</h3>
+      <p>
+        No modelo, o destino é um <strong>parâmetro</strong>: o mesmo sistema atende um polo regional
+        ou uma capital. Destinos mais distantes aumentam o tempo de viagem, o que torna a prioridade,
+        a continuidade e o cálculo de rotas ainda mais importantes. O laboratório permite simular isso
+        com um multiplicador de distância.
+      </p>
 
       <div class="two-col">
         <div>
           <h3>Dentro do escopo</h3>
           <ul class="check">
-            <li>Desenhar rotas e horários de transporte para o centro de diálise.</li>
-            <li>Dimensionar frota e reserva para garantir continuidade.</li>
-            <li>Uma região do interior (um centro e alguns municípios) como caso de estudo.</li>
+            <li>Demanda recorrente de hemodiálise por origem, dia e turno.</li>
+            <li>Prioridade operacional configurável, com regras auditáveis.</li>
+            <li>Rotas, agendas, reserva e replanejamento de frotas.</li>
+            <li>Rascunho de pactuação compatível com a política vigente.</li>
+            <li>Arquitetura aberta a outros tipos de rota (como caso de estudo conceitual).</li>
           </ul>
         </div>
         <div>
           <h3>Fora do escopo</h3>
           <ul class="cross">
-            <li>Decisões clínicas: indicação, prescrição e escolha do tipo de diálise.</li>
-            <li>Definir os horários clínicos das sessões (vêm como entrada, do centro).</li>
+            <li>Decisões clínicas, inclusive indicação e prescrição de diálise.</li>
+            <li>Definir os horários clínicos das sessões (vêm como entrada do centro).</li>
             <li>Substituir a regulação regional do SUS.</li>
-            <li>Construir novos centros (apenas como comparação futura).</li>
+            <li>Operar hoje o transporte de órgãos (abertura futura, seção 3.5).</li>
           </ul>
         </div>
       </div>
@@ -134,67 +172,81 @@
       <h2>Quem sente o problema, e como</h2>
       <p>
         <span class="badge st-validar">A validar</span>
-        A coluna "Base" mostra o que tem alguma fonte e o que é só hipótese do time. Nenhuma dor
-        foi confirmada em campo ainda (ver perguntas Q1 a Q10).
+        A coluna "Base" mostra o que tem alguma fonte e o que é só hipótese do time. Nenhuma dor foi
+        confirmada em campo ainda (ver perguntas Q1 a Q12).
       </p>
 
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>ID</th><th>Quem</th><th>Dor</th><th>Efeito em rotas e horários</th><th>Base</th></tr>
+            <tr><th>ID</th><th>Quem</th><th>Dor</th><th>Efeito no produto</th><th>Base</th></tr>
           </thead>
           <tbody>
             <tr>
               <td>P1</td>
               <td>Paciente</td>
               <td>Viagens longas, várias vezes por semana, somadas a sessões de cerca de quatro horas.</td>
-              <td>O tempo a bordo e o horário de saída são restrições centrais.</td>
+              <td>O tempo de translocação é o objetivo principal do roteamento.</td>
               <td>Estudo na Bahia (distância média até a unidade mais próxima de cerca de 101 km). Dado antigo e regional.</td>
             </tr>
             <tr>
               <td>P2</td>
               <td>Paciente</td>
               <td>Faltar a uma sessão por falta de transporte tem consequências sérias para a saúde.</td>
-              <td>Continuidade (reserva, contingência) é requisito, não luxo.</td>
-              <td>Documentos de gestão tratam o transporte como essencial à continuidade; relato de maior chance de faltas sem transporte (estudo dos EUA).</td>
+              <td>Continuidade (reserva e replanejamento) é requisito, não extra.</td>
+              <td>Documentos de gestão tratam o transporte como essencial à continuidade; estudo dos EUA relata mais faltas sem transporte próprio.</td>
             </tr>
             <tr>
               <td>P3</td>
               <td>Paciente</td>
               <td>Atrasos encurtam a sessão, e a espera após a sessão prolonga o dia.</td>
-              <td>Pontualidade na chegada e no retorno precisa ser medida.</td>
+              <td>Pontualidade e espera entram nas métricas.</td>
               <td>Relato de paciente nos EUA. Hipótese para o Brasil.</td>
             </tr>
             <tr>
               <td>P4</td>
               <td>Família e acompanhante</td>
               <td>Perde dias de trabalho para levar o paciente ou depende de caronas.</td>
-              <td>Rotas coletivas e regulares reduzem a dependência de arranjos informais.</td>
-              <td>Pedidos de veículo de municípios do interior de São Paulo mencionam caronas e falta de transporte apropriado.</td>
+              <td>Rotas coletivas e regulares reduzem arranjos informais.</td>
+              <td>Pedidos de veículo de municípios paulistas citam caronas e falta de transporte apropriado.</td>
             </tr>
             <tr>
               <td>P5</td>
-              <td>Gestor municipal</td>
-              <td>Frota limitada, contratos de transporte caros e pouco critério para agrupar pacientes.</td>
-              <td>Precisa de rotas compartilhadas justificáveis e de um custo por sessão transportada.</td>
-              <td>Hipótese. Existem municípios que contratam empresas e outros que usam frota própria.</td>
+              <td>Gestor da frota</td>
+              <td>Frota limitada, contratos caros e pouco critério para agrupar pacientes.</td>
+              <td>Comparação de arranjos e custo por sessão transportada.</td>
+              <td>Hipótese. Há municípios que contratam empresas e outros que usam frota própria.</td>
             </tr>
             <tr>
               <td>P6</td>
-              <td>Centro de diálise</td>
-              <td>Atrasos e faltas deixam máquinas ociosas e desorganizam os turnos.</td>
-              <td>A chegada deve respeitar o início do turno de cada grupo.</td>
-              <td>Hipótese a confirmar com o centro (Q8).</td>
+              <td>Gestor da frota</td>
+              <td>A demanda muda (novos pacientes, altas, transplantes, mudanças de endereço), e o arranjo envelhece.</td>
+              <td>Módulo de demanda com cenários de crescimento e alerta de capacidade.</td>
+              <td>Hipótese a confirmar (Q2, Q4).</td>
             </tr>
             <tr>
               <td>P7</td>
-              <td>Motorista e operação</td>
-              <td>Estradas rurais ruins, chuva e veículos sem acessibilidade.</td>
-              <td>O tempo de viagem real difere do mapa, e é preciso margem.</td>
-              <td>Hipótese. Q3 e Q5.</td>
+              <td>Gestor e centro</td>
+              <td>Sem regra clara de prioridade, a decisão de quem recebe a reserva ou o melhor horário é improvisada.</td>
+              <td>Módulo de prioridade com classes definidas pelas equipes de saúde.</td>
+              <td>Hipótese a confirmar (Q6).</td>
             </tr>
             <tr>
               <td>P8</td>
+              <td>Centro de diálise</td>
+              <td>Atrasos e faltas deixam máquinas ociosas e desorganizam os turnos.</td>
+              <td>A chegada respeita o início do turno de cada grupo.</td>
+              <td>Hipótese a confirmar (Q9).</td>
+            </tr>
+            <tr>
+              <td>P9</td>
+              <td>Motorista e operação</td>
+              <td>Estradas rurais ruins, chuva e veículos sem acessibilidade.</td>
+              <td>Margem de tempo e restrições de acessibilidade no cálculo.</td>
+              <td>Hipótese (Q3, Q5).</td>
+            </tr>
+            <tr>
+              <td>P10</td>
               <td>Nosso time</td>
               <td>Não há dados reais por paciente (LGPD) e a região ainda não foi escolhida.</td>
               <td>Trabalhamos com dados agregados e sintéticos, e declaramos isso.</td>
@@ -210,42 +262,164 @@
       <p class="kicker">3 · Pesquisa</p>
       <h2>O que sabemos, o que supomos e o que falta descobrir</h2>
 
-      <h3>3.1 O que já verificamos</h3>
+      <h3>3.1 Mercado, política e contexto (verificado em fontes)</h3>
       <ul>
         <li>
-          <strong>Rotina do tratamento:</strong> as fontes consultadas descrevem sessões de três a
-          quatro horas, cerca de três vezes por semana, com variação conforme o paciente.
-          A frequência e a duração são decisão clínica e entram no modelo como dados de entrada.
+          <strong>Rotina do tratamento:</strong> as fontes descrevem sessões de três a quatro horas,
+          cerca de três vezes por semana, com variação conforme o paciente. A frequência e a duração
+          são decisão clínica e entram no modelo como dado de entrada.
         </li>
         <li>
-          <strong>Dimensão nacional:</strong> o Censo Brasileiro de Diálise 2023, da Sociedade
-          Brasileira de Nefrologia, estimou cerca de 157 mil pessoas em diálise crônica, das quais
-          88,2% em hemodiálise, 8,0% em hemodiafiltração e 3,8% em diálise peritoneal. É uma estimativa
-          baseada em amostra (cerca de 37% dos centros responderam).
+          <strong>Dimensão nacional:</strong> o Censo Brasileiro de Diálise 2023 estimou cerca de 157
+          mil pessoas em diálise crônica, das quais 88,2% em hemodiálise, 8,0% em hemodiafiltração e
+          3,8% em diálise peritoneal. É estimativa baseada em amostra (cerca de 37% dos centros
+          responderam).
         </li>
         <li>
           <strong>Distância no interior:</strong> um estudo no interior da Bahia (dados de 2004 a 2006)
-          encontrou distância média de cerca de 101 km até a unidade de hemodiálise mais próxima,
-          com cerca de 4 horas de ida e volta estimadas. O dado é antigo e regional, mas ilustra a
-          ordem de grandeza do problema.
+          encontrou distância média de cerca de 101 km até a unidade de hemodiálise mais próxima, com
+          cerca de 4 horas de ida e volta estimadas. O dado é antigo e regional.
         </li>
         <li>
           <strong>Transporte e faltas (contexto internacional):</strong> o estudo EnROUTE (EUA, mais de
-          115 mil pacientes) relatou que 27% não tinham transporte particular para ir à diálise e
-          que quem dependia de transporte de terceiros tinha mais chance de perder sessões.
-          São dados dos EUA, usados só como contexto.
+          115 mil pacientes) relatou que 27% não tinham transporte particular para ir à diálise e que
+          quem dependia de transporte de terceiros tinha mais chance de perder sessões.
         </li>
         <li>
-          <strong>Contexto regulatório (a confirmar):</strong> a Nota Técnica nº 011/2026 do COSEMS-SC
-          descreve uma proposta federal, em forma de minuta de portaria, para financiar transporte
-          sanitário a pacientes de hemodiálise regulados para serviço a mais de 50 km do município
-          de residência, com até três idas e voltas por semana. A nota diz que a minuta pode mudar,
-          então é preciso verificar o que foi publicado. Ela prevê, entre outras condições, registro do
-          veículo no CNES e deliberação da CIB.
+          <strong>Política vigente:</strong> a Lei 15.233, de 7 de outubro de 2025, alterou a Lei
+          12.732/2012 e garante transporte sanitário a pacientes do SUS em hemodiálise que precisem se
+          deslocar a serviço a mais de 50 km do domicílio. A Portaria GM/MS 11.165/2026 (maio de 2026)
+          trata da doação de veículos e do financiamento. Os veículos são distribuídos por macrorregião,
+          e o gestor local organiza os fluxos.
+        </li>
+        <li>
+          <strong>Mercado inicial:</strong> o Ministério da Saúde informou a entrega de cerca de 3,3
+          mil veículos (vans, micro-ônibus e ambulâncias) para deslocamentos acima de 50 km, e uma
+          notícia indica 1.476 voltados a radioterapia e hemodiálise. Segundo uma reportagem, não há
+          edital aberto para novos pedidos, e municípios fora da distribuição podem comprar veículos
+          pela ata de registro de preços do Ministério. Esses números são de fontes jornalísticas e
+          precisam ser conferidos.
+        </li>
+        <li>
+          <strong>Pactuação:</strong> segundo orientações do COSEMS-SP, a CIR aprova qual ente gere a
+          frota, a CIB homologa e envia ao Ministério da Saúde. O documento deve conter, entre outros
+          itens, o total de pessoas a transportar (com acompanhantes), o desenho regional dos
+          itinerários com os municípios abrangidos e a articulação com o agendamento nos serviços. A
+          descrição é de São Paulo e vem de uma entidade de secretários municipais. O texto oficial e o
+          fluxo do estado escolhido precisam ser conferidos.
+        </li>
+        <li>
+          <strong>Literatura de roteamento:</strong> o roteamento de pacientes (<em>dial-a-ride</em>)
+          já é estudado, inclusive com um caso de prefeitura brasileira (Ouro Preto) e um modelo
+          específico para hemodiálise. O diferencial do produto, portanto, não é o algoritmo, e sim
+          demanda, prioridade, pactuação e operação.
         </li>
       </ul>
 
-      <h3>3.2 Perguntas abertas</h3>
+      <h3>3.2 Demanda: como modelar</h3>
+      <p>
+        A demanda de hemodiálise é <strong>recorrente</strong>: cada paciente gera uma viagem de ida e
+        outra de volta em cada sessão, nos dias e turnos do seu grupo. O produto trabalha com
+        <em>pedidos recorrentes agregados</em>, nunca com dados individuais identificáveis.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campo do pedido recorrente</th><th>Descrição</th><th>Observação</th></tr></thead>
+          <tbody>
+            <tr><td>Origem</td><td>Município ou ponto de embarque.</td><td>Agregado por origem.</td></tr>
+            <tr><td>Destino</td><td>Centro de diálise (capital ou polo regional).</td><td>Parâmetro do modelo.</td></tr>
+            <tr><td>Grupo de dias e turno</td><td>Quando o grupo faz a sessão.</td><td>Vem do centro.</td></tr>
+            <tr><td>Quantidade de pacientes</td><td>Pessoas que viajam juntas na mesma origem, dia e turno.</td><td>Sujeita a mudanças semanais.</td></tr>
+            <tr><td>Acompanhantes</td><td>Proporção ou número de acompanhantes.</td><td>O padrão de 10% vem das orientações do COSEMS-SP, a confirmar.</td></tr>
+            <tr><td>Necessidades de acessibilidade</td><td>Cadeira de rodas, mobilidade reduzida.</td><td>Define o tipo de veículo.</td></tr>
+            <tr><td>Classe de prioridade</td><td>Definida pelas equipes de saúde (ver 3.3).</td><td>Não é decisão do sistema.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        A <strong>dinâmica da demanda</strong> (entradas por novos casos, saídas por transplante, alta
+        ou óbito, mudanças de endereço) é modelada como cenário de crescimento ou redução. O sistema
+        responde a uma pergunta de planejamento: <em>"com X% a mais de pacientes, o arranjo atual ainda
+        cabe nas máquinas, nos assentos e nos limites de horário?"</em> Se não couber, o sistema aponta
+        o que falta (máquinas, turnos ou veículos) e não deixa ninguém sem rota.
+      </p>
+
+      <h3>3.3 Prioridade: princípios</h3>
+      <div class="cards">
+        <article class="card">
+          <h3>1 · Definida por quem entende</h3>
+          <p>As classes de prioridade vêm das equipes de saúde e da regulação. O sistema as aplica.</p>
+        </article>
+        <article class="card">
+          <h3>2 · Ordena, não exclui</h3>
+          <p>Prioridade define quem escolhe primeiro os horários mais favoráveis e quem é replanejado
+            primeiro em uma falha. Nenhum paciente deixa de ter rota por causa dela.</p>
+        </article>
+        <article class="card">
+          <h3>3 · Capacidade insuficiente é alerta</h3>
+          <p>Se faltam máquinas, turnos ou veículos, o sistema mostra a lacuna e propõe ampliar, e não
+            escolhe quem fica de fora.</p>
+        </article>
+        <article class="card">
+          <h3>4 · Auditável</h3>
+          <p>Toda decisão de alocação mostra a regra que a gerou.</p>
+        </article>
+      </div>
+      <p class="small">
+        Exemplos de fatores que as equipes poderiam considerar (<strong>a definir com elas</strong>, não
+        são recomendação clínica): necessidade de acessibilidade, ausência de transporte alternativo,
+        necessidade de acompanhante e tempo de viagem. No laboratório, as classes são "Alta", "Média"
+        e "Normal", escolhidas pelo usuário.
+      </p>
+
+      <h3>3.4 Menor tempo de translocação: como medir e otimizar</h3>
+      <ul>
+        <li><strong>Tempo a bordo:</strong> minutos dentro do veículo, em cada trecho (ida e volta).</li>
+        <li><strong>Espera:</strong> tempo no centro antes e depois da sessão, além da folga de chegada.</li>
+        <li><strong>Horas semanais de translocação:</strong> soma, para todos os pacientes, do tempo a bordo
+          nas viagens da semana. É o indicador central do produto.</li>
+        <li><strong>Equidade:</strong> acompanhar o máximo, e não só a média, para que quem mora mais longe
+          não carregue sempre o maior tempo.</li>
+      </ul>
+      <p>
+        <strong>Ordem de objetivos:</strong> primeiro a viabilidade (nenhuma restrição violada), depois a
+        redução do tempo de translocação dos pacientes, e por último o custo da frota. Há uma troca
+        natural: agrupar pacientes em uma mesma rota reduz veículos, mas acrescenta paradas e tempo a
+        bordo. O laboratório tem um controle de <em>peso do tempo do paciente</em> para mostrar essa troca.
+      </p>
+
+      <h3>3.5 Abertura para outras rotas: o caso do transporte de órgãos</h3>
+      <p>
+        <span class="badge st-proposta">Abertura futura</span>
+        O núcleo de rotas (tempos de viagem, janelas de tempo, prioridade, replanejamento) é
+        reaproveitável em outros contextos. O transporte de órgãos para transplante é um exemplo
+        interessante porque leva o princípio do <em>menor tempo</em> ao extremo, mas é um problema de
+        natureza diferente.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Hemodiálise</th><th>Transporte de órgãos</th></tr></thead>
+          <tbody>
+            <tr><td>Demanda</td><td>Recorrente e previsível (sessões semanais).</td><td>Pontual e imprevisível (surge quando há um doador).</td></tr>
+            <tr><td>Tempo</td><td>Janelas de horário e conforto do paciente.</td><td>Tempo é a principal restrição: cada órgão tem um limite de isquemia fria.</td></tr>
+            <tr><td>Modais</td><td>Veículos terrestres de frota fixa.</td><td>Com frequência exige transporte aéreo e coordenação de voos.</td></tr>
+            <tr><td>Planejamento</td><td>Periódico, repetido toda semana.</td><td>Sob demanda, a cada ocorrência.</td></tr>
+            <tr><td>Coordenação</td><td>Gestores municipais e regionais (CIR e CIB).</td><td>Sistema Nacional de Transplantes e centrais de transplantes.</td></tr>
+            <tr><td>Problema de otimização</td><td>Roteamento periódico com janelas de tempo e capacidade.</td><td>Caminho mais rápido com restrições de recursos e horários de voos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        A literatura brasileira já trata a otimização de rotas de órgãos: uma dissertação da
+        COPPE/UFRJ propõe um algoritmo para escolher a sequência de voos que entrega o órgão o mais
+        rápido possível, e cita perda de órgãos por falta de transporte em um período recente. O
+        que o RotaSaúde pode oferecer, no futuro, é a camada de <strong>demanda, prioridade e
+        replanejamento</strong> sobre um motor de rotas comum. Isso exigiria parceria com as centrais
+        de transplantes e validação clínica e regulatória, e <strong>não faz parte do escopo
+        atual</strong>.
+      </p>
+
+      <h3>3.6 Perguntas abertas</h3>
       <div class="table-wrap">
         <table>
           <thead>
@@ -254,29 +428,29 @@
           <tbody>
             <tr>
               <td>Q1</td>
-              <td>Onde estão os centros habilitados e para qual cada município é regulado?</td>
+              <td>Onde estão os centros habilitados e para qual cada município é regulado (inclusive capitais)?</td>
               <td>Consultar cadastro e regulação regional.</td>
               <td>CNES, regulação</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
             <tr>
               <td>Q2</td>
-              <td>Quantos pacientes há por município, e em quais dias e turnos fazem as sessões?</td>
+              <td>Quantos pacientes há por município, em quais dias e turnos, e como a demanda varia ao longo do ano?</td>
               <td>Dados agregados dos centros e das secretarias.</td>
               <td>Centros, secretarias, SIA/SUS</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
             <tr>
               <td>Q3</td>
-              <td>Qual o tempo real de viagem entre municípios, incluindo estradas de terra?</td>
-              <td>Matriz de tempos com mapas e fator de margem validado por motoristas.</td>
+              <td>Qual o tempo real de viagem até o destino, incluindo estradas de terra e longas distâncias?</td>
+              <td>Matriz de tempos com mapas e margem validada por motoristas.</td>
               <td>OpenStreetMap, motoristas</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
             <tr>
               <td>Q4</td>
-              <td>Que transporte existe hoje (frota própria, consórcio, contrato, linha regular) e em quais horários?</td>
-              <td>Entrevistar gestores municipais.</td>
+              <td>Que transporte existe hoje (frota própria, consórcio, contrato, linha regular) e como as rotas são definidas?</td>
+              <td>Entrevistar gestores municipais e da regional.</td>
               <td>Secretarias de saúde</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
@@ -289,44 +463,58 @@
             </tr>
             <tr>
               <td>Q6</td>
-              <td>Qual o tempo máximo a bordo e quais janelas de saída e retorno são aceitáveis?</td>
-              <td>Ouvir pacientes, familiares e a equipe do centro.</td>
-              <td>Campo, equipe clínica</td>
+              <td>Que critérios de prioridade as equipes de saúde aceitariam, e em que situações elas se aplicam?</td>
+              <td>Oficina com equipe do centro e da regulação.</td>
+              <td>Equipes de saúde</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
             <tr>
               <td>Q7</td>
-              <td>Qual o custo por quilômetro e por contrato, e que financiamento está em vigor?</td>
-              <td>Conferir contratos e a situação da minuta de portaria.</td>
-              <td>Prefeituras, Diário Oficial</td>
+              <td>Qual o tempo máximo a bordo e quais janelas de saída e retorno são aceitáveis?</td>
+              <td>Ouvir pacientes, famílias e equipe clínica.</td>
+              <td>Campo, equipe clínica</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
             <tr>
               <td>Q8</td>
-              <td>Quantas faltas e atrasos ocorrem por problemas de transporte?</td>
-              <td>Pedir dados agregados ao centro.</td>
-              <td>Centros de diálise</td>
+              <td>Qual o custo por quilômetro e por contrato, e que valores do incentivo federal estão em vigor?</td>
+              <td>Conferir contratos e os anexos da Portaria 11.165/2026.</td>
+              <td>Prefeituras, Diário Oficial</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
             <tr>
               <td>Q9</td>
-              <td>Que planos de contingência existem (reserva, rota alternativa, aviso ao centro)?</td>
-              <td>Entrevistar gestores e motoristas.</td>
-              <td>Secretarias, centros</td>
+              <td>Quantas faltas e atrasos ocorrem por problemas de transporte, e que plano de contingência existe?</td>
+              <td>Pedir dados agregados ao centro e entrevistar gestores.</td>
+              <td>Centros de diálise, secretarias</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
             <tr>
               <td>Q10</td>
-              <td>Nossa hipótese está correta: a hemodiálise de rotina exige estrutura fixa? E quando a diálise peritoneal domiciliar reduz a necessidade de viagens?</td>
+              <td>A hemodiálise de rotina exige estrutura fixa (hipótese)? Quando a diálise peritoneal domiciliar reduz a necessidade de viagens?</td>
               <td>Conversar com um nefrologista. A decisão clínica não é do modelo.</td>
               <td>Equipe clínica</td>
+              <td><span class="badge st-aberta">Aberta</span></td>
+            </tr>
+            <tr>
+              <td>Q11</td>
+              <td>Como o fluxo de pactuação funciona na prática no estado escolhido, e haverá novas rodadas?</td>
+              <td>Entrevistar uma regional de saúde ou um gestor.</td>
+              <td>CIR, CIB, secretaria estadual</td>
+              <td><span class="badge st-aberta">Aberta</span></td>
+            </tr>
+            <tr>
+              <td>Q12</td>
+              <td>Quem pagaria pelo produto, e quanto? (modelo de negócio)</td>
+              <td>Entrevistas com gestores e consórcios.</td>
+              <td>Mercado</td>
               <td><span class="badge st-aberta">Aberta</span></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <h3>3.3 Hipóteses de trabalho</h3>
+      <h3>3.7 Hipóteses de trabalho</h3>
       <div class="table-wrap">
         <table>
           <thead>
@@ -335,49 +523,52 @@
           <tbody>
             <tr>
               <td>H1</td>
-              <td>Agrupar pacientes de municípios vizinhos nas mesmas rotas reduz veículos e horas de frota sem estourar o tempo a bordo.</td>
-              <td>Comparar no laboratório com o arranjo "um veículo por município".</td>
-              <td>Q2, Q3, Q4</td>
+              <td>Agrupar municípios vizinhos nas mesmas rotas reduz veículos e horas de frota, mas aumenta o tempo a bordo. O melhor arranjo depende do peso dado ao tempo do paciente.</td>
+              <td>Variar o peso no laboratório e observar a troca.</td>
+              <td>Q2, Q3, Q7</td>
             </tr>
             <tr>
               <td>H2</td>
-              <td>O tempo máximo a bordo e os limites de saída e retorno são as restrições que mais condicionam o desenho das rotas.</td>
-              <td>Variar os limites no laboratório e observar o efeito.</td>
-              <td>Q6</td>
+              <td>Em destinos mais distantes (capitais), o limite de tempo a bordo passa a ser a restrição dominante, e rotas diretas ganham valor.</td>
+              <td>Aumentar o multiplicador de distância no laboratório.</td>
+              <td>Q3, Q7</td>
             </tr>
             <tr>
               <td>H3</td>
-              <td>Um veículo reserva regional reduz mais as sessões perdidas por falha de veículo do que um veículo extra em cada rota.</td>
-              <td>Simular falhas de veículo e medir pacientes afetados.</td>
-              <td>Q8, Q9</td>
+              <td>Uma regra explícita de prioridade para alocar a reserva e replanejar reduz decisões improvisadas.</td>
+              <td>Testar com gestores em cenários de falha.</td>
+              <td>Q6, Q9</td>
             </tr>
             <tr>
               <td>H4</td>
-              <td>Alinhar os grupos de dias e turnos entre municípios vizinhos aumenta as oportunidades de compartilhar veículos.</td>
-              <td>Comparar agendas atuais e agendas coordenadas.</td>
+              <td>Alinhar grupos de dias e turnos entre municípios vizinhos aumenta as oportunidades de compartilhar veículos.</td>
+              <td>Comparar agendas atuais e coordenadas.</td>
+              <td>Q2</td>
+            </tr>
+            <tr>
+              <td>H5</td>
+              <td>Planejar com cenários de crescimento da demanda evita rearranjos emergenciais.</td>
+              <td>Testar com o controle de crescimento e com dados históricos reais.</td>
               <td>Q2</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <h3>3.4 Ponto de partida técnico (hipótese de modelagem)</h3>
-      <p>
-        Cada município tem pacientes que precisam chegar ao centro antes do início do turno e voltar
-        depois do fim da sessão, em dias repetidos toda semana. Isso é um
-        <strong>problema de roteamento de veículos periódico, com janelas de tempo, capacidade e limite
-        de tempo a bordo</strong> (da família dos problemas de <em>dial-a-ride</em>). Em termos simples:
-      </p>
-
+      <h3>3.8 Ponto de partida técnico</h3>
       <div class="formula" role="figure" aria-label="Formulação do problema">
         <p class="formula-label">Formulação</p>
         <p class="formula-body">
-          minimizar [ horas de veículo + frota + penalidade de tempo a bordo ]<br>
+          minimizar [ w &middot; tempo de translocação dos pacientes + (1 &minus; w) &middot; horas de veículo ]<br>
           sujeito a: chegar antes do início do turno &middot; voltar depois do fim &middot;
           pacientes &le; assentos &middot; pacientes por turno &le; máquinas &middot; tempo a bordo &le; limite
         </p>
       </div>
-
+      <p>
+        Em termos de problema, é um roteamento de veículos periódico com janelas de tempo, capacidade
+        e limite de tempo a bordo (da família <em>dial-a-ride</em>). O peso <em>w</em> é escolhido pelo
+        gestor, e a prioridade ordena a alocação.
+      </p>
       <div class="two-col">
         <div>
           <h3>Fontes de dados previstas</h3>
@@ -400,46 +591,68 @@
         </div>
       </div>
 
-      <h3>3.5 Fontes consultadas</h3>
+      <h3>3.9 Fontes consultadas</h3>
       <ul class="sources">
         <li><a href="https://www.scielo.br/j/jbn/a/kDwfc3xxqJbGJh4cTPZKBqw/" target="_blank" rel="noopener">Censo Brasileiro de Diálise 2023 (Jornal Brasileiro de Nefrologia, SciELO)</a></li>
         <li><a href="https://periodicos.ufpe.br/revistas/revistaenfermagem/article/download/239674/32864/148049" target="_blank" rel="noopener">Artigo sobre procedimentos de hemodiálise no SUS (Revista de Enfermagem da UFPE), rotina de sessões</a></li>
-        <li><a href="https://www.tnh1.com.br/noticia/nid/diagnostico-tratamento-e-qualidade-de-vida-10-perguntas-sobre-dialise-e-cuidado-renal/" target="_blank" rel="noopener">Reportagem com perguntas e respostas sobre diálise (TNH1, 2023)</a></li>
         <li><a href="https://pesquisa.bvsalud.org/oncologiauy/resource/en/lil-606106" target="_blank" rel="noopener">Distância até a unidade de hemodiálise no interior da Bahia (J. Bras. Nefrol., 2007)</a></li>
-        <li><a href="https://www.cosemssc.org.br/wp-content/uploads/2026/05/Nota-Tecnica-Transporte-Sanitario-Radioterapia-e-Hemodialise.pdf" target="_blank" rel="noopener">Nota Técnica nº 011/2026 do COSEMS-SC sobre transporte sanitário para radioterapia e hemodiálise</a></li>
         <li><a href="https://www.kidney.org/es/noticias-historias/un-estudio-arroja-luz-sobre-las-barreras-de-transporte-en-la-dialisis-y-explica" target="_blank" rel="noopener">Estudo EnROUTE sobre barreiras de transporte na diálise (National Kidney Foundation, EUA)</a></li>
+        <li><a href="https://atlaspublico.com.br/camara/noticias/comissao-de-saude-aprova-pl-que-garante-clinica-de-79171" target="_blank" rel="noopener">Notícia que cita a Lei 15.233/2025 e o transporte a mais de 50 km (Atlas Público)</a></li>
+        <li><a href="https://www.conass.org.br/?p=56720" target="_blank" rel="noopener">Informe do CONASS sobre a Portaria GM/MS de transporte sanitário (2026)</a></li>
+        <li><a href="https://www.cosemssp.org.br/wp-content/uploads/2026/06/NT-GCPATE_transporte-sanitario.pdf" target="_blank" rel="noopener">Orientações do COSEMS-SP para a pactuação do transporte sanitário (Portaria GM/MS 11.165/2026)</a></li>
+        <li><a href="https://diariodotransporte.com.br/2026/05/14/caminhos-da-saude-se-torna-outra-esperanca-para-a-industria-de-onibus-e-governo-federal-regulamenta-financiamento-para-mais-modalidades/" target="_blank" rel="noopener">Reportagem sobre o programa Caminhos da Saúde e os 3,3 mil veículos (Diário do Transporte, 2026)</a></li>
+        <li><a href="https://atlaspublico.com.br/noticias/ministerio-da-saude-doa-35-vans-acessiveis-a-secretaria-da-78551" target="_blank" rel="noopener">Notícia sobre doação de vans acessíveis de 15 lugares e total para radioterapia e hemodiálise (Atlas Público)</a></li>
+        <li><a href="https://ohoje.com/2026/11/02/prefeitura-de-goiania-aprova-licitacao-de-r-33-milhoes-para-transporte-de-pacientes-de-hemodialise/" target="_blank" rel="noopener">Reportagem sobre o programa e a compra de veículos por ata de registro de preços (O Hoje, 2026)</a></li>
+        <li><a href="https://educapes.capes.gov.br/handle/capes/1004234?mode=full" target="_blank" rel="noopener">Algoritmos meta-heurísticos para o problema dial-a-ride, com dados da prefeitura de Ouro Preto (UFOP)</a></li>
+        <li><a href="https://aminer.org/pub/65671acf939a5f40823f396a/mathematical-model-for-dial-a-ride-problem-with-time-windows-case-hemodialysis" target="_blank" rel="noopener">Modelo matemático de dial-a-ride com janelas de tempo para pacientes de hemodiálise (DASA, 2023)</a></li>
+        <li><a href="https://pantheon.ufrj.br/handle/11422/13760?mode=full" target="_blank" rel="noopener">Algoritmo de programação dinâmica para o transporte de órgãos para transplantes (COPPE/UFRJ)</a></li>
+        <li><a href="https://www.pet.coppe.ufrj.br/images/Dissertação.pdf" target="_blank" rel="noopener">Dissertação sobre logística aérea de órgãos e tempo de isquemia fria (COPPE/UFRJ)</a></li>
       </ul>
     </section>
 
     <!-- 4. OBJETIVOS -->
     <section id="objetivos" class="alt">
       <p class="kicker">4 · Objetivos</p>
-      <h2>O que o projeto precisa alcançar</h2>
+      <h2>O que o produto precisa alcançar</h2>
       <ol class="steps">
         <li id="o1">
-          <h3>O1 · Decidir ONDE: rotas e pontos de embarque</h3>
-          <p>Agrupar municípios e pacientes em rotas que levam ao centro de referência.</p>
+          <h3>O1 · Representar e prever a demanda</h3>
+          <p>Manter o retrato atual da demanda recorrente por origem, destino, dia e turno, e testar
+            cenários de crescimento.</p>
         </li>
         <li id="o2">
-          <h3>O2 · Decidir QUANDO: dias, turnos e horários</h3>
-          <p>Definir grupo de dias, turno e horários de saída e retorno de cada rota, respeitando a
-            agenda do centro e as janelas aceitáveis.</p>
+          <h3>O2 · Priorizar com regras transparentes</h3>
+          <p>Aplicar classes de prioridade definidas pelas equipes de saúde para ordenar alocações e
+            replanejamentos, sem excluir ninguém.</p>
         </li>
         <li id="o3">
-          <h3>O3 · Garantir continuidade</h3>
-          <p>Reduzir ao mínimo as sessões perdidas por falta de transporte, com reserva e contingência.</p>
+          <h3>O3 · Minimizar o tempo de translocação</h3>
+          <p>Calcular rotas e agendas que reduzam o tempo do paciente a bordo, respeitando a agenda do
+            centro e a capacidade.</p>
         </li>
         <li id="o4">
-          <h3>O4 · Limitar o tempo e o desgaste do paciente</h3>
-          <p>Controlar o tempo a bordo e a espera, e não sobrecarregar sempre quem mora mais longe.</p>
+          <h3>O4 · Garantir continuidade</h3>
+          <p>Reduzir ao mínimo as sessões perdidas por falta de transporte, com reserva, replanejamento
+            e aviso ao centro.</p>
         </li>
         <li id="o5">
-          <h3>O5 · Usar bem os recursos</h3>
-          <p>Reduzir frota, quilômetros e custo por sessão transportada, sem violar O3 e O4.</p>
+          <h3>O5 · Usar bem a frota</h3>
+          <p>Reduzir veículos, quilômetros e custo por sessão transportada, sem violar O3 e O4.</p>
         </li>
         <li id="o6">
-          <h3>O6 · Entregar um protótipo demonstrável e honesto</h3>
-          <p>Mostrar rotas e horários em quadro semanal e mapa, com premissas e incertezas visíveis.</p>
+          <h3>O6 · Cumprir a política e apoiar a pactuação</h3>
+          <p>Gerar saídas compatíveis com a pactuação regional e conferir regras como o critério de
+            mais de 50 km.</p>
+        </li>
+        <li id="o7">
+          <h3>O7 · Manter o núcleo aberto a outras rotas</h3>
+          <p>Separar demanda, prioridade e cálculo de rotas em módulos, de modo que outros contextos
+            possam usá-los no futuro. Isso é decisão de arquitetura, não entrega atual.</p>
+        </li>
+        <li id="o8">
+          <h3>O8 · Entregar um protótipo demonstrável e honesto</h3>
+          <p>Mostrar demanda, prioridade, rotas e rascunho de pactuação, com premissas e incertezas
+            visíveis.</p>
         </li>
       </ol>
     </section>
@@ -449,37 +662,71 @@
       <p class="kicker">5 · Requisitos</p>
       <h2>O que o sistema precisa fazer e respeitar</h2>
 
-      <h3>Funcionais</h3>
+      <h3>Demanda (RD)</h3>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
           <tbody>
-            <tr><td>RF1</td><td>Cadastrar centro de diálise (turnos, máquinas por turno), municípios e pontos de embarque.</td><td>O1, O2</td></tr>
-            <tr><td>RF2</td><td>Registrar pacientes de forma agregada por município (quantidade e necessidades de mobilidade).</td><td>O1, O4</td></tr>
-            <tr><td>RF3</td><td>Calcular a matriz de tempos de viagem, com fator de margem para estradas rurais.</td><td>O2, O4</td></tr>
-            <tr><td>RF4</td><td>Atribuir cada município a um grupo de dias e a um turno, respeitando as máquinas do turno.</td><td>O1, O2</td></tr>
-            <tr><td>RF5</td><td>Gerar rotas com horário de saída que garanta chegada antes do início do turno e retorno após o fim.</td><td>O2, O3</td></tr>
-            <tr><td>RF6</td><td>Respeitar assentos e acessibilidade dos veículos.</td><td>O3, O4</td></tr>
-            <tr><td>RF7</td><td>Respeitar o tempo máximo a bordo e as janelas de saída e retorno.</td><td>O4</td></tr>
-            <tr><td>RF8</td><td>Dimensionar frota e veículo reserva.</td><td>O3, O5</td></tr>
-            <tr><td>RF9</td><td>Mostrar o plano em quadro semanal e em mapa.</td><td>O6</td></tr>
-            <tr><td>RF10</td><td>Simular cenários: veículo indisponível, estrada interditada, novo paciente.</td><td>O3, O6</td></tr>
-            <tr><td>RF11</td><td>Comparar com o arranjo atual (um veículo por município).</td><td>O5, O6</td></tr>
+            <tr><td>RD1</td><td>Cadastrar pedidos recorrentes agregados: origem, destino, grupo de dias, turno, quantidade, acompanhantes e acessibilidade.</td><td>O1</td></tr>
+            <tr><td>RD2</td><td>Simular cenários de crescimento ou redução da demanda e apontar o que deixa de caber.</td><td>O1, O4</td></tr>
+            <tr><td>RD3</td><td>Registrar a prioridade de cada origem entre classes configuráveis.</td><td>O2</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>Não funcionais</h3>
+      <h3>Prioridade (RP)</h3>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
           <tbody>
-            <tr><td>RNF1</td><td>Usar apenas dados agregados, públicos ou sintéticos, em conformidade com a LGPD. Nenhum dado individual de paciente no sistema.</td><td>O6</td></tr>
-            <tr><td>RNF2</td><td>Transparência: toda premissa e simplificação deve estar visível.</td><td>O6</td></tr>
-            <tr><td>RNF3</td><td>Segurança: o sistema é apoio logístico. Decisões clínicas e de regulação seguem com as equipes de saúde, e qualquer plano deve ser validado por elas.</td><td>O3</td></tr>
-            <tr><td>RNF4</td><td>Funcionar em navegador comum, sem servidor, na demonstração.</td><td>O6</td></tr>
-            <tr><td>RNF5</td><td>Ser reproduzível: código e fontes de dados versionados no repositório.</td><td>O6</td></tr>
-            <tr><td>RNF6</td><td>Interface legível por gestores e equipes sem formação técnica (linguagem simples, teclado, contraste).</td><td>O6</td></tr>
+            <tr><td>RP1</td><td>Usar a prioridade para ordenar a alocação de horários e rotas e a ordem de replanejamento.</td><td>O2</td></tr>
+            <tr><td>RP2</td><td>Nunca excluir um paciente por prioridade. Se faltar capacidade, apontar a lacuna.</td><td>O2, O4</td></tr>
+            <tr><td>RP3</td><td>Registrar a regra que originou cada alocação, para auditoria.</td><td>O2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Rotas e agenda (RR)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
+          <tbody>
+            <tr><td>RR1</td><td>Calcular a matriz de tempos de viagem, com fator de margem para estradas rurais e multiplicador para destinos distantes.</td><td>O3</td></tr>
+            <tr><td>RR2</td><td>Atribuir cada origem a um grupo de dias e a um turno, respeitando as máquinas do turno.</td><td>O3, O5</td></tr>
+            <tr><td>RR3</td><td>Gerar rotas com horário de saída que garanta chegada antes do início do turno e retorno após o fim.</td><td>O3, O4</td></tr>
+            <tr><td>RR4</td><td>Respeitar assentos, acessibilidade, tempo máximo a bordo e janelas de saída e retorno.</td><td>O3</td></tr>
+            <tr><td>RR5</td><td>Permitir ao gestor definir o peso entre o tempo do paciente e o custo da frota.</td><td>O3, O5</td></tr>
+            <tr><td>RR6</td><td>Dimensionar frota e veículo reserva.</td><td>O4, O5</td></tr>
+            <tr><td>RR7</td><td>Mostrar o plano em quadro semanal e em mapa, com comparação com o arranjo atual.</td><td>O8</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Operação e conformidade (RO e RC)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
+          <tbody>
+            <tr><td>RO1</td><td>Simular falha de veículo ou estrada interditada e propor replanejamento.</td><td>O4</td></tr>
+            <tr><td>RO2</td><td>Avisar o centro e as famílias sobre atrasos e mudanças (fase futura).</td><td>O4</td></tr>
+            <tr><td>RC1</td><td>Gerar rascunho de pactuação com gestor da frota, destino, abrangência, itinerário, total de pessoas com acompanhantes, prioridade e articulação com o agendamento.</td><td>O6</td></tr>
+            <tr><td>RC2</td><td>Conferir o critério de mais de 50 km e sinalizar pacientes fora dele.</td><td>O6</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Plataforma e não funcionais (RX e RNF)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Requisito</th><th>Objetivo</th></tr></thead>
+          <tbody>
+            <tr><td>RX1</td><td>Separar em módulos independentes a demanda, a prioridade e o cálculo de rotas.</td><td>O7</td></tr>
+            <tr><td>RNF1</td><td>Usar apenas dados agregados, públicos ou sintéticos, em conformidade com a LGPD. Nenhum dado individual de paciente no sistema.</td><td>O8</td></tr>
+            <tr><td>RNF2</td><td>Transparência: toda premissa e simplificação deve estar visível.</td><td>O8</td></tr>
+            <tr><td>RNF3</td><td>Segurança: o sistema é apoio logístico. Decisões clínicas e de regulação seguem com as equipes de saúde, e qualquer plano deve ser validado por elas.</td><td>O4</td></tr>
+            <tr><td>RNF4</td><td>Auditabilidade: cada plano guarda as premissas e as regras usadas.</td><td>O2, O6</td></tr>
+            <tr><td>RNF5</td><td>Funcionar em navegador comum, sem servidor, na demonstração.</td><td>O8</td></tr>
+            <tr><td>RNF6</td><td>Interface legível por gestores e equipes sem formação técnica.</td><td>O8</td></tr>
           </tbody>
         </table>
       </div>
@@ -487,10 +734,10 @@
       <h3>Restrições e premissas</h3>
       <ul>
         <li>As agendas de sessão (grupo de dias, turno e duração) vêm do centro e não são definidas pelo modelo.</li>
-        <li>Escopo inicial: um centro de referência e de 4 a 8 municípios, com veículos do tipo van.</li>
+        <li>Escopo inicial: um destino e de 4 a 8 origens, com veículos do tipo van.</li>
         <li>Não temos dados reais de pacientes ou de frota. Os números do laboratório são fictícios.</li>
         <li>A malha viária rural é imprecisa, e isso é declarado nos resultados.</li>
-        <li>O financiamento federal mencionado na nota técnica é uma minuta, e o modelo não depende dele.</li>
+        <li>O modelo não depende do financiamento federal para funcionar. Os valores do incentivo por faixa de distância não foram confirmados.</li>
       </ul>
     </section>
 
@@ -499,9 +746,9 @@
       <p class="kicker">6 · Métricas</p>
       <h2>Como saberemos se funcionou</h2>
       <p>
-        As metas ficam <strong>a definir</strong> até termos a região e as medidas reais, exceto
-        onde a meta decorre da própria definição. Definimos antes o que medir, para não escolher a
-        métrica depois de ver o resultado.
+        As metas ficam <strong>a definir</strong> até termos a região e as medidas reais, exceto onde
+        a meta decorre da própria definição. Definimos antes o que medir, para não escolher a métrica
+        depois de ver o resultado.
       </p>
       <div class="table-wrap">
         <table>
@@ -511,43 +758,43 @@
           <tbody>
             <tr>
               <td>M1</td>
-              <td>Cobertura de transporte</td>
-              <td>Pacientes com rota atribuída e sem violação de restrição, divididos pelo total de pacientes.</td>
-              <td>O1, O3</td>
-              <td>100%</td>
+              <td>Horas semanais de translocação</td>
+              <td>Soma, para todos os pacientes, do tempo a bordo nas viagens da semana. Indicador central.</td>
+              <td>O3</td>
+              <td>Menor que o arranjo de referência</td>
             </tr>
             <tr>
               <td>M2</td>
               <td>Tempo a bordo (médio e máximo)</td>
               <td>Minutos de viagem em cada trecho, por paciente.</td>
-              <td>O4</td>
-              <td>Abaixo do limite aceito (Q6)</td>
+              <td>O3</td>
+              <td>Abaixo do limite aceito (Q7)</td>
             </tr>
             <tr>
               <td>M3</td>
-              <td>Pontualidade</td>
-              <td>Parcela de chegadas antes do início do turno, com a margem definida.</td>
-              <td>O2, O3</td>
-              <td>A definir</td>
+              <td>Cobertura de transporte</td>
+              <td>Pacientes com rota atribuída e sem violação de restrição, divididos pelo total de pacientes.</td>
+              <td>O1, O4</td>
+              <td>100%</td>
             </tr>
             <tr>
               <td>M4</td>
+              <td>Pontualidade</td>
+              <td>Parcela de chegadas antes do início do turno, com a margem definida.</td>
+              <td>O3, O4</td>
+              <td>A definir</td>
+            </tr>
+            <tr>
+              <td>M5</td>
               <td>Veículos e horas de frota por semana</td>
               <td>Frota estimada e soma das horas de veículo em viagem.</td>
               <td>O5</td>
               <td>A definir</td>
             </tr>
             <tr>
-              <td>M5</td>
+              <td>M6</td>
               <td>Custo por sessão transportada</td>
               <td>Custo operacional dividido pelo número de sessões transportadas.</td>
-              <td>O5</td>
-              <td>A definir</td>
-            </tr>
-            <tr>
-              <td>M6</td>
-              <td>Ocupação dos assentos</td>
-              <td>Pacientes transportados divididos pelos assentos disponíveis por viagem.</td>
               <td>O5</td>
               <td>A definir</td>
             </tr>
@@ -555,22 +802,36 @@
               <td>M7</td>
               <td>Robustez a falhas</td>
               <td>Pacientes afetados se um veículo falhar, com e sem reserva.</td>
-              <td>O3</td>
+              <td>O4</td>
               <td>Zero com reserva</td>
             </tr>
             <tr>
               <td>M8</td>
               <td>Violações de restrição</td>
               <td>Turnos com excesso de máquinas ou assentos, ou com saída e retorno fora dos limites.</td>
-              <td>O2, O4</td>
+              <td>O3, O6</td>
               <td>Zero</td>
             </tr>
             <tr>
               <td>M9</td>
-              <td>Equidade de tempo a bordo</td>
-              <td>Diferença entre o tempo a bordo do município mais distante e a média.</td>
-              <td>O4</td>
+              <td>Folga de capacidade na demanda</td>
+              <td>Crescimento de demanda que o arranjo suporta antes de violar uma restrição.</td>
+              <td>O1</td>
               <td>A definir</td>
+            </tr>
+            <tr>
+              <td>M10</td>
+              <td>Equidade de tempo a bordo</td>
+              <td>Diferença entre o tempo a bordo da origem mais distante e a média.</td>
+              <td>O2, O3</td>
+              <td>A definir</td>
+            </tr>
+            <tr>
+              <td>M11</td>
+              <td>Adoção (negócio)</td>
+              <td>Número de gestores de frota e pactuações que usam o sistema.</td>
+              <td>O6</td>
+              <td>A definir após piloto</td>
             </tr>
           </tbody>
         </table>
@@ -580,22 +841,36 @@
     <!-- 7. LAB DE UI -->
     <section id="lab">
       <p class="kicker">7 · Lab de UI</p>
-      <h2>Quadro de turnos e rotas: testando onde e quando</h2>
+      <h2>Demanda, prioridade e rotas: testando onde, quando e com que tempo</h2>
       <p>
-        Este laboratório é um protótipo da interface que um gestor poderia usar. Os municípios,
-        pacientes e tempos são <strong>fictícios e ilustrativos</strong>. Escolha, para cada
-        município, o grupo de dias e o turno, e veja se o plano respeita as máquinas, os assentos
-        e os limites de horário. Todos os pacientes de um município vão juntos no mesmo turno.
+        Este laboratório é um protótipo da interface que um gestor de frota usaria. Os municípios,
+        pacientes, distâncias e prioridades são <strong>fictícios e ilustrativos</strong>. Ajuste a
+        demanda, escolha prioridade, grupo de dias e turno de cada origem, e veja o tempo de
+        translocação, a frota e as restrições. Todos os pacientes de um município vão juntos no
+        mesmo turno.
       </p>
 
+      <h3>Premissas do cenário</h3>
       <div class="lab-controls" aria-label="Premissas do laboratório">
+        <label>
+          Crescimento da demanda (%)
+          <input id="in-cresc" type="number" min="0" max="100" step="5" value="0">
+        </label>
+        <label>
+          Distância ao destino (multiplicador; 1 = polo regional)
+          <input id="in-fator" type="number" min="0.5" max="5" step="0.5" value="1">
+        </label>
+        <label>
+          Peso do tempo do paciente no agrupamento (%)
+          <input id="in-peso" type="number" min="0" max="100" step="10" value="70">
+        </label>
         <label>
           Máquinas por turno no centro
           <input id="in-maq" type="number" min="1" max="40" step="1" value="8">
         </label>
         <label>
-          Assentos por veículo
-          <input id="in-assentos" type="number" min="1" max="30" step="1" value="8">
+          Assentos por veículo (van acessível padrão: 15)
+          <input id="in-assentos" type="number" min="1" max="30" step="1" value="15">
         </label>
         <label>
           Duração da sessão (horas)
@@ -603,7 +878,7 @@
         </label>
         <label>
           Tempo máximo a bordo (min, por trecho)
-          <input id="in-limite" type="number" min="15" max="240" step="5" value="90">
+          <input id="in-limite" type="number" min="15" max="600" step="5" value="90">
         </label>
         <label>
           Saída de casa não antes de
@@ -623,9 +898,12 @@
         </label>
       </div>
       <p class="small">
-        Início dos turnos (fixos neste laboratório): manhã 06:30, tarde 11:30 e noite 16:30. Grupo A:
-        segunda, quarta e sexta. Grupo B: terça, quinta e sábado. A chegada deve ocorrer 15 minutos
-        antes do início, e o retorno sai 15 minutos após o fim da sessão.
+        Para simular uma capital, aumente o multiplicador de distância (por exemplo, 3) e depois o
+        tempo máximo a bordo: o laboratório mostra quais restrições deixam de ser cumpridas.
+        Peso 100% prioriza só o tempo do paciente, e 0% prioriza só as horas de veículo.
+        Início dos turnos (fixos): manhã 06:30, tarde 11:30 e noite 16:30. Grupo A: segunda, quarta e
+        sexta. Grupo B: terça, quinta e sábado. A chegada deve ocorrer 15 minutos antes do início, e o
+        retorno sai 15 minutos após o fim da sessão.
       </p>
 
       <div class="lab-actions">
@@ -634,14 +912,17 @@
         <button type="button" id="btn-clear" class="btn">Limpar</button>
       </div>
 
-      <h3>Municípios</h3>
+      <h3>Demanda e prioridade por origem</h3>
       <div class="table-wrap">
         <table class="lab-table" id="lab-table">
           <thead>
             <tr>
               <th>Município (fictício)</th>
-              <th>Pacientes</th>
-              <th>Até o centro</th>
+              <th>Pacientes hoje</th>
+              <th>Pacientes no cenário</th>
+              <th>Até o destino</th>
+              <th>Mais de 50 km?</th>
+              <th>Prioridade</th>
               <th>Grupo de dias</th>
               <th>Turno</th>
               <th>Situação</th>
@@ -650,6 +931,10 @@
           <tbody id="lab-body"></tbody>
         </table>
       </div>
+      <p class="small">
+        A prioridade define quem escolhe primeiro os horários mais favoráveis no agrupamento guloso.
+        Ela nunca deixa um município sem rota: se faltar capacidade, o laboratório mostra a lacuna.
+      </p>
 
       <h3>Turnos e rotas</h3>
       <div class="table-wrap">
@@ -672,28 +957,36 @@
 
       <div class="results" aria-live="polite">
         <div class="result">
-          <span class="result-num" id="res-cobertura">0</span>
-          <span class="result-label">pacientes com rota válida (M1)</span>
+          <span class="result-num" id="res-trans">0</span>
+          <span class="result-label">horas semanais de translocação dos pacientes (M1)</span>
         </div>
         <div class="result">
-          <span class="result-num" id="res-frota">0</span>
-          <span class="result-label">veículos na frota estimada (M4)</span>
-        </div>
-        <div class="result">
-          <span class="result-num" id="res-horas">0</span>
-          <span class="result-label">horas de veículo por semana (M4)</span>
+          <span class="result-num" id="res-medio">0</span>
+          <span class="result-label">tempo médio a bordo por trecho, em min (M2)</span>
         </div>
         <div class="result">
           <span class="result-num" id="res-bordo">0</span>
           <span class="result-label">tempo máximo a bordo, em min (M2)</span>
         </div>
         <div class="result">
-          <span class="result-num" id="res-viol">0</span>
-          <span class="result-label">violações de restrição (M8)</span>
+          <span class="result-num" id="res-cobertura">0</span>
+          <span class="result-label">pacientes com rota válida (M3)</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="res-frota">0</span>
+          <span class="result-label">veículos na frota estimada (M5)</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="res-horas">0</span>
+          <span class="result-label">horas de veículo por semana (M5)</span>
         </div>
         <div class="result">
           <span class="result-num" id="res-falha">0</span>
           <span class="result-label">pacientes afetados se 1 veículo falhar (M7)</span>
+        </div>
+        <div class="result">
+          <span class="result-num" id="res-viol">0</span>
+          <span class="result-label">violações de restrição (M8)</span>
         </div>
       </div>
       <p id="lab-alert" class="alert" role="status" hidden></p>
@@ -708,14 +1001,51 @@
         </table>
       </div>
       <p class="small">
-        Simplificações do laboratório: os municípios ficam alinhados no corredor até o centro, e o
-        veículo recolhe do mais distante ao mais próximo. A frota estimada soma, por turno, o maior
-        número de veículos entre os dois grupos de dias (sem reaproveitar veículos entre turnos).
-        Quando uma rota precisa de mais de um veículo, os tempos mostrados são conservadores. O
-        agrupamento guloso testa um município por vez, do mais distante ao mais próximo, e escolhe
-        o turno que menos aumenta as horas de veículo sem violar restrições. O otimizador de verdade
+        Simplificações do laboratório: os municípios ficam alinhados no corredor até o destino, e o
+        veículo recolhe do mais distante ao mais próximo. O tempo de translocação de cada paciente é o
+        tempo a bordo (distância mais as paradas feitas depois do embarque dele), nos dois sentidos, em
+        três sessões por semana. A frota estimada soma, por turno, o maior número de veículos entre os
+        dois grupos de dias (sem reaproveitar veículos entre turnos). Quando uma rota precisa de mais
+        de um veículo, os tempos mostrados são conservadores. O agrupamento guloso testa uma origem por
+        vez, por prioridade e depois por distância, e escolhe o turno de menor custo ponderado
+        (tempo do paciente e horas de veículo) sem violar restrições. O otimizador de verdade
         (OR-Tools) considerará a ordem das paradas e a divisão entre veículos.
       </p>
+
+      <h3>Rascunho da pactuação</h3>
+      <p>
+        Gera, a partir do arranjo acima, uma tabela com os campos que as orientações do COSEMS-SP
+        descrevem para a pactuação regional: gestor da frota, municípios abrangidos, itinerário, total
+        de pessoas (com acompanhantes) e articulação com o agendamento. Acrescentamos destino e
+        prioridade. A coluna de elegíveis aplica o critério de mais de 50 km. O formato oficial é
+        definido pela CIR e pela CIB do estado, então este rascunho é só um ponto de partida.
+      </p>
+      <div class="lab-controls" aria-label="Dados do rascunho">
+        <label>
+          Município gestor da frota
+          <input id="in-gestor" type="text" maxlength="60" placeholder="A definir pela CIR">
+        </label>
+        <label>
+          Destino (centro de diálise)
+          <input id="in-destino" type="text" maxlength="60" placeholder="Centro de diálise">
+        </label>
+        <label>
+          Acompanhantes (% dos pacientes)
+          <input id="in-acomp" type="number" min="0" max="100" step="1" value="10">
+        </label>
+      </div>
+      <p class="small">
+        O padrão de 10% vem das orientações do COSEMS-SP para a hemodiálise. Confirme o valor na
+        portaria.
+      </p>
+      <div class="lab-actions">
+        <button type="button" id="btn-draft" class="btn btn-primary">Gerar rascunho da pactuação</button>
+        <button type="button" id="draft-copy" class="btn">Copiar como Markdown</button>
+        <span id="draft-msg" class="small" role="status"></span>
+      </div>
+      <div id="draft-out" aria-live="polite">
+        <p class="muted">Clique em "Gerar rascunho da pactuação" depois de montar o arranjo.</p>
+      </div>
     </section>
 
     <!-- 8. DECISÕES -->
@@ -729,9 +1059,51 @@
 
       <div class="adr-list">
         <article class="adr">
-          <header><h3>D10 · Afunilar o tema para hemodiálise no interior</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> tratamento contínuo, em geral três vezes por semana, em que
-            a distância até o centro é uma barreira diária.</p>
+          <header><h3>D16 · Apresentar como produto de uma empresa (plataforma B2G)</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
+          <p><strong>Contexto:</strong> a política cria gestores de frota que precisam de rotas e
+            agendas. Clientes e modelo de negócio são hipóteses (Q12).</p>
+          <p><strong>Alternativas:</strong> apresentar só como protótipo acadêmico.</p>
+          <p class="adr-date">07/11/2026</p>
+        </article>
+        <article class="adr">
+          <header><h3>D17 · Objetivo principal: menor tempo de translocação do paciente</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> é a necessidade mais direta de quem faz hemodiálise e viaja.
+            O custo da frota vem depois, com peso ajustável pelo gestor.</p>
+          <p><strong>Alternativas:</strong> minimizar apenas o custo da frota.</p>
+          <p class="adr-date">07/11/2026</p>
+        </article>
+        <article class="adr">
+          <header><h3>D18 · Prioridade ordena, nunca exclui</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> classes de prioridade vêm das equipes de saúde. O sistema as
+            usa para ordenar alocações e replanejamentos, e aponta a lacuna quando falta capacidade.</p>
+          <p class="adr-date">07/11/2026</p>
+        </article>
+        <article class="adr">
+          <header><h3>D19 · O destino é um parâmetro (capital ou polo regional)</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> o foco passa a incluir capitais. O mesmo núcleo atende destinos
+            próximos e distantes, com multiplicador de distância no laboratório.</p>
+          <p class="adr-date">07/11/2026</p>
+        </article>
+        <article class="adr">
+          <header><h3>D20 · Transporte de órgãos como abertura futura, fora do escopo atual</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> o problema é de natureza diferente (urgente, pontual, com limite
+            rígido de tempo e coordenação própria). Só o núcleo de rotas pode ser reaproveitado.</p>
+          <p><strong>Condição:</strong> parceria com centrais de transplantes e validação clínica e
+            regulatória.</p>
+          <p class="adr-date">07/11/2026</p>
+        </article>
+        <article class="adr">
+          <header><h3>D21 · Ferramenta de apoio à pactuação como moldura</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
+          <p><strong>Contexto:</strong> a lei garante o direito e os veículos, mas o desenho dos
+            arranjos regionais fica com a gestão. O sistema monta o rascunho e confere as regras.</p>
+          <p><strong>Alternativas:</strong> agenda e rota juntas como diferencial isolado; rota viva
+            (replanejamento) como extra.</p>
+          <p class="adr-date">07/11/2026</p>
+        </article>
+        <article class="adr">
+          <header><h3>D10 · Afunilar o tema para hemodiálise</h3><span class="badge st-decidida">Decidida</span></header>
+          <p><strong>Contexto:</strong> tratamento contínuo, em geral três vezes por semana, em que a
+            distância até o centro é uma barreira diária.</p>
           <p><strong>Alternativas:</strong> prevenção com unidade móvel (ideia anterior).</p>
           <p class="adr-date">07/11/2026</p>
         </article>
@@ -745,34 +1117,35 @@
         </article>
         <article class="adr">
           <header><h3>D12 · Roteamento periódico com janelas de tempo e limite de tempo a bordo</h3><span class="badge st-decidida">Decidida (provisória)</span></header>
-          <p><strong>Contexto:</strong> as sessões se repetem toda semana, com horários fixos de
-            início e fim, e o paciente não deve passar tempo demais no veículo.</p>
-          <p><strong>Alternativas:</strong> roteamento com prêmios (da ideia anterior), que
-            não se aplica porque todos os pacientes precisam ser atendidos.</p>
+          <p><strong>Contexto:</strong> as sessões se repetem toda semana, com horários fixos, e o
+            paciente não deve passar tempo demais no veículo.</p>
+          <p><strong>Alternativas:</strong> roteamento com prêmios (da ideia anterior), que não se
+            aplica porque todos os pacientes precisam ser atendidos.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
-          <header><h3>D13 · Escopo do MVP</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Proposta:</strong> um centro de referência, de 4 a 8 municípios, dois grupos de
-            dias, três turnos e veículos do tipo van.</p>
+          <header><h3>D13 · Escopo do MVP</h3><span class="badge st-proposta">Proposta (atualizada)</span></header>
+          <p><strong>Proposta:</strong> um destino, de 4 a 8 origens, dois grupos de dias, três turnos e
+            veículos do tipo van, com demanda, prioridade e rascunho de pactuação.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
           <header><h3>D14 · O modelo é apoio logístico, não clínico</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Decisão:</strong> horários das sessões e decisões clínicas e de regulação vêm
-            como entrada. Qualquer plano deve ser validado pelas equipes de saúde.</p>
+          <p><strong>Decisão:</strong> horários das sessões e decisões clínicas e de regulação vêm como
+            entrada. Qualquer plano deve ser validado pelas equipes de saúde.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
           <header><h3>D15 · Cenários alternativos como comparação futura</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Proposta:</strong> comparar o custo do transporte com o de uma unidade satélite
-            e com a diálise domiciliar. Isso exige dados e avaliação clínica, e fica fora do MVP.</p>
+          <p><strong>Proposta:</strong> comparar o custo do transporte com o de uma unidade satélite e
+            com a diálise domiciliar. Isso exige dados e avaliação clínica, e fica fora do MVP.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
           <header><h3>D5 · Validação por simulação com arranjo de referência</h3><span class="badge st-proposta">Proposta (atualizada)</span></header>
           <p><strong>Proposta:</strong> comparar o plano agrupado com o arranjo atual (um veículo por
-            município) e testar a sensibilidade aos tempos de viagem e aos limites.</p>
+            município) e testar a sensibilidade aos tempos de viagem, ao peso do tempo do paciente e ao
+            crescimento da demanda.</p>
           <p class="adr-date">07/11/2026</p>
         </article>
         <article class="adr">
@@ -782,13 +1155,13 @@
         </article>
         <article class="adr">
           <header><h3>D7 · Região do caso de estudo</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Em aberto:</strong> qual centro de diálise e quais municípios, de preferência
-            em uma região do interior próxima ao campus do time.</p>
+          <p><strong>Em aberto:</strong> qual destino (centro de diálise) e quais municípios de origem,
+            de preferência em uma região próxima ao campus do time.</p>
         </article>
         <article class="adr">
           <header><h3>D8 · Parâmetros operacionais do transporte</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Em aberto:</strong> assentos, tempo máximo a bordo, janelas de saída e retorno e
-            margem de tempo para estradas rurais (Q3, Q5 e Q6).</p>
+          <p><strong>Em aberto:</strong> assentos, tempo máximo a bordo, janelas de saída e retorno,
+            margem para estradas rurais e classes de prioridade (Q3, Q5, Q6 e Q7).</p>
         </article>
         <article class="adr">
           <header><h3>D9 · Nome do projeto</h3><span class="badge st-pendente">Pendente</span></header>
@@ -808,20 +1181,56 @@
     <section id="workflow">
       <p class="kicker">9 · Workflow</p>
       <h2>Como o trabalho flui</h2>
-      <p>
-        Seis etapas, cada uma com entradas, saídas e uma definição de pronto. As etapas 1 e 2
-        são o que estamos fazendo agora.
-      </p>
 
+      <h3>9.1 Fluxo do cliente no produto</h3>
+      <p>Como um gestor de frota usaria o sistema, do cadastro da demanda ao acompanhamento.</p>
+      <ol class="flow">
+        <li class="flow-step">
+          <h3>1 · Cadastrar a demanda</h3>
+          <p><strong>Entra:</strong> origens, pacientes por grupo e turno, acompanhantes e acessibilidade.<br>
+             <strong>Sai:</strong> retrato atual da demanda.</p>
+        </li>
+        <li class="flow-step">
+          <h3>2 · Definir prioridades</h3>
+          <p><strong>Entra:</strong> classes definidas com as equipes de saúde.<br>
+             <strong>Sai:</strong> origens classificadas, com a regra registrada.</p>
+        </li>
+        <li class="flow-step">
+          <h3>3 · Calcular rotas e agenda</h3>
+          <p><strong>Entra:</strong> demanda, prioridade, frota, destino e peso do tempo do paciente.<br>
+             <strong>Sai:</strong> rotas, horários, quadro semanal e métricas.</p>
+        </li>
+        <li class="flow-step">
+          <h3>4 · Pactuar e aprovar</h3>
+          <p><strong>Entra:</strong> arranjo escolhido.<br>
+             <strong>Sai:</strong> rascunho de pactuação para a CIR e a CIB.</p>
+        </li>
+        <li class="flow-step">
+          <h3>5 · Operar e registrar</h3>
+          <p><strong>Entra:</strong> plano aprovado.<br>
+             <strong>Sai:</strong> viagens executadas e registros de produção (fase futura).</p>
+        </li>
+        <li class="flow-step">
+          <h3>6 · Replanejar e medir</h3>
+          <p><strong>Entra:</strong> falhas, mudanças na demanda e indicadores.<br>
+             <strong>Sai:</strong> plano atualizado e relatório de métricas.</p>
+        </li>
+      </ol>
+
+      <h3>9.2 Nosso ciclo de desenvolvimento</h3>
+      <p>
+        Seis etapas, cada uma com entradas, saídas e uma definição de pronto. As etapas 1 e 2 são o que
+        estamos fazendo agora.
+      </p>
       <ol class="flow">
         <li class="flow-step done">
           <h3>1 · Entender</h3>
           <p><strong>Entra:</strong> tema do desafio e fontes.<br>
              <strong>Sai:</strong> intenção, dores, perguntas de pesquisa.<br>
-             <strong>Pronto quando:</strong> o problema central está formulado e as perguntas Q1 a Q10 têm responsável.</p>
+             <strong>Pronto quando:</strong> o problema central está formulado e as perguntas Q1 a Q12 têm responsável.</p>
           <span class="badge st-decidida">Em andamento</span>
         </li>
-        <li class="flow-step">
+        <li class="flow-step done">
           <h3>2 · Definir</h3>
           <p><strong>Entra:</strong> intenção e dores.<br>
              <strong>Sai:</strong> objetivos, requisitos, métricas.<br>
@@ -831,21 +1240,21 @@
         <li class="flow-step">
           <h3>3 · Modelar</h3>
           <p><strong>Entra:</strong> requisitos e dados.<br>
-             <strong>Sai:</strong> matriz de tempos, agrupamento de municípios e otimizador de rotas.<br>
+             <strong>Sai:</strong> demanda, prioridade, matriz de tempos e otimizador de rotas.<br>
              <strong>Pronto quando:</strong> gera um plano semanal sem violações.</p>
           <span class="badge st-pendente">Pendente</span>
         </li>
         <li class="flow-step">
           <h3>4 · Prototipar</h3>
           <p><strong>Entra:</strong> modelo e lab de UI.<br>
-             <strong>Sai:</strong> quadro semanal e mapa interativos.<br>
+             <strong>Sai:</strong> quadro semanal, mapa e rascunho de pactuação interativos.<br>
              <strong>Pronto quando:</strong> o gestor altera premissas e vê o efeito.</p>
           <span class="badge st-pendente">Pendente</span>
         </li>
         <li class="flow-step">
           <h3>5 · Validar</h3>
           <p><strong>Entra:</strong> protótipo e arranjo de referência.<br>
-             <strong>Sai:</strong> métricas M1 a M9, sensibilidade e revisão de uma pessoa da área de saúde.<br>
+             <strong>Sai:</strong> métricas M1 a M11, sensibilidade e revisão de uma pessoa da área de saúde.<br>
              <strong>Pronto quando:</strong> os limites do modelo estão declarados.</p>
           <span class="badge st-pendente">Pendente</span>
         </li>
@@ -862,24 +1271,28 @@
         <summary>Roteiro do pitch (5 minutos)</summary>
         <ol class="timeline">
           <li><strong>Problema:</strong> uma pessoa em hemodiálise precisa chegar ao centro cerca de três
-            vezes por semana. No interior, só a viagem pode somar horas, e faltar não é opção.</li>
-          <li><strong>Ideia:</strong> rotas compartilhadas, desenhadas junto com a agenda do centro,
-            com reserva para garantir continuidade.</li>
-          <li><strong>Modelo:</strong> roteamento periódico com janelas de tempo, capacidade e limite de
-            tempo a bordo.</li>
-          <li><strong>Demo:</strong> quadro semanal, com comparação entre o arranjo atual e o agrupado.</li>
-          <li><strong>Impacto e limites:</strong> horas de frota, tempo a bordo, robustez a falhas,
-            dados fictícios, validação clínica e próximos passos com uma secretaria de saúde.</li>
+            vezes por semana. Para quem mora longe, só a viagem soma horas, e faltar não é opção.</li>
+          <li><strong>Contexto:</strong> a lei garante o transporte a mais de 50 km e o governo enviou
+            veículos. O desenho das rotas e dos horários fica com a gestão regional.</li>
+          <li><strong>Produto:</strong> demanda, prioridade e rotas, com o menor tempo de translocação
+            como objetivo principal e o rascunho de pactuação como saída.</li>
+          <li><strong>Demo:</strong> arranjo atual contra arranjo agrupado, peso do tempo do paciente,
+            crescimento da demanda, capital e falha de veículo.</li>
+          <li><strong>Impacto e limites:</strong> horas de translocação, robustez a falhas, dados
+            fictícios, validação clínica e próximos passos com uma regional de saúde. A abertura para
+            outras rotas é visão de longo prazo, não promessa.</li>
         </ol>
       </details>
 
       <details>
         <summary>Cuidados a declarar na apresentação</summary>
         <ul>
-          <li>O modelo é apoio logístico. Decisões clínicas e de regulação são das equipes de saúde.</li>
+          <li>O sistema é apoio logístico. Decisões clínicas e de regulação são das equipes de saúde.</li>
           <li>Os dados do protótipo são fictícios, e os tempos de viagem rurais são aproximados.</li>
-          <li>O financiamento federal citado é uma minuta, e o modelo não depende dele.</li>
-          <li>Equidade: o município mais distante não deve carregar sempre o maior tempo a bordo.</li>
+          <li>Roteamento de pacientes já é estudado na literatura. O diferencial é demanda, prioridade, pactuação e operação.</li>
+          <li>A prioridade ordena alocações e nunca exclui um paciente.</li>
+          <li>Equidade: a origem mais distante não deve carregar sempre o maior tempo a bordo.</li>
+          <li>Transporte de órgãos é uma abertura conceitual e exigiria parceria e validação próprias.</li>
         </ul>
       </details>
     </section>

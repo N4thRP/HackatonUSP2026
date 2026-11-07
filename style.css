@@ -251,6 +251,9 @@ td:first-child { font-weight: 700; white-space: nowrap; }
 .adr-date { font-size: .8rem !important; }
 .adr.archived { background: var(--bg-alt); border-style: dashed; }
 
+.draft-table td { white-space: normal; min-width: 110px; }
+.draft-table td.num { white-space: nowrap; }
+
 .sources { padding-left: 1.2rem; font-size: .92rem; }
 .sources li { margin-bottom: .35rem; }
 
