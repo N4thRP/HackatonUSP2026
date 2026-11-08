@@ -26,6 +26,17 @@ st.markdown("""
   .block-container{padding-top:1.6rem;max-width:1180px}
   h1{font-size:1.9rem!important;letter-spacing:-.01em;margin-bottom:.1rem!important}
   .sub{color:#4E6462;margin:0 0 1rem 0;font-size:.98rem}
+  .cab{background:#fff;border:1px solid #D3DDDA;border-radius:14px;padding:16px 22px 14px;margin:0 0 10px 0}
+  .cab-l1{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .cab-t{font-size:1.75rem;font-weight:800;letter-spacing:-.01em;color:#17302F;margin-right:12px}
+  .cab-tag{font-size:.9rem;color:#6B7B79}
+  .cab-st{display:inline-flex;align-items:center;gap:7px;padding:3px 12px;border-radius:999px;background:#E4F0E1;
+          color:#2F6F2A;font-weight:600;font-size:.85rem;white-space:nowrap}
+  .cab-st i{width:8px;height:8px;border-radius:50%;background:#3F8F3A}
+  .cab-un{font-size:1.02rem;font-weight:600;color:#1D5C63;margin-top:2px}
+  .cab-l2{display:flex;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;margin-top:12px;padding-top:10px;
+          border-top:1px solid #E3E9E7;font-size:.92rem;color:#4E6462}
+  .cab-dia{font-weight:600;color:#17302F}
   .faixa{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:600;font-size:.82rem;white-space:nowrap}
   .sim{border:1px dashed #A8753F;background:#FBF3E8;color:#7A4A22;border-radius:4px;padding:0 6px;font-size:.82rem;white-space:nowrap}
   .sim small{opacity:.75;margin-left:3px}
@@ -159,10 +170,19 @@ with st.sidebar:
                 'marca dado sintético (horário, valor, cor de risco, distância e respostas). O resto vem do dataset real.</div>',
                 unsafe_allow_html=True)
 
-st.markdown("# Giro")
-st.markdown(f'<p class="sub">{escape(unidade.title())} · consultas de {dia.strftime("%d/%m/%Y")}. '
-            'Quem tende a faltar recebe contato 3 dias antes; quem diz que não vai libera a vaga para a fila.</p>',
-            unsafe_allow_html=True)
+SEMANA = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
+MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro",
+         "novembro", "dezembro"]
+ini, fim_per = prev.data_consulta.min(), prev.data_consulta.max()
+st.markdown(
+    f'<div class="cab"><div class="cab-l1"><div><span class="cab-t">Giro</span>'
+    f'<span class="cab-tag">Previsão de faltas e realocação de vagas</span></div>'
+    f'<span class="cab-st" title="Consultas reais de 2016; horários, respostas e fila são simulados">'
+    f'<i></i>Simulação</span></div>'
+    f'<div class="cab-un">Unidade {escape(unidade.title())} · Vitória (ES)</div>'
+    f'<div class="cab-l2"><span class="cab-dia">{SEMANA[dia.weekday()]}, {dia.day} de {MESES[dia.month - 1]} de {dia.year}</span>'
+    f'<span class="cab-per">Período simulado: {ini:%d/%m} a {fim_per:%d/%m/%Y}</span></div></div>',
+    unsafe_allow_html=True)
 
 dia_ts = pd.Timestamp(dia)
 agenda = prev[(prev.unidade == unidade) & (prev.data_consulta == dia_ts)].sort_values("horario")
