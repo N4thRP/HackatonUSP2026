@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Projeto — Vaga Viva · Previsão de no-show e realocação de consultas</title>
+<title>Projeto — Giro · Previsão de no-show e realocação de consultas</title>
 <style>
   :root{
     --bg:#f6f4ef; --paper:#fffdf8; --ink:#1d1f1e; --muted:#5f6461; --line:#dedad0;
@@ -136,7 +136,7 @@
 
 <header class="top">
   <div class="bar">
-    <strong>Vaga Viva</strong>
+    <strong>Giro</strong>
     <nav>
       <a href="#s01">01 Intenção</a><a href="#s02">02 Dores</a><a href="#s03">03 Pesquisa</a>
       <a href="#s04">04 Objetivos</a><a href="#s05">05 Requisitos</a><a href="#s06">06 Métricas</a>
@@ -154,7 +154,7 @@
   <div class="hero">
     <div class="kicker">Hackathon USP · Saúde para todos: soluções para reduzir barreiras no acesso à saúde</div>
     <h1 data-edit>Prever a falta, confirmar com o paciente e devolver a vaga para quem está na fila.</h1>
-    <p data-edit>Documento vivo do projeto. Cada seção tem um texto inicial curto para a equipe corrigir antes de escrever o MVP. Nome “Vaga Viva” é provisório.</p>
+    <p data-edit>Documento vivo do projeto. Cada seção tem um texto inicial curto para a equipe corrigir antes de escrever o MVP.</p>
   </div>
 
   <!-- 01 -->
@@ -594,7 +594,7 @@
 
     <h4 class="sub">2.2 Como o código Python fica organizado</h4>
     <p class="small" data-edit>Um repositório, um pacote Python e quatro comandos que rodam em sequência. Cada comando lê e escreve os arquivos combinados (contratos), então dá para rodar e testar cada parte separada.</p>
-<pre class="tree">vagaviva/
+<pre class="tree">giro/
 ├── config/
 │   ├── fontes.yaml        <span># parâmetros sintéticos + fonte de cada um (seção 03)</span>
 │   └── regras.yaml        <span># faixas, janelas de tempo (D19), carência, ordem das cores</span>
@@ -602,7 +602,7 @@
 │   ├── brutos/            <span># KaggleV2-May-2016.csv, Itajaí</span>
 │   ├── consultas.parquet  <span># saída de preparar.py</span>
 │   └── sinteticos.parquet <span># saída de sinteticos.py (tabela separada, R12)</span>
-├── src/vagaviva/
+├── src/giro/
 │   ├── preparar.py        <span># limpeza, variáveis, perfil P1–P6</span>
 │   ├── sinteticos.py      <span># horário, valor, cor, distância, respostas</span>
 │   ├── modelo.py          <span># treinar, prever, faixa, 3 fatores</span>
@@ -669,7 +669,7 @@ def candidatos(vaga, lista, hoje):
       <tr><th>Cenário</th><th>Faltas alcançadas pelo contato</th><th>Perda recuperada</th><th>R$ (convênio)</th></tr>
       <tr><td>Sem produto</td><td class="mono">0</td><td class="mono">0%</td><td class="mono">R$ 0</td></tr>
       <tr><td>Contato aleatório (20%)</td><td class="mono">1.458 (20%)</td><td class="mono">~6,5%</td><td class="mono">~R$ 71 mil</td></tr>
-      <tr><td><b>Vaga Viva</b></td><td class="mono"><b>2.692 (36,9%)</b></td><td class="mono"><b>9,8%</b></td><td class="mono"><b>R$ 107 mil</b></td></tr>
+      <tr><td><b>Giro</b></td><td class="mono"><b>2.692 (36,9%)</b></td><td class="mono"><b>9,8%</b></td><td class="mono"><b>R$ 107 mil</b></td></tr>
     </table>
     <p class="small" data-edit><b>Corrigido na 2.5:</b> o funil acima conta toda vaga preenchida, mas a cascata mostra que só ~524 viram vaga de verdade (R$ 79 mil, R$ 2,4 mil por unidade/mês). Texto original: em 9 dias úteis, R$ 107 mil recuperados de R$ 1,09 milhão perdidos — cerca de <b>R$ 3,3 mil por unidade por mês</b>. Esse é o teto natural da mensalidade (Fase 3). No cenário SUS, as mesmas 715 vagas valem R$ 9,9 mil, e o ganho principal passa a ser pacientes atendidos antes.</p>
     <div class="note" data-edit><b>O que a estimativa ainda não captura:</b> a cascata (cada aceite libera outro horário), o efeito do lembrete na faixa MÉDIO e a perda de velocidade do modo sequencial. Tudo isso só aparece na simulação (M8, M9). Fazer a faixa por unidade/dia, e não no dia inteiro, baixa o recall de 39,0% para 36,9% — é o preço de cada unidade contatar só a sua capacidade.</div>
@@ -785,8 +785,8 @@ def candidatos(vaga, lista, hoje):
     <table data-edit>
       <tr><th>Cenário</th><th>Vagas liberadas</th><th>1ª vaga preenchida (M8)</th><th>Vagas recuperadas</th><th>Perda recuperada (M9)</th><th>R$ convênio</th><th>Espera média dos beneficiados</th><th>Urgentes</th></tr>
       <tr><td>Contato sorteado, sem modelo</td><td class="mono">1.650</td><td class="mono">49,6%</td><td class="mono">715</td><td class="mono">9,8%</td><td class="mono">R$ 113 mil</td><td class="mono">—</td><td class="mono">—</td></tr>
-      <tr><td><b>Vaga Viva · sequencial</b></td><td class="mono">2.815</td><td class="mono"><b>45,4%</b></td><td class="mono">1.139</td><td class="mono"><b>15,6%</b></td><td class="mono"><b>R$ 180 mil</b></td><td class="mono">23 dias</td><td class="mono">32%</td></tr>
-      <tr><td>Vaga Viva · simultânea</td><td class="mono">2.815</td><td class="mono">61,4%</td><td class="mono">1.605</td><td class="mono">22,0%</td><td class="mono">R$ 253 mil</td><td class="mono">18 dias</td><td class="mono">20%</td></tr>
+      <tr><td><b>Giro · sequencial</b></td><td class="mono">2.815</td><td class="mono"><b>45,4%</b></td><td class="mono">1.139</td><td class="mono"><b>15,6%</b></td><td class="mono"><b>R$ 180 mil</b></td><td class="mono">23 dias</td><td class="mono">32%</td></tr>
+      <tr><td>Giro · simultânea</td><td class="mono">2.815</td><td class="mono">61,4%</td><td class="mono">1.605</td><td class="mono">22,0%</td><td class="mono">R$ 253 mil</td><td class="mono">18 dias</td><td class="mono">20%</td></tr>
     </table>
     <p class="small" data-edit>Cerca de <b>R$ 5,6 mil por unidade por mês</b> no modo sequencial. O modelo faz diferença: com o mesmo volume de contatos sorteado, recupera-se 37% menos. Em 6 sementes diferentes, M8 fica entre 45,2% e 47,0% e M9 entre 15,1% e 16,1%.</p>
 
@@ -855,7 +855,7 @@ def candidatos(vaga, lista, hoje):
 
 <script>
 (function(){
-  var KEY='vagaviva-projeto-v13';
+  var KEY='giro-projeto-v13';
   var nodes=[].slice.call(document.querySelectorAll('[data-edit]'));
   var store=null;
   try{store=window.localStorage;}catch(e){}
