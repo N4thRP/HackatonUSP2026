@@ -123,8 +123,18 @@ st.markdown("""
 
 
 # ---------------- dados ----------------
+ARQUIVOS_DADOS = [SAIDAS / "previsoes.csv", DADOS / "sinteticos.parquet", SAIDAS / "resumo_simulacao.json",
+                  SAIDAS / "placar.csv", SAIDAS / "eventos.jsonl", SAIDAS / "eventos_particular.jsonl"]
+
+
+def versao_dados():
+    """Data de modificação dos arquivos lidos. Entra como argumento das funções com cache, para que elas
+    releiam tudo quando a simulação for gerada de novo, sem precisar reiniciar o app."""
+    return tuple(a.stat().st_mtime if a.exists() else 0.0 for a in ARQUIVOS_DADOS)
+
+
 @st.cache_data
-def carregar():
+def carregar(versao):
     prev = pd.read_csv(SAIDAS / "previsoes.csv", parse_dates=["data_consulta", "data_agendamento"],
                        dtype={"id_paciente": str})
     sint = pd.read_parquet(DADOS / "sinteticos.parquet")
@@ -135,7 +145,7 @@ def carregar():
 
 
 @st.cache_data
-def eventos(regra="geral"):
+def eventos(regra, versao):
     """regra "geral" (D34, SUS) ou "particular" (D35, hospital particular)."""
     arquivo = "eventos.jsonl" if regra == "geral" else "eventos_particular.jsonl"
     return pd.read_json(SAIDAS / arquivo, lines=True)
@@ -196,7 +206,8 @@ def mapa_unidade(unidade):
     return "".join(h)
 
 
-prev, resumo, placar = carregar()
+VERSAO = versao_dados()
+prev, resumo, placar = carregar(VERSAO)
 
 # ---------------- barra lateral ----------------
 LOGO = ('<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#1D5C63"/>'
@@ -210,16 +221,15 @@ with st.sidebar:
                 '<div class="sb-desc">Menos faltas, mais vagas</div></div></div>', unsafe_allow_html=True)
     with st.container(border=True):
         st.markdown('<div class="sb-sec">Cenário</div>', unsafe_allow_html=True)
-        valor = st.radio(":material/apartment: Tipo de serviço", ["Convênio", "SUS"], index=0, horizontal=True,
-                         format_func={"Convênio": "Particular", "SUS": "SUS"}.get,
+        valor = st.radio(":material/apartment: Tipo de serviço", ["Particular", "SUS"], index=0, horizontal=True,
                          help="Particular (convênio): R$ 128–195 por consulta; a vaga vai primeiro para quem tem consulta "
                               "uma semana depois, no mesmo horário (D35). SUS: R$ 13,85 por consulta perdida; a vaga vai "
                               "para quem espera há mais tempo (D34).")
-    REGRA = "particular" if valor == "Convênio" else "geral"
-    ev = eventos(REGRA)
+    REGRA = "particular" if valor == "Particular" else "geral"
+    ev = eventos(REGRA, VERSAO)
     # dia sugerido ao abrir: o com mais remarcações a partir das vagas liberadas dele (fixo pela regra geral,
     # para não mudar de dia quando o cenário muda)
-    ev_g = eventos("geral")
+    ev_g = eventos("geral", VERSAO)
     lib0 = ev_g[(ev_g.tipo == "vaga_liberada") & (ev_g.nivel == 0)]
     n_ac = ev_g[ev_g.tipo == "aceite"].groupby("raiz").size()
     lib0 = lib0.assign(remarc=lib0.id_consulta.map(n_ac).fillna(0))
@@ -410,9 +420,9 @@ FIM_CURTO = {"fila_sem_horario": "paciente da fila atendido", "volta_agenda": "v
 
 
 @st.cache_data
-def cascatas_unidade(unidade, regra):
+def cascatas_unidade(unidade, regra, versao):
     """Uma linha por cascata (vaga liberada por 'não vou'/'quero remarcar') da unidade."""
-    ev = eventos(regra)
+    ev = eventos(regra, versao)
     e = ev[ev.unidade == unidade]
     raizes = e[(e.tipo == "vaga_liberada") & (e.nivel == 0)].id_consulta.astype(int)
     ac = e[e.tipo == "aceite"]
@@ -567,7 +577,7 @@ def desenhar_cascata(etapas, fim, passo, raiz_resp):
 
 with aba3:
     prev_id = prev.set_index("id_consulta")
-    todas = cascatas_unidade(unidade, REGRA)
+    todas = cascatas_unidade(unidade, REGRA, VERSAO)
     do_dia = todas[todas.data_consulta == dia_ts]
     if todas.empty:
         st.info("Nenhuma vaga foi liberada nesta unidade no período. Escolha outra unidade na barra lateral.")
@@ -638,7 +648,12 @@ with aba3:
 
 # ---------------- Painel ----------------
 with aba4:
-    r = resumo["particular" if REGRA == "particular" else "produto"]
+    chave_r = "particular" if REGRA == "particular" else "produto"
+    if chave_r not in resumo:
+        st.error(f"O resumo da simulação não tem os números do cenário {'Particular' if REGRA == 'particular' else 'SUS'}. Rode `python simular.py` "
+                 "para gerar as duas regras e recarregue a página.")
+        st.stop()
+    r = resumo[chave_r]
     ctl = resumo.get("particular_aleatorio" if REGRA == "particular" else "aleatorio")
     st.markdown(f"#### Período inteiro · {r['unidades']} unidades · {r['dias_uteis']} dias úteis · {r['consultas']:,} consultas".replace(",", "."))
     c1, c2, c3, c4 = st.columns(4)
@@ -646,21 +661,21 @@ with aba4:
     c2.metric("Vagas liberadas", f"{r['vagas_liberadas']:,}".replace(",", "."))
     c3.metric("Vagas recuperadas", f"{r['vagas_recuperadas']:,}".replace(",", "."),
               help="Só conta quando a cadeia termina num paciente da fila sem horário ou num horário que volta à agenda (D25).")
-    if valor == "Convênio":
+    if valor == "Particular":
         c4.metric("Receita recuperada", brl(r["valor_recuperado_convenio"]), f"{r['M9']:.1%} da perda".replace(".", ","))
     else:
         c4.metric("Pacientes da fila atendidos", r["pacientes_b_atendidos"],
                   f"+ {r['dias_antecipados_tipo_a']:,.0f} dias antecipados".replace(",", "."))
 
     st.markdown("#### Comparação")
-    chave = "valor_recuperado_convenio" if valor == "Convênio" else "vagas_recuperadas"
+    chave = "valor_recuperado_convenio" if valor == "Particular" else "vagas_recuperadas"
     linhas = [("Sem o produto", 0), ("Contato sorteado, sem modelo", ctl[chave] if ctl else 0), ("Giro", r[chave])]
     maior = max(v for _, v in linhas) or 1
-    fmt = brl if valor == "Convênio" else (lambda v: f"{v:,.0f} vagas".replace(",", "."))
+    fmt = brl if valor == "Particular" else (lambda v: f"{v:,.0f} vagas".replace(",", "."))
     st.markdown('<div class="barras">' + "".join(
         f'<div class="br"><span>{n}</span><div class="t"><div style="width:{100*v/maior:.0f}%"></div></div><span>{fmt(v)}</span></div>'
         for n, v in linhas) + "</div>", unsafe_allow_html=True)
-    if valor == "Convênio":
+    if valor == "Particular":
         st.caption(f"Cerca de {brl(r['por_unidade_mes_convenio'])} por unidade por mês. "
                    f"O sorteio usa as mesmas quantidades de contato, sem o modelo.")
     else:
