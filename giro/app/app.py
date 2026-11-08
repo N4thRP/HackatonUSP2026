@@ -73,8 +73,9 @@ st.markdown("""
   .sb-sec{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7FE3D5;margin:-2px 0 2px 0}
   .sb-nota{font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.5;margin-top:4px}
   .sb-nota b{color:#fff}
-  .marca{display:inline-flex;align-items:center;gap:8px;vertical-align:middle}
-  .marca-nome{font-family:"Sora",sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .marca{display:inline-flex;align-items:flex-end;gap:0;vertical-align:middle}
+  .marca svg{margin:0 .07em -.06em 0;flex:none}
+  .marca-nome{font-family:"Sora",sans-serif;font-weight:800;font-size:.82em;letter-spacing:-.02em;line-height:1}
   h1,h2,h3,h4,.painel-t,.cab-un,.cx-resumo b{font-family:"Sora",sans-serif}
   .mapa{width:100%;height:auto;display:block;margin:-4px 0 6px 0}
   .painel{background:#fff;border:1px solid #DCE5EA;border-radius:14px;padding:18px 22px 16px;margin:4px 0 14px 0}
@@ -228,13 +229,13 @@ def simbolo(cor="#0B4F6C", tam=34):
 
 
 def marca(cor="#0B4F6C", tam=34):
-    """Símbolo + nome "giro" em Sora (assinatura horizontal)."""
-    return (f'<span class="marca">{simbolo(cor, tam)}'
-            f'<span class="marca-nome" style="color:{cor};font-size:{tam * 0.95:.0f}px">giro</span></span>')
+    """Logotipo "Giro": o símbolo faz o papel do G, seguido de "iro" em Sora (assinatura horizontal)."""
+    return (f'<span class="marca" role="img" aria-label="Giro" style="font-size:{tam}px;color:{cor}">'
+            f'{simbolo(cor, tam)}<span class="marca-nome">iro</span></span>')
 
 
 with st.sidebar:
-    st.markdown(f'<div class="sb-marca">{marca("#FFFFFF", 30)}'
+    st.markdown(f'<div class="sb-marca">{marca("#FFFFFF", 34)}'
                 '<div class="sb-desc">Cada vaga encontra seu paciente.</div></div>', unsafe_allow_html=True)
     with st.container(border=True):
         st.markdown('<div class="sb-sec">Cenário</div>', unsafe_allow_html=True)
@@ -274,7 +275,7 @@ MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "a
          "novembro", "dezembro"]
 ini, fim_per = prev.data_consulta.min(), prev.data_consulta.max()
 st.markdown(
-    f'<div class="cab"><div class="cab-l1"><div class="cab-id">{marca("#0B4F6C", 36)}'
+    f'<div class="cab"><div class="cab-l1"><div class="cab-id">{marca("#0B4F6C", 40)}'
     f'<span class="cab-tag">Realocação inteligente de consultas para clínicas privadas e para o SUS</span></div>'
     f'<span class="cab-st" title="Consultas reais de 2016; horários, respostas e fila são simulados">'
     f'<i></i>Simulação</span></div>'
