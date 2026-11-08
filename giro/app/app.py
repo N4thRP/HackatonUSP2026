@@ -51,6 +51,34 @@ st.markdown("""
   .br .t{height:16px;background:#DCE4E2;border-radius:3px;overflow:hidden}
   .br .t div{height:100%;background:#1D5C63}
   .legenda{font-size:.82rem;color:#4E6462;margin-top:6px}
+  .painel{background:#fff;border:1px solid #D3DDDA;border-radius:14px;padding:18px 22px 16px;margin:4px 0 14px 0}
+  .painel-t{font-size:1.15rem;font-weight:700;margin-bottom:12px}
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 24px}
+  .kpi-t{display:flex;align-items:center;gap:8px;font-size:.88rem;color:#4E6462}
+  .kpi-v{font-size:2.1rem;font-weight:700;line-height:1.15;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+  .kpi-s{font-size:.82rem;color:#6B7B79}
+  .painel-g{display:grid;grid-template-columns:1fr 1fr;gap:12px 32px;margin-top:16px;padding-top:14px;border-top:1px solid #E3E9E7}
+  .painel-s{font-size:.85rem;font-weight:600;color:#4E6462;margin-bottom:6px}
+  .pilha{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#E3E9E7;gap:2px}
+  .pilha-leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.82rem;color:#4E6462;margin-top:6px}
+  .pilha-leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+  .semantica{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 18px;margin:2px 0 12px 0}
+  .semantica>div{display:flex;align-items:flex-start;gap:8px;font-size:.88rem}
+  .semantica small{display:block;color:#6B7B79;font-size:.78rem}
+  .pac{display:flex;align-items:flex-start;gap:10px}
+  .chip60{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;font-weight:700;color:#1D5C63;background:#DCEDE8}
+  details.rk{position:relative;flex:none;margin-top:3px}
+  details.rk summary{list-style:none;cursor:pointer;display:block}
+  details.rk summary::-webkit-details-marker{display:none}
+  .rk-dot{display:block;width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 0 0 4px #C9D5D2;transition:box-shadow .15s}
+  details.rk summary:hover .rk-dot,details.rk[open] .rk-dot{box-shadow:0 0 0 3px #fff,0 0 0 5px #1D5C63}
+  .rk-pop{position:absolute;left:-6px;top:24px;z-index:20;width:320px;background:#fff;border:1px solid #C9D5D2;border-radius:10px;
+          box-shadow:0 8px 24px rgba(23,48,47,.16);padding:12px 14px;font-size:.86rem;color:#17302F}
+  .rk-cab{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:6px}
+  .rk-sec{font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:#4E6462;margin:8px 0 2px}
+  .rk-pop ul{margin:0;padding-left:18px}
+  .rk-pe{margin-top:8px;color:#6B7B79;font-size:.8rem}
+  @media (max-width:760px){.kpis,.semantica{grid-template-columns:repeat(2,minmax(0,1fr))}.painel-g{grid-template-columns:1fr}}
   .cx-svg{width:100%;height:auto;background:#fff;border:1px solid #D3DDDA;border-radius:10px;margin:6px 0 2px 0}
   .cx-svg .cx-dt{font-size:15px;font-weight:600;fill:#1F2D2B}
   .cx-svg .cx-sub{font-size:12.5px;fill:#6B7B79}
@@ -150,17 +178,81 @@ lib_u = ev_u[ev_u.tipo == "vaga_liberada"]
 aba1, aba2, aba3, aba4 = st.tabs(["Agenda", "Contatos", "Realocação", "Painel"])
 
 # ---------------- Agenda ----------------
+PONTO_RISCO = {"ALTO": "#C0392B", "MÉDIO": "#D4A017", "BAIXO": "#3F8F3A"}
+SEMANTICA = [  # (rótulo, cor do texto, fundo, significado, o que o Giro faz)
+    ("Alto", "#B43C2A", "#F7E3DE", "Requer atenção prioritária", "20% de maior risco do dia: pedido de confirmação 3 dias antes"),
+    ("Médio", "#8A6512", "#F5ECD2", "Requer acompanhamento", "30% seguintes: lembrete com botão “não vou”"),
+    ("Baixo", "#3E6B52", "#E1EEE6", "Sem alerta relevante", "Sem contato"),
+    ("Aviso 60+", "#1D5C63", "#DCEDE8", "Idoso na faixa Baixo", "Aviso 3 dias antes com botão “não vou”"),
+]
+ICONE = {  # ícones de traço, 18 px
+    "agenda": '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/>',
+    "contato": '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>',
+    "vaga": '<path d="M4 21h16M6 21V4h9v17M15 6l4 2v13M12 12v1"/>',
+    "falta": '<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/>',
+}
+
+
+def icone(nome, cor):
+    return (f'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{cor}" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round">{ICONE[nome]}</svg>')
+
+
+def kpi(nome, cor, titulo, valor, sub, dica=""):
+    return (f'<div class="kpi" title="{escape(dica)}"><div class="kpi-t">{icone(nome, cor)}{titulo}</div>'
+            f'<div class="kpi-v">{valor}</div><div class="kpi-s">{sub}</div></div>')
+
+
+def barra_empilhada(partes):
+    """partes: [(rótulo, n, cor)] → barra horizontal com legenda."""
+    tot = sum(n for _, n, _ in partes) or 1
+    seg = "".join(f'<div style="width:{100 * n / tot:.2f}%;background:{c}" title="{r}: {n}"></div>'
+                  for r, n, c in partes if n)
+    leg = "".join(f'<span><i style="background:{c}"></i>{r} <b>{n}</b></span>' for r, n, c in partes)
+    return f'<div class="pilha">{seg}</div><div class="pilha-leg">{leg}</div>'
+
+
+def popover_risco(r, avisado):
+    nome, cor, fundo = FAIXA[r.faixa]
+    fatores = [x for x in [r.fator_1, r.fator_2, r.fator_3] if isinstance(x, str) and x]
+    motivos = "".join(f"<li>{escape(f)}</li>" for f in fatores) or "<li>Nenhum fator de destaque</li>"
+    acao = {"ALTO": "Recebe pedido de confirmação 3 dias antes.",
+            "MÉDIO": "Recebe lembrete com botão “não vou” 3 dias antes."}.get(
+        r.faixa, "Recebe aviso 3 dias antes por ter 60 anos ou mais." if avisado else "Não recebe contato.")
+    return (f'<details class="rk"><summary title="Ver risco e motivo">'
+            f'<span class="rk-dot" style="background:{PONTO_RISCO[r.faixa]}"></span></summary>'
+            f'<div class="rk-pop"><div class="rk-cab"><span class="faixa" style="color:{cor};background:{fundo}">'
+            f'Risco {nome.lower()}</span><span>{r.prob_falta:.0%} de chance estimada de faltar</span></div>'
+            f'<div class="rk-sec">Por quê</div><ul>{motivos}</ul>'
+            f'<div class="rk-sec">O que o Giro faz</div><div>{acao}</div>'
+            f'<div class="rk-pe">Perfil: {escape(r.perfil_nome)}</div></div></details>')
+
+
 with aba1:
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Consultas no dia", len(agenda))
-    c2.metric("Contatadas", int(agenda.id_consulta.isin(contatados).sum()))
+    n_cons = len(agenda)
+    n_cont = int(agenda.id_consulta.isin(contatados).sum())
     vagas_dia = [i for i in agenda.id_consulta if resp.get(i) in ("nao_vou", "remarcar")]
-    c3.metric("Vagas liberadas", len(vagas_dia))
-    c4.metric("Faltas reais no dia", int(agenda.falta.sum()), help="Do dataset. Usado só para avaliar, nunca mostrado à unidade.")
+    st.markdown(
+        '<div class="painel"><div class="painel-t">Visão geral do dia</div><div class="kpis">'
+        + kpi("agenda", "#2F6FB0", "Consultas no dia", n_cons, "Total agendado")
+        + kpi("contato", "#1D5C63", "Contatadas", n_cont, f"{n_cont / max(n_cons, 1):.0%} das consultas")
+        + kpi("vaga", "#3F8F3A", "Vagas liberadas", len(vagas_dia), "Disponíveis para realocação")
+        + kpi("falta", "#C77A1A", "Faltas reais", int(agenda.falta.sum()), "Do dataset, só para avaliar o modelo",
+              "Vem do dataset real. Serve só para avaliar; a unidade não vê esse número antes da consulta.")
+        + '</div><div class="painel-g"><div><div class="painel-s">Risco das consultas</div>'
+        + barra_empilhada([(FAIXA[f][0], int((agenda.faixa == f).sum()), PONTO_RISCO[f]) for f in FAIXA])
+        + '</div><div><div class="painel-s">Respostas aos contatos</div>'
+        + barra_empilhada([("Confirmaram", sum(resp.get(i) == "vou" for i in agenda.id_consulta), "#3F8F3A"),
+                           ("Liberaram a vaga", len(vagas_dia), "#C0392B"),
+                           ("Sem resposta", n_cont - sum(i in resp for i in agenda.id_consulta), "#AEBBB8")])
+        + '</div></div></div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="semantica">' + "".join(
+        f'<div><span class="faixa" style="color:{c};background:{f}">{r}</span><span><b>{s}</b>'
+        f'<small>{a}</small></span></div>' for r, c, f, s, a in SEMANTICA) + "</div>", unsafe_allow_html=True)
 
     ver = st.radio("Mostrar", ["Só quem recebeu contato", "Todas as consultas"], horizontal=True, key="ver_agenda")
     tabela = agenda if ver == "Todas as consultas" else agenda[(agenda.faixa != "BAIXO") | agenda.id_consulta.isin(contatados)]
-    aviso_html = '<br><span class="faixa" style="color:#1D5C63;background:#DCEDE8;margin-top:4px">Aviso 60+</span>'
     linhas = []
     for r in tabela.itertuples():
         if r.id_consulta in contatados:
@@ -173,17 +265,15 @@ with aba1:
                 status = '<span class="st-cin">Sem resposta (reenviado)</span>'
         else:
             status = '<span class="st-cin">Sem contato</span>'
-        fat = "; ".join(x for x in [r.fator_1, r.fator_2, r.fator_3] if isinstance(x, str) and x)
+        avisado = r.id_consulta in avisados
+        chip = '<span class="chip60">60+</span>' if avisado else ""
         linhas.append(
-            f"<tr><td>{sim(r.horario)}</td><td>{paciente_curto(r.id_paciente)}<br><span class='fat'>{int(r.idade)} anos · "
-            f"{escape(r.perfil_nome)}</span></td><td>{faixa_html(r.faixa)}{aviso_html if r.id_consulta in avisados else ''}</td>"
-            f"<td class='fat'>{escape(fat)}</td>"
-            f"<td>{status}</td></tr>")
-    st.markdown("<table class='ag'><tr><th>Horário</th><th>Paciente</th><th>Risco</th><th>Por quê</th><th>Situação</th></tr>"
+            f"<tr><td>{sim(r.horario)}</td><td><div class='pac'>{popover_risco(r, avisado)}<div>"
+            f"{paciente_curto(r.id_paciente)}{chip}<br><span class='fat'>{int(r.idade)} anos · "
+            f"{escape(r.perfil_nome)}</span></div></div></td><td>{status}</td></tr>")
+    st.markdown("<table class='ag'><tr><th>Horário</th><th>Paciente</th><th>Situação</th></tr>"
                 + "".join(linhas) + "</table>", unsafe_allow_html=True)
-    st.caption("Alto: 20% de maior risco do dia nesta unidade, recebe pedido de confirmação 3 dias antes. "
-               "Médio: os 30% seguintes, recebem lembrete com botão “não vou”. Baixo: sem contato, "
-               "exceto pacientes de 60 anos ou mais, que recebem aviso 3 dias antes.")
+    st.caption("Clique na bolinha ao lado do paciente para ver o risco e o motivo.")
 
 # ---------------- Contatos ----------------
 with aba2:
