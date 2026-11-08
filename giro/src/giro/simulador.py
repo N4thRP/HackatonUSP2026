@@ -99,7 +99,7 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
         if resp in ("nao_vou", "remarcar"):
             u, i = pos[r.id_consulta]
             agendas[u]["ativa"][i] = False
-            log(t_resp, "vaga_liberada", id_consulta=int(r.id_consulta), unidade=u, nivel=0,
+            log(t_resp, "vaga_liberada", id_consulta=int(r.id_consulta), raiz=int(r.id_consulta), unidade=u, nivel=0,
                 valor=float(r.valor_convenio))
             heapq.heappush(heap, (t_resp, seq, {"unidade": u, "dia": int(r.dia), "nivel": 0, "raiz": int(r.id_consulta),
                                                 "origem": int(r.id_consulta), "valor": float(r.valor_convenio)}))
@@ -195,7 +195,7 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
             for chave in ag:
                 extra = {"ativa": False, "dia": float(dia_vaga), "ultimo_aceite": float(t_ac // T)}
                 ag[chave] = np.append(ag[chave], extra.get(chave, ag[chave][i]))
-            log(t_ac, "vaga_liberada", id_consulta=int(ag["id"][i]), unidade=u, nivel=nivel + 1,
+            log(t_ac, "vaga_liberada", id_consulta=int(ag["id"][i]), raiz=v["raiz"], unidade=u, nivel=nivel + 1,
                 valor=float(ag["valor"][i]))
             heapq.heappush(heap, (t_ac, seq, {"unidade": u, "dia": dia_antigo, "nivel": nivel + 1, "raiz": v["raiz"],
                                               "origem": int(ag["id"][i]), "valor": float(ag["valor"][i])}))
