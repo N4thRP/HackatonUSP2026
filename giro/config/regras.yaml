@@ -1,0 +1,19 @@
+# Regras de negócio aprovadas na seção 08 do projeto.
+corte_treino: "2016-05-25"        # D1: treino antes, teste a partir desta data
+faixas:                           # D15: posição no dia da unidade
+  alto: 0.20
+  medio: 0.50
+contato_dias_antes: 3             # D27
+tentativas_por_dia: 20            # ofertas de 30 min entre 08h e 18h
+minutos_por_oferta: 30            # D19
+corte_horas_antes: 2              # D19
+carencia_dias: 7                  # Luma
+guarda_dias_uteis: 5              # D24
+volta_agenda_dias_uteis: 5        # D25: buraco a 5+ dias úteis volta à agenda
+modo_padrao: sequencial           # D11
+ordem_cor: [vermelho, amarelo, verde, azul]   # D13
+faixa_por_idade: false            # se true, os 20%/50% são cortados dentro de cada faixa etária (equidade, M5)
+aviso_idosos:                     # D31: lembrete com botão "não vou" 3 dias antes para 60+ na faixa BAIXO
+  ativo: true
+  idade_min: 60
+  dias_antes: 3

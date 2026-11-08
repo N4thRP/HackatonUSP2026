@@ -1,0 +1,49 @@
+# Parâmetros dos dados sintéticos (D4). Cada bloco diz de onde veio o número.
+# Campos sintéticos nunca entram no modelo (D14).
+semente: 42
+
+horario:
+  fonte: "Dataset de Itajaí (SC): distribuição real das horas de atendimento"
+  arquivo: dados/brutos/itajai.csv
+  inicio: "07:00"
+  fim: "18:30"
+  passo_min: 30
+
+valor:
+  convenio:
+    fonte: "APM 2025: operadoras pagam R$ 128 a R$ 195 por consulta"
+    minimo: 128
+    moda: 150
+    maximo: 195
+  sus:
+    fonte: "Beltrame et al. 2019: R$ 3.558.837,88 / 257.025 faltas"
+    valor: 13.85
+
+cor_risco:
+  fonte: "Cores e prazos dos protocolos SisReg; proporções são hipótese"
+  proporcoes: {vermelho: 0.05, amarelo: 0.15, verde: 0.30, azul: 0.50}
+
+distancia_km:
+  fonte: "Hipótese (sem fonte direta)"
+  mediana: 2.5
+  sigma_log: 0.9
+
+resposta:
+  fonte: "Hipótese ligada ao resultado real da consulta (D22, D26)"
+  alto:
+    faltou: {nao_vou: 0.50, vou: 0.20, nada: 0.30}
+    foi: {vou: 0.75, remarcar: 0.05, nada: 0.20}
+  medio:
+    faltou: {nao_vou: 0.35, vou: 0.25, nada: 0.40}
+    foi: {vou: 0.72, remarcar: 0.03, nada: 0.25}
+
+aceite:
+  fonte: "Calibrado para 45% de preenchimento (Luma 42-48%); adesão 60% (caso de cliente Luma)"
+  chance_por_oferta: 0.027
+  adesao: 0.60
+
+fila_b:
+  fonte: "Mediana de espera de Farias et al. 2019 (16-20 dias); tamanho da fila é hipótese"
+  por_unidade: 20
+  espera_mediana_dias: 18
+  sigma_log: 1.0
