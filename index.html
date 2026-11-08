@@ -170,7 +170,7 @@
     <div class="flow">
       <div class="step"><span class="k">ETAPA 1</span><b>Prever</b><span class="small muted">Modelo dá a probabilidade de falta de cada consulta futura.</span></div>
       <div class="step"><span class="k">ETAPA 2</span><b>Contatar</b><span class="small muted">Mensagem para os de maior risco. Só libera a vaga com resposta ativa do paciente.</span></div>
-      <div class="step"><span class="k">ETAPA 3</span><b>Realocar</b><span class="small muted">Vaga vai para a lista de espera, por ordem de quem espera há mais tempo, um paciente por vez.</span></div>
+      <div class="step"><span class="k">ETAPA 3</span><b>Realocar</b><span class="small muted">Vaga vai para a lista de espera, um paciente por vez. No SUS, quem espera há mais tempo; em hospital particular, quem tem consulta uma semana depois, no mesmo horário.</span></div>
     </div>
   </section>
 
@@ -351,9 +351,9 @@
       <tr><td class="id">R5</td><td>Enviar mensagem simulada com três respostas: “Vou”, “Não vou”, “Quero remarcar”. Sem resposta = nada muda; reenvio único.</td><td>Contatar</td></tr>
       <tr><td class="id">R6</td><td>A vaga só é liberada após resposta “Não vou” ou “Quero remarcar”, registrada com data e hora.</td><td>Contatar</td></tr>
       <tr><td class="id">R7</td><td>Lista de espera: pacientes com consulta futura na mesma unidade que aceitaram receber ofertas, com data de entrada (= data do agendamento real). Elegível = mesma unidade e horário livre no slot.</td><td>Realocar</td></tr>
-      <tr><td class="id">R8</td><td>Ordem das ofertas: mais tempo na lista primeiro (D34). Modo <b>sequencial</b> (padrão): um paciente por vez, 30 min para responder; modo <b>simultâneo</b> disponível no botão.</td><td>Realocar</td></tr>
+      <tr><td class="id">R8</td><td>Ordem das ofertas: no <b>SUS</b>, mais tempo na lista primeiro (D34); em <b>hospital particular</b>, a vaga vai primeiro para quem tem consulta marcada 7 dias depois, no mesmo horário; sem essa pessoa ou sem aceite, segue a regra geral (D35). Modo <b>sequencial</b> (padrão): um paciente por vez, 30 min para responder; modo <b>simultâneo</b> disponível no botão.</td><td>Realocar</td></tr>
       <tr><td class="id">R8b</td><td>Regras herdadas do Luma: quem aceita fica 7 dias sem novas ofertas; quem recusa 30 ofertas sai da lista; aprovação da equipe opcional.</td><td>Realocar</td></tr>
-      <tr><td class="id">R9</td><td>Cascata (seção 09, 2.5): quem aceita libera o horário antigo, que entra no mesmo ciclo. Fila única com tipo A (já tem consulta depois) e tipo B (fila sem horário), por quem espera há mais tempo. Tipo A só recebe oferta se a consulta atual estiver a 5+ dias úteis de hoje.</td><td>Realocar</td></tr>
+      <tr><td class="id">R9</td><td>Cascata (seção 09, 2.5): quem aceita libera o horário antigo, que entra no mesmo ciclo. Fila única com tipo A (já tem consulta depois) e tipo B (fila sem horário), por quem espera há mais tempo. Tipo A só recebe oferta se a consulta atual estiver a 5+ dias úteis de hoje. Em hospital particular (D35), a cascata anda de semana em semana no mesmo horário: quem antecipa libera o horário da semana seguinte.</td><td>Realocar</td></tr>
       <tr><td class="id">R10</td><td>Painel com: consultas do dia e faixa de risco (ALTO/MÉDIO/BAIXO), status dos contatos, vagas liberadas e realocadas, receita recuperada e dias de espera economizados. Botões Oferta (simultânea/sequencial) e Valor (convênio/SUS); selo “simulado” em todo campo sintético.</td><td>UI</td></tr>
       <tr><td class="id">R11</td><td>Gerador sintético com semente fixa seguindo a tabela “Dados sintéticos” da seção 03; cada campo guarda a fonte e os parâmetros num arquivo de configuração.</td><td>Dados</td></tr>
       <tr><td class="id">R12</td><td>Campos sintéticos ficam em tabela separada e não são lidos pelo treino do modelo.</td><td>Dados</td></tr>
@@ -430,7 +430,7 @@
         <tr><th>Elemento</th><th>Regra</th></tr>
         <tr><td><b>Faixa de risco</b></td><td><span class="risk r-hi">ALTO</span> = 20% de maior risco do dia (entra na fila de contato) · <span class="risk r-md">MÉDIO</span> = próximos 30% (lembrete com botão “não vou”, D26) · <span class="risk r-lo">BAIXO</span> = restante. A porcentagem fica só no log e na avaliação, nunca na tela.</td></tr>
         <tr><td><b>Botão Oferta</b></td><td>Sequencial (padrão): um por vez, na ordem de tempo na lista, 30 min cada. Simultânea: envia a todos os elegíveis, primeiro que aceitar leva. A troca vale para as próximas vagas, não para ofertas já enviadas.</td></tr>
-        <tr><td><b>Botão Valor</b></td><td>Convênio (padrão): R$ 150 por vaga. SUS: R$ 13,85 por vaga + “dias de espera economizados”. Muda todos os totais do painel ao mesmo tempo.</td></tr>
+        <tr><td><b>Botão Valor</b></td><td>Convênio (padrão, hospital particular): R$ 150 por vaga e realocação pela D35. SUS: R$ 13,85 por vaga + “dias de espera economizados” e realocação pela D34. Muda todos os totais do painel ao mesmo tempo.</td></tr>
         <tr><td><b>Selo “simulado”</b></td><td>Todo dado sintético aparece com borda tracejada e o texto “simulado” ao lado: distância, horário e valor. Legenda fixa no rodapé da tela. Dados reais (tempo na lista, faixa de risco) aparecem normais.</td></tr>
       </table>
     </div>
@@ -476,6 +476,7 @@
       <tr><td class="id">D32</td><td>Medir M5 como cobertura de contato entre quem faltaria (por idade, sexo e Bolsa Família), não pela ordenação do modelo.</td><td>Mede o que importa para o paciente: ser avisado. Com D31: 27,5 p.p. (40–59 anos em 73%). A medida antiga fica visível como M5a (41 p.p.), por transparência. Meta mantida em ≤ 10 p.p.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D33</td><td>M8 e M9 no placar são a média de 5 sementes, com a faixa registrada.</td><td>O ruído de uma semente (±1 p.p.) é maior que a folga da M8; uma rodada só não decide se a meta foi atingida.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D34</td><td>Prioridade da fila só por tempo de espera: a cor de risco (urgência) sai da ordem das ofertas e dos dados sintéticos. Revoga a D13.</td><td>Decisão da equipe: a urgência era sintética e subjetiva. Média de 5 sementes: M8 44,5% (antes 45,3%), M9 16,6% (antes 17,0%); quem ganha a vaga esperava 25 dias em média (antes 21).</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D35</td><td>Em <b>hospital particular</b>, a vaga liberada é oferecida a quem tem consulta marcada <b>uma semana depois, no mesmo horário</b> (mesmo dia da semana e hora). No SUS continua valendo a D34 (tempo de espera).</td><td>Decisão da equipe. Mantém o dia da semana e o horário que o paciente já escolheu, e a cascata anda de semana em semana. Se ninguém tem consulta nesse horário ou o paciente não aceita em 30 min, a vaga cai para a regra geral (D34, tempo de espera). Ainda não implementada no MVP.</td><td><span class="tag ok">tomada</span></td></tr>
     </table>
   </section>
 
@@ -580,7 +581,7 @@
       <div class="step"><span class="k">D-3 · 08:00</span><b>1. Prever</b><span class="small muted">Lê a agenda dos próximos 3 dias, calcula o risco e dá a faixa ALTO/MÉDIO/BAIXO.</span></div>
       <div class="step"><span class="k">D-3</span><b>2. Contatar</b><span class="small muted">ALTO recebe pedido de confirmação. MÉDIO recebe lembrete com botão “não vou”. BAIXO, nada.</span></div>
       <div class="step"><span class="k">até D-1</span><b>3. Ouvir</b><span class="small muted">“Vou” confirma. “Não vou/remarcar” libera a vaga. Sem resposta: um reenvio; depois, nada muda.</span></div>
-      <div class="step"><span class="k">imediato</span><b>4. Ofertar</b><span class="small muted">Lista de espera elegível, por tempo na lista. Um por vez, 30 min cada.</span></div>
+      <div class="step"><span class="k">imediato</span><b>4. Ofertar</b><span class="small muted">SUS: lista elegível por tempo na lista. Particular: primeiro quem tem consulta 7 dias depois, no mesmo horário; senão, regra geral. Um por vez, 30 min cada.</span></div>
       <div class="step"><span class="k">até 2 h antes</span><b>5. Encaixar</b><span class="small muted">Quem aceita é movido; o horário antigo dele volta ao passo 4 (cascata).</span></div>
     </div>
     <table data-edit>
@@ -588,7 +589,7 @@
       <tr><td class="id">1</td><td>Agenda futura (consultas.parquet)</td><td>previsoes.csv: probabilidade, faixa, 3 fatores, perfil</td><td>Faixa por posição no dia da unidade (D15). Perfil só para a tela e o tom da mensagem.</td></tr>
       <tr><td class="id">2</td><td>Consultas ALTO e MÉDIO</td><td>Evento “contato” no log</td><td>Mensagem com 3 botões (R5). Tom muda pelo perfil: P2 facilita dizer “não vou”; P5 vai ao responsável.</td></tr>
       <tr><td class="id">3</td><td>Respostas</td><td>Eventos “resposta” e “vaga_liberada”</td><td>Vaga só é liberada com resposta ativa (D2). Quem pede remarcação recebe opções de nova data.</td></tr>
-      <tr><td class="id">4</td><td>Vaga liberada + lista de espera</td><td>Evento “oferta”</td><td>Elegível: mesma unidade, consulta marcada para depois da vaga, aceitou receber ofertas, fora da carência de 7 dias. Ordem: tempo na lista (D34). Sequencial (D11).</td></tr>
+      <tr><td class="id">4</td><td>Vaga liberada + lista de espera</td><td>Evento “oferta”</td><td>Elegível: mesma unidade, consulta marcada para depois da vaga, aceitou receber ofertas, fora da carência de 7 dias. Ordem: SUS, tempo na lista (D34); hospital particular, primeiro a consulta 7 dias depois no mesmo horário e, sem ela ou sem aceite, tempo na lista (D35). Sequencial (D11).</td></tr>
       <tr><td class="id">5</td><td>Aceite ou expiração</td><td>Eventos “aceite”/“expirou”; agenda atualizada</td><td>Expirou → próximo da lista. Paramos de ofertar 2 h antes do horário. Horário antigo de quem aceitou volta ao passo 4.</td></tr>
       <tr><td class="id">6</td><td>Log de eventos</td><td>Painel e placar</td><td>Vagas liberadas, reocupadas, receita (convênio/SUS), dias de espera economizados.</td></tr>
     </table>
