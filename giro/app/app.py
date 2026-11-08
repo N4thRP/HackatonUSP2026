@@ -9,7 +9,9 @@ import streamlit as st
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "src"))
-from giro import DADOS, SAIDAS  # noqa: E402
+from giro import DADOS, SAIDAS, carregar_config  # noqa: E402
+
+OFERTAS_POR_DIA = carregar_config()[1]["tentativas_por_dia"]
 
 st.set_page_config(page_title="Giro", page_icon="🩺", layout="wide")
 
@@ -255,7 +257,13 @@ with aba3:
                     html.append('<div class="subt">Ficou com a vaga</div><div class="ganhou">'
                                 + linha_oferta(aceitou.iloc[0], '<span class="ac">aceitou</span>') + "</div>")
                 else:
-                    html.append('<div class="subt">Ninguém aceitou antes do prazo (até 2 h antes da consulta)</div>')
+                    # Ofertas vão até 2 h antes do dia da vaga (fim em vaga_dia * OFERTAS_POR_DIA, D19).
+                    ult = ofertas.iloc[-1]
+                    if ult.t + 1 < ult.vaga_dia * OFERTAS_POR_DIA:
+                        html.append('<div class="subt">Ninguém aceitou e a fila acabou: não havia mais '
+                                    'ninguém elegível para receber a oferta</div>')
+                    else:
+                        html.append('<div class="subt">Ninguém aceitou antes do prazo (até 2 h antes da consulta)</div>')
             elif not len(simult):
                 html.append('<p class="ex" style="margin:4px 0">Nenhuma oferta enviada: não havia ninguém elegível na fila '
                             'nesse momento (mesma unidade, consulta a 5+ dias úteis de hoje ou fila sem horário) '
@@ -278,7 +286,7 @@ with aba3:
             texto = {"fila_sem_horario": "Cadeia terminou com um paciente da fila da regulação: uma vaga a mais na unidade.",
                      "volta_agenda": "O último horário livre está a 5+ dias úteis e volta para a agenda normal: vaga recuperada.",
                      "perdida": "O último horário ficou perto demais para alguém marcar e se perdeu.",
-                     "nao_preenchida": "Ninguém aceitou a tempo; a vaga não foi preenchida."}[r]
+                     "nao_preenchida": "Ninguém da fila aceitou; a vaga não foi preenchida."}[r]
             ok = r in ("fila_sem_horario", "volta_agenda")
             st.markdown(f'<div class="fim {"" if ok else "perdida"}">{texto}</div>', unsafe_allow_html=True)
         st.caption("Ordem da fila: cor de risco (vermelho, amarelo, verde, azul) e, dentro da cor, quem espera há mais tempo. "
