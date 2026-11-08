@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 from .contato import mensagem, sortear_resposta
-from .lista_espera import ORDEM_COR, elegiveis_a, elegiveis_b, ordenar
+from .lista_espera import elegiveis_a, elegiveis_b, ordenar
 
 
 class Calendario:
@@ -56,7 +56,6 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
             "id": g["id_consulta"].to_numpy(), "pac": g["id_paciente"].astype(str).to_numpy(),
             "dia": g["dia"].to_numpy().astype(float), "dia_ag": g["dia_ag"].to_numpy(),
             "data_ag": g["data_agendamento"].to_numpy(),
-            "cor": g["cor_risco"].map(ORDEM_COR).to_numpy(), "cor_txt": g["cor_risco"].to_numpy(),
             "dist": g["distancia_km"].to_numpy(),
             "aceita": g["aceita_ofertas"].to_numpy().astype(bool),
             "ativa": np.ones(len(g), bool), "ultimo_aceite": np.full(len(g), -99.0),
@@ -66,8 +65,7 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
             pos[cid] = (u, i)
     filas = {}
     for u, g in fila_b.groupby("unidade"):
-        filas[u] = {"id": g["id_b"].to_numpy(), "cor": g["cor_risco"].map(ORDEM_COR).to_numpy(),
-                    "cor_txt": g["cor_risco"].to_numpy(), "espera0": g["espera_dias_inicial"].to_numpy(),
+        filas[u] = {"id": g["id_b"].to_numpy(), "espera0": g["espera_dias_inicial"].to_numpy(),
                     "dist": g["distancia_km"].to_numpy(),
                     "aceita": g["aceita_ofertas"].to_numpy().astype(bool), "servido": np.zeros(len(g), bool)}
 
@@ -126,12 +124,12 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
         ia = np.flatnonzero(ma)
         data_agora = cal.data(agora)
         esp_a = (data_agora - pd.to_datetime(ag["data_ag"][ia]).normalize()).days.to_numpy() if len(ia) else np.array([])
-        cand_cor, cand_esp, cand_ref = list(ag["cor"][ia]), list(esp_a), [("A", i) for i in ia]
+        cand_esp, cand_ref = list(esp_a), [("A", i) for i in ia]
         if fb is not None:
             ib = np.flatnonzero(elegiveis_b(fb))
             esp_b = fb["espera0"][ib] + (data_agora - cal.data(inicio_teste)).days
-            cand_cor += list(fb["cor"][ib]); cand_esp += list(esp_b); cand_ref += [("B", i) for i in ib]
-        ordem = ordenar(cand_cor, cand_esp) if cand_ref else []
+            cand_esp += list(esp_b); cand_ref += [("B", i) for i in ib]
+        ordem = ordenar(cand_esp) if cand_ref else []
         vistos, unicos = set(), []          # uma oferta por paciente, mesmo com várias consultas futuras
         for k in ordem:
             tipo_k, i_k = cand_ref[k]
@@ -146,7 +144,7 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
             tipo, i = cand_ref[k]
             src = ag if tipo == "A" else fb
             return {"tipo_fila": tipo, "quem": str(src["pac"][i]) if tipo == "A" else str(src["id"][i]),
-                    "cor": str(src["cor_txt"][i]), "espera_dias": float(cand_esp[k]),
+                    "espera_dias": float(cand_esp[k]),
                     "distancia_km": float(src["dist"][i])}
 
         vencedor, t_ac = None, None
@@ -232,7 +230,6 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
         "dias_antecipados_tipo_a": stats["dias_antecipados"],
         "pacientes_b_atendidos": stats["fim_b"],
         "espera_media_beneficiados": float(benef["espera_dias"].mean()) if len(benef) else 0.0,
-        "urgentes_beneficiados": float(benef["cor"].isin(["vermelho", "amarelo"]).mean()) if len(benef) else 0.0,
         "M8": stats["preenchidas_n0"] / max(stats["liberadas"], 1),
         "M9": stats["valor_recuperado"] / perda,
         "M10_seg_medio": float(tempos.mean()) if len(tempos) else 0.0,

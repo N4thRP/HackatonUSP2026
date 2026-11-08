@@ -4,7 +4,7 @@ import pandas as pd
 from giro import DADOS
 from giro.preparar import VARIAVEIS_MODELO
 
-SINTETICOS = {"horario", "valor_convenio", "valor_sus", "cor_risco", "distancia_km", "aceita_ofertas"}
+SINTETICOS = {"horario", "valor_convenio", "valor_sus", "distancia_km", "aceita_ofertas"}
 
 
 def test_variaveis_do_modelo_nao_tem_sinteticos():

@@ -16,7 +16,6 @@ OFERTAS_POR_DIA = carregar_config()[1]["tentativas_por_dia"]
 
 st.set_page_config(page_title="Giro", page_icon="🩺", layout="wide")
 
-COR_SISREG = {"vermelho": "#C0392B", "amarelo": "#D4A017", "verde": "#3F8F3A", "azul": "#2F6FB0"}
 FAIXA = {"ALTO": ("Alto", "#B43C2A", "#F7E3DE"), "MÉDIO": ("Médio", "#8A6512", "#F5ECD2"),
          "BAIXO": ("Baixo", "#3E6B52", "#E1EEE6")}
 RESPOSTA = {"nao_vou": "Não vou", "remarcar": "Quero remarcar", "vou": "Vou"}
@@ -48,10 +47,9 @@ st.markdown("""
   table.ag td{border-bottom:1px solid #DCE4E2;padding:8px;vertical-align:top}
   .fat{color:#4E6462;font-size:.83rem}
   .st-ok{color:#2F6F2A;font-weight:600}.st-lib{color:#B43C2A;font-weight:600}.st-prox{color:#A87A00;font-weight:600}.st-cin{color:#6B7B79}
-  .of{display:grid;grid-template-columns:34px 8px 1fr auto;gap:10px;align-items:center;padding:5px 0;border-bottom:1px dashed #DCE4E2;font-size:.9rem}
+  .of{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:5px 0;border-bottom:1px dashed #DCE4E2;font-size:.9rem}
   .of:last-child{border-bottom:0}
   .of .n{color:#6B7B79;text-align:right;font-variant-numeric:tabular-nums}
-  .of .c{width:8px;height:22px;border-radius:3px}
   .ac{color:#2F6F2A;font-weight:600}.ex{color:#8C9997}
   .subt{font-size:.85rem;font-weight:600;color:#4E6462;margin:10px 0 2px 0}
   .ganhou{background:#E4F0E1;border-radius:8px;padding:0 10px}
@@ -65,6 +63,17 @@ st.markdown("""
   .br .t{height:16px;background:#DCE4E2;border-radius:3px;overflow:hidden}
   .br .t div{height:100%;background:#1D5C63}
   .legenda{font-size:.82rem;color:#4E6462;margin-top:6px}
+  section[data-testid="stSidebar"][data-collapsed="false"]{width:272px!important;min-width:272px!important}
+  [data-testid="stSidebar"] [data-testid="stSidebarContent"]{padding-top:0}
+  [data-testid="stSidebarUserContent"]{padding:0 16px 16px 16px}
+  [data-testid="stSidebar"] [data-testid="stVerticalBlock"] [data-testid="stVerticalBlock"]{background:#fff;border-radius:12px;
+          border-color:#D3DDDA!important}
+  .sb-marca{display:flex;align-items:center;gap:10px;margin:-2.2rem 0 14px 0}
+  .sb-nome{font-size:1.35rem;font-weight:800;letter-spacing:-.01em;color:#17302F;line-height:1.1}
+  .sb-desc{font-size:.78rem;color:#6B7B79}
+  .sb-sec{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6B7B79;margin:-2px 0 2px 0}
+  .sb-nota{font-size:.78rem;color:#4E6462;line-height:1.5;margin-top:4px}
+  .mapa{width:100%;height:auto;display:block;margin:-4px 0 6px 0}
   .painel{background:#fff;border:1px solid #D3DDDA;border-radius:14px;padding:18px 22px 16px;margin:4px 0 14px 0}
   .painel-t{font-size:1.15rem;font-weight:700;margin-bottom:12px}
   .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 24px}
@@ -80,7 +89,7 @@ st.markdown("""
   .semantica>div{display:flex;align-items:flex-start;gap:8px;font-size:.88rem}
   .semantica small{display:block;color:#6B7B79;font-size:.78rem}
   .pac{display:flex;align-items:flex-start;gap:10px}
-  .chip60{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;font-weight:700;color:#1D5C63;background:#DCEDE8}
+  .chip60{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;font-weight:700;color:#1F5A99;background:#DCE9F7}
   details.rk{position:relative;flex:none;margin-top:3px}
   details.rk summary{list-style:none;cursor:pointer;display:block}
   details.rk summary::-webkit-details-marker{display:none}
@@ -107,7 +116,6 @@ st.markdown("""
   .cx-num{width:26px;height:26px;border-radius:50%;background:#1D5C63;color:#fff;display:flex;align-items:center;
           justify-content:center;font-size:.85rem}
   .cx-mov{margin:4px 0 4px 13px;padding:6px 0 6px 22px;border-left:3px solid #1D5C63;font-size:.93rem;color:#1F2D2B}
-  .cx-cor{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:baseline}
 </style>
 """, unsafe_allow_html=True)
 
@@ -147,14 +155,55 @@ def brl(v):
     return f"R$ {v:,.0f}".replace(",", ".")
 
 
+@st.cache_data
+def dados_mapa():
+    return json.load(open(Path(__file__).parent / "mapa.json", encoding="utf-8"))
+
+
+def mapa_unidade(unidade):
+    """Contorno de Vitória com um ponto por unidade e um pin vermelho na unidade escolhida."""
+    M = dados_mapa()
+    k = 0.938  # cos(20,3°): corrige a largura dos graus de longitude nessa latitude
+    pts = [p for anel in M["vitoria"] for p in anel]
+    xs, ys = [p[0] * k for p in pts], [-p[1] for p in pts]
+    mx, my = min(xs), min(ys)
+    W, PAD = 260, 10
+    esc = (W - 2 * PAD) / (max(xs) - mx)
+    H = (max(ys) - my) * esc + 2 * PAD + 8  # folga em cima para a cabeça do pin
+
+    def f(lon, lat):
+        return PAD + (lon * k - mx) * esc, PAD + 8 + (-lat - my) * esc
+
+    def caminho(anel):
+        return "M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in (f(*p) for p in anel)) + "Z"
+
+    h = [f'<svg viewBox="0 0 {W} {H:.0f}" class="mapa" role="img" aria-label="Mapa de Vitória com a unidade escolhida">']
+    h += [f'<path d="{caminho(anel)}" fill="#B9C3C1"/>' for anel in M["vitoria"]]
+    for nome, (lat, lon) in M["bairros"].items():
+        x, y = f(lon, lat)
+        h.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.2" fill="#fff" fill-opacity=".85">'
+                 f'<title>{escape(nome.title())}</title></circle>')
+    if unidade in M["bairros"]:
+        x, y = f(*M["bairros"][unidade][::-1])
+        h.append(f'<g transform="translate({x:.1f},{y:.1f})"><title>{escape(unidade.title())}</title>'
+                 '<path d="M0,0 C-2.5,-6 -9,-10 -9,-16 A9,9 0 1 1 9,-16 C9,-10 2.5,-6 0,0Z" fill="#C0392B" '
+                 'stroke="#fff" stroke-width="1.5"/><circle cx="0" cy="-16" r="3.4" fill="#fff"/></g>')
+    h.append("</svg>")
+    return "".join(h)
+
+
 prev, resumo, placar = carregar()
 
 # ---------------- barra lateral ----------------
+LOGO = ('<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#1D5C63"/>'
+        '<path d="M24.5 12.5A9 9 0 1 0 25.6 19" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>'
+        '<path d="M20.6 11.6l4.3 1.2-.9-4.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" '
+        'stroke-linejoin="round"/><circle cx="17" cy="17" r="2.6" fill="#E8B04A"/></svg>')
+
+
 with st.sidebar:
-    st.markdown("### Giro")
-    st.caption("Simulação com consultas reais de Vitória (ES), 25/05 a 08/06/2016.")
-    valor = st.radio("Valor da consulta", ["Convênio", "SUS"], index=0,
-                     help="Convênio: R$ 128–195 por consulta (média R$ 150). SUS: R$ 13,85 por consulta perdida.")
+    st.markdown(f'<div class="sb-marca">{LOGO}<div><div class="sb-nome">Giro</div>'
+                '<div class="sb-desc">Menos faltas, mais vagas</div></div></div>', unsafe_allow_html=True)
     ev = eventos()
     # dia sugerido ao abrir: o com mais remarcações a partir das vagas liberadas dele (mostra bem a cascata)
     lib0 = ev[(ev.tipo == "vaga_liberada") & (ev.nivel == 0)]
@@ -165,13 +214,23 @@ with st.sidebar:
                .sort_values(["remarc", "vagas"], ascending=False))
     padrao_u, padrao_d = ranking.index[0]
     unidades = sorted(prev["unidade"].unique())
-    unidade = st.selectbox("Unidade", unidades, index=unidades.index(padrao_u), format_func=str.title)
-    dias = sorted(prev.loc[prev.unidade == unidade, "data_consulta"].dt.date.unique())
-    dia = st.selectbox("Dia da consulta", dias, index=dias.index(padrao_d.date()) if padrao_d.date() in dias else 0,
-                       format_func=lambda d: d.strftime("%d/%m/%Y"))
-    st.markdown('<div class="legenda"><span class="sim">exemplo<small>simulado</small></span> '
-                'marca dado sintético (horário, valor, cor de risco, distância e respostas). O resto vem do dataset real.</div>',
-                unsafe_allow_html=True)
+
+    with st.container(border=True):
+        st.markdown('<div class="sb-sec">Local e data</div>', unsafe_allow_html=True)
+        unidade = st.selectbox(":material/location_on: Unidade", unidades, index=unidades.index(padrao_u),
+                               format_func=str.title)
+        st.markdown(mapa_unidade(unidade), unsafe_allow_html=True)
+        dias = sorted(prev.loc[prev.unidade == unidade, "data_consulta"].dt.date.unique())
+        dia = st.selectbox(":material/calendar_month: Dia da consulta", dias,
+                           index=dias.index(padrao_d.date()) if padrao_d.date() in dias else 0,
+                           format_func=lambda d: d.strftime("%d/%m/%Y"))
+    with st.container(border=True):
+        st.markdown('<div class="sb-sec">Valores</div>', unsafe_allow_html=True)
+        valor = st.radio(":material/payments: Valor da consulta", ["Convênio", "SUS"], index=0, horizontal=True,
+                         help="Convênio: R$ 128–195 por consulta (média R$ 150). SUS: R$ 13,85 por consulta perdida.")
+    st.markdown('<div class="sb-nota"><b>Sobre os dados.</b> Consultas reais de Vitória (ES), de 25/05 a 08/06/2016. '
+                '<span class="sim">exemplo<small>simulado</small></span> marca dado sintético (horário, valor, '
+                'distância e respostas).</div>', unsafe_allow_html=True)
 
 SEMANA = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
 MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro",
@@ -206,7 +265,7 @@ SEMANTICA = [  # (rótulo, cor do texto, fundo, significado, o que o Giro faz)
     ("Alto", "#B43C2A", "#F7E3DE", "Requer atenção prioritária", "20% de maior risco do dia: pedido de confirmação 3 dias antes"),
     ("Médio", "#8A6512", "#F5ECD2", "Requer acompanhamento", "30% seguintes: lembrete com botão “não vou”"),
     ("Baixo", "#3E6B52", "#E1EEE6", "Sem alerta relevante", "Sem contato"),
-    ("Aviso 60+", "#1D5C63", "#DCEDE8", "Idoso na faixa Baixo", "Aviso 3 dias antes com botão “não vou”"),
+    ("Aviso 60+", "#1F5A99", "#DCE9F7", "Idoso na faixa Baixo", "Aviso 3 dias antes com botão “não vou”"),
 ]
 ICONE = {  # ícones de traço, 18 px
     "agenda": '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/>',
@@ -374,10 +433,6 @@ def plural(n, um, varios):
     return f"{n} {um if n == 1 else varios}"
 
 
-def ponto_cor(cor):
-    return f'<span class="cx-cor" style="background:{COR_SISREG.get(cor, "#999")}"></span>'
-
-
 def svg_mapa(etapas, fim, passo):
     """Linha do tempo: cada horário livre é um ponto; cada seta é um paciente que antecipou a consulta."""
     datas = [e["data"] for e in etapas]
@@ -433,9 +488,8 @@ def html_ofertas(ofertas):
     def linha(o, res):
         tipo = "já tem consulta mais tarde" if o.tipo_fila == "A" else "fila sem horário"
         return (f'<div class="of"><span class="n">{int(o.ordem)}º</span>'
-                f'<span class="c" style="background:{COR_SISREG[o.cor]}"></span>'
                 f'<span>{paciente_curto(o.quem)} · {tipo} · espera {o.espera_dias:.0f} dias · '
-                f'{sim(o.cor)} {sim(f"{o.distancia_km:.1f} km")}</span>{res}</div>')
+                f'{sim(f"{o.distancia_km:.1f} km")}</span>{res}</div>')
     if not len(ofertas):
         return ('<p class="ex" style="margin:4px 0">Nenhuma oferta enviada: não havia ninguém elegível na fila nesse '
                 'momento (mesma unidade, consulta a 5+ dias úteis de hoje ou fila sem horário) ou não sobrou tempo '
@@ -448,7 +502,7 @@ def html_ofertas(ofertas):
         for o in (sem if len(sem) <= 8 else sem.head(6)).itertuples():
             h.append(linha(o, '<span class="ex">não respondeu</span>'))
         if len(sem) > 8:
-            h.append(f'<div class="of"><span class="n">…</span><span></span>'
+            h.append(f'<div class="of"><span class="n">…</span>'
                      f'<span class="ex">mais {len(sem) - 6} ofertas sem resposta</span><span></span></div>')
     if len(ac):
         h.append('<div class="subt">Ficou com a vaga</div><div class="ganhou">'
@@ -480,12 +534,12 @@ def desenhar_cascata(etapas, fim, passo, raiz_resp):
         if a is not None:
             if a.tipo_fila == "A":
                 dias = (pd.Timestamp(a.dia_antigo) - e["data"]).days
-                mov = (f'{ponto_cor(a.cor)}<b>{paciente_curto(a.quem)}</b> aceitou na {int(e["ofertas"].ordem.max())}ª '
+                mov = (f'<b>{paciente_curto(a.quem)}</b> aceitou na {int(e["ofertas"].ordem.max())}ª '
                        f'oferta e antecipou a consulta de <b>{pd.Timestamp(a.dia_antigo):%d/%m}</b> para '
                        f'<b>{e["data"]:%d/%m}</b>: <b>{plural(dias, "dia", "dias")}</b> antes. '
                        f'Esperava havia {plural(int(a.espera_dias), "dia", "dias")}.')
             else:
-                mov = (f'{ponto_cor(a.cor)}<b>{paciente_curto(a.quem)}</b>, que não tinha horário marcado, aceitou na '
+                mov = (f'<b>{paciente_curto(a.quem)}</b>, que não tinha horário marcado, aceitou na '
                        f'{int(e["ofertas"].ordem.max())}ª oferta depois de {plural(int(a.espera_dias), "dia", "dias")} de espera.')
             st.markdown(f'<div class="cx-mov">↓ {mov}</div>', unsafe_allow_html=True)
         with st.expander(("Ver a oferta desta etapa" if n_of == 1 else f"Ver as {n_of} ofertas desta etapa")
@@ -560,8 +614,8 @@ with aba3:
             else:
                 with area.container():
                     desenhar_cascata(etapas, fim, passo, resp.get(rid, "nao_vou"))
-        st.caption("Ordem da fila: cor de risco (vermelho, amarelo, verde, azul) e, dentro da cor, quem espera há mais "
-                   "tempo. Quem já tem consulta só recebe oferta se ela estiver a 5+ dias úteis.")
+        st.caption("Ordem da fila: quem espera há mais tempo recebe a oferta primeiro. "
+                   "Quem já tem consulta só recebe oferta se ela estiver a 5+ dias úteis.")
 
 # ---------------- Painel ----------------
 with aba4:
@@ -597,7 +651,8 @@ with aba4:
     st.markdown("#### Quem ganhou as vagas")
     c1, c2, c3 = st.columns(3)
     c1.metric("Espera média dos beneficiados", f"{r['espera_media_beneficiados']:.0f} dias")
-    c2.metric("Urgentes (vermelho ou amarelo)", f"{r['urgentes_beneficiados']:.0%}", help="São 20% da fila.")
+    c2.metric("Vieram da fila da regulação", f"{r['pacientes_b_atendidos'] / max(r['movimentos'], 1):.0%}",
+              help="Parte dos beneficiados que não tinha nenhum horário marcado.")
     c3.metric("Primeira vaga preenchida", f"{r['M8']:.1%}".replace(".", ","),
               help="Desta rodada (semente 42). O placar usa a média de 5 sementes. M8, meta 45%.")
 

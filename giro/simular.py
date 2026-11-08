@@ -26,11 +26,11 @@ def benchmark(n=10_000, repeticoes=200):
     rng = np.random.default_rng(0)
     ag = {"ativa": np.ones(n, bool), "aceita": rng.random(n) < .6, "dia": rng.integers(0, 60, n).astype(float),
           "dia_ag": rng.integers(-30, 0, n), "ultimo_aceite": np.full(n, -99.0)}
-    cor, esp = rng.integers(0, 4, n), rng.integers(0, 90, n)
+    esp = rng.integers(0, 90, n)
     t0 = time.perf_counter()
     for _ in range(repeticoes):
         m = elegiveis_a(ag, 3, 0, 5, 7)
-        ordenar(cor[m], esp[m])
+        ordenar(esp[m])
     return (time.perf_counter() - t0) / repeticoes
 
 

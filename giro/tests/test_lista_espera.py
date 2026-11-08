@@ -1,7 +1,7 @@
 """M7: as ofertas seguem as regras da lista de espera."""
 import numpy as np
 
-from giro.lista_espera import ORDEM_COR, elegiveis_a, ordenar
+from giro.lista_espera import elegiveis_a, ordenar
 
 
 def agenda(**kw):
@@ -11,15 +11,12 @@ def agenda(**kw):
     return {k: np.array(v) for k, v in base.items()}
 
 
-def test_ordem_cor_antes_do_tempo():
-    cor = [ORDEM_COR[c] for c in ["azul", "vermelho", "amarelo", "vermelho"]]
-    espera = [100, 5, 50, 30]
-    # vermelho (30 dias) > vermelho (5) > amarelo > azul, mesmo o azul esperando 100 dias
-    assert list(ordenar(cor, espera)) == [3, 1, 2, 0]
+def test_quem_espera_mais_recebe_primeiro():
+    assert list(ordenar([3, 40, 12, 100])) == [3, 1, 2, 0]
 
 
-def test_dentro_da_cor_mais_antigo_primeiro():
-    assert list(ordenar([2, 2, 2], [3, 40, 12])) == [1, 2, 0]
+def test_empate_mantem_ordem_original():
+    assert list(ordenar([10, 30, 10, 30])) == [1, 3, 0, 2]
 
 
 def test_so_quem_seria_atendido_depois():

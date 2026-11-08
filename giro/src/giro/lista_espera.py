@@ -2,12 +2,9 @@
 
 Tipo A: paciente que já tem consulta marcada mais tarde na mesma unidade (dado real).
 Tipo B: paciente na fila da regulação, sem horário (sintético).
-Ordem: cor de risco (D13) e, dentro da cor, quem espera há mais tempo.
+Ordem: quem espera há mais tempo recebe a oferta primeiro (a cor de risco não entra na prioridade).
 """
 import numpy as np
-
-ORDEM_COR = {"vermelho": 0, "amarelo": 1, "verde": 2, "azul": 3}
-
 
 def elegiveis_a(ag, dia_vaga, agora, guarda, carencia):
     """Máscara dos pacientes tipo A que podem receber a oferta.
@@ -30,6 +27,6 @@ def elegiveis_b(fb):
     return fb["aceita"] & ~fb["servido"]
 
 
-def ordenar(cor_ordem, espera):
-    """Índices em ordem de oferta: cor primeiro, depois maior espera."""
-    return np.lexsort((-np.asarray(espera, dtype=float), np.asarray(cor_ordem)))
+def ordenar(espera):
+    """Índices em ordem de oferta: maior espera primeiro (empate mantém a ordem original)."""
+    return np.argsort(-np.asarray(espera, dtype=float), kind="stable")

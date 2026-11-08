@@ -10,7 +10,6 @@ corte_horas_antes: 2              # D19
 carencia_dias: 7                  # Luma
 guarda_dias_uteis: 5              # D24
 volta_agenda_dias_uteis: 5        # D25: buraco a 5+ dias úteis volta à agenda
-ordem_cor: [vermelho, amarelo, verde, azul]   # D13
 faixa_por_idade: false            # se true, os 20%/50% são cortados dentro de cada faixa etária (equidade, M5)
 aviso_idosos:                     # D31: lembrete com botão "não vou" 3 dias antes para 60+ na faixa BAIXO
   ativo: true

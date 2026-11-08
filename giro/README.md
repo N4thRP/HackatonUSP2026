@@ -1,6 +1,6 @@
 # Giro — MVP
 
-Prevê quem tende a faltar à consulta, contata o paciente 3 dias antes (faixas Alto e Médio, mais um aviso para quem tem 60+) e, quando ele responde que não vai, oferece a vaga à fila de espera (cor de risco do SisReg primeiro, depois quem espera há mais tempo). Hackathon USP · Saúde para todos.
+Prevê quem tende a faltar à consulta, contata o paciente 3 dias antes (faixas Alto e Médio, mais um aviso para quem tem 60+) e, quando ele responde que não vai, oferece a vaga à fila de espera (quem espera há mais tempo primeiro). Hackathon USP · Saúde para todos.
 
 ## Como rodar
 
@@ -28,6 +28,7 @@ config/regras.yaml     regras aprovadas (faixas, D-3, guarda, carência)
 dados/brutos/          vitoria.csv (treino) e itajai.csv (só horários)
 src/giro/          preparar, sinteticos, modelo, contato, lista_espera, simulador, metricas
 app/app.py             interface Streamlit (Agenda, Contatos, Realocação, Painel)
+app/mapa.json          contorno de Vitória (IBGE) e centro de cada bairro (OpenStreetMap), para o mapa da barra lateral
 tests/                 testes automáticos
 saidas/                modelo, previsões, eventos da simulação, resumo e placar
 ```
@@ -35,7 +36,7 @@ saidas/                modelo, previsões, eventos da simulação, resumo e plac
 ## O que é real e o que é simulado
 
 Real (dataset de Vitória, 2016): pacientes, datas, antecedência, histórico, condições de saúde, unidade e se faltou.
-Simulado (com semente fixa, ver `config/fontes.yaml`): horário, valor da consulta, cor de risco, distância, respostas às mensagens, aceite das ofertas e a fila da regulação sem horário. Campos simulados nunca entram no modelo e aparecem com o selo "simulado" na interface.
+Simulado (com semente fixa, ver `config/fontes.yaml`): horário, valor da consulta, distância, respostas às mensagens, aceite das ofertas e a fila da regulação sem horário. Campos simulados nunca entram no modelo e aparecem com o selo "simulado" na interface.
 
 ## Opções em `config/regras.yaml`
 

@@ -19,10 +19,6 @@ valor:
     fonte: "Beltrame et al. 2019: R$ 3.558.837,88 / 257.025 faltas"
     valor: 13.85
 
-cor_risco:
-  fonte: "Cores e prazos dos protocolos SisReg; proporções são hipótese"
-  proporcoes: {vermelho: 0.05, amarelo: 0.15, verde: 0.30, azul: 0.50}
-
 distancia_km:
   fonte: "Hipótese (sem fonte direta)"
   mediana: 2.5

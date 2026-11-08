@@ -25,13 +25,6 @@ def test_valor_medio_convenio_entre_145_e_165(dados):
     assert s["valor_convenio"].between(128, 195).all()
 
 
-def test_proporcao_das_cores(dados):
-    fontes, _, s = dados
-    por_paciente = s.drop_duplicates("id_paciente")["cor_risco"].value_counts(normalize=True)
-    for cor, alvo in fontes["cor_risco"]["proporcoes"].items():
-        assert abs(por_paciente[cor] - alvo) <= 0.02
-
-
 def test_mesma_semente_mesmos_dados(dados):
     fontes, consultas, s = dados
     amostra = consultas.head(2000)

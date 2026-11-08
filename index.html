@@ -170,7 +170,7 @@
     <div class="flow">
       <div class="step"><span class="k">ETAPA 1</span><b>Prever</b><span class="small muted">Modelo dá a probabilidade de falta de cada consulta futura.</span></div>
       <div class="step"><span class="k">ETAPA 2</span><b>Contatar</b><span class="small muted">Mensagem para os de maior risco. Só libera a vaga com resposta ativa do paciente.</span></div>
-      <div class="step"><span class="k">ETAPA 3</span><b>Realocar</b><span class="small muted">Vaga vai para a lista de espera: primeiro pela cor de risco do SisReg, depois por quem espera há mais tempo, um paciente por vez.</span></div>
+      <div class="step"><span class="k">ETAPA 3</span><b>Realocar</b><span class="small muted">Vaga vai para a lista de espera, por ordem de quem espera há mais tempo, um paciente por vez.</span></div>
     </div>
   </section>
 
@@ -287,11 +287,11 @@
       <tr><td><b>Tempo na lista de espera</b></td><td>Dias entre o agendamento (<code>ScheduledDay</code>) e a data simulada. Pacientes com consulta futura entram na lista com essa data.</td><td>Dataset de Vitória (mediana 4 dias, p90 30). Conferir com Farias et al.: mediana 16–20 dias na regulação.</td><td><span class="conf c-real">dado real</span></td></tr>
       <tr><td><b>Horário</b></td><td>Sortear hora pela distribuição de Itajaí (gráfico acima), em slots de 30 min entre 07:00 e 18:30. Capacidade da unidade/dia = consultas reais do bairro naquele dia (mediana 38).</td><td>Dataset de Itajaí + dataset de Vitória</td><td><span class="conf c-der">derivado</span></td></tr>
       <tr><td><b>Valor da consulta</b></td><td>Cenário convênio (padrão): triangular entre R$ 128 e R$ 195, moda R$ 150. Cenário SUS: R$ 13,85 por consulta.</td><td>APM (operadoras 2025) · Beltrame et al. (R$ 3,56 mi ÷ 257.025 faltas)</td><td><span class="conf c-der">derivado</span></td></tr>
-      <tr><td><b>Urgência</b></td><td>Cor de risco SisReg por paciente da lista: vermelho 5%, amarelo 15%, verde 30%, azul 50%. Prazo máximo da cor limita quanto tempo o paciente pode esperar.</td><td>Protocolos de regulação (cores e prazos). Proporções sem fonte pública.</td><td><span class="conf c-hip">hipótese</span></td></tr>
+      <tr><td><b>Urgência</b></td><td><s>Cor de risco SisReg por paciente da lista: vermelho 5%, amarelo 15%, verde 30%, azul 50%. Prazo máximo da cor limita quanto tempo o paciente pode esperar.</s> Removida pela D34: a urgência não entra na prioridade nem nos dados.</td><td>Protocolos de regulação (cores e prazos). Proporções sem fonte pública.</td><td><span class="conf c-hip">hipótese</span></td></tr>
       <tr><td><b>Distância até a unidade</b></td><td>Log-normal com mediana 2,5 km e p90 ~8 km; maior para quem é atendido fora do próprio bairro.</td><td>Sem fonte direta. Farias et al. apontam que morar longe e o porte do município pesam no absenteísmo.</td><td><span class="conf c-hip">hipótese</span></td></tr>
       <tr><td><b>Resposta ao contato</b></td><td>Ligada ao resultado real da consulta: quem de fato faltou responde 50% “não vou”, 20% “vou”, 30% nada; quem de fato foi responde 75% “vou”, 5% “remarcar”, 20% nada. Faixa MÉDIO (lembrete com botão): 35% dos faltosos e 3% dos que iriam dizem “não vou”.</td><td>Sem fonte direta; calibrar na demo.</td><td><span class="conf c-hip">hipótese</span></td></tr>
       <tr><td><b>Aceite da oferta</b></td><td>2,7% de chance de aceite a cada oferta de 30 min; 60% dos pacientes aceitam receber ofertas.</td><td>Calibrado para 45% de preenchimento (Luma: 42–48%); adesão de 60% em caso de cliente Luma</td><td><span class="conf c-der">derivado</span></td></tr>
-      <tr><td><b>Fila sem horário (tipo B)</b></td><td>20 pacientes por unidade, cor de risco sorteada, espera log-normal com mediana 18 dias.</td><td>Mediana de espera de Farias et al. (16–20 dias); tamanho da fila sem fonte.</td><td><span class="conf c-hip">hipótese</span></td></tr>
+      <tr><td><b>Fila sem horário (tipo B)</b></td><td>20 pacientes por unidade, espera log-normal com mediana 18 dias.</td><td>Mediana de espera de Farias et al. (16–20 dias); tamanho da fila sem fonte.</td><td><span class="conf c-hip">hipótese</span></td></tr>
     </table>
 
     <p class="sources">Fontes:
@@ -319,7 +319,7 @@
         <ol class="small">
           <li>Modelo de previsão de no-show treinado no dataset de Vitória, com validação temporal.</li>
           <li>Fila de contato priorizada pelo risco, com mensagem pronta e resposta do paciente (vou / não vou / remarcar).</li>
-          <li>Motor de realocação no modelo Luma Health: a vaga vai para a lista de espera, ordenada por cor de risco e depois por tempo na lista, com ofertas em sequência.</li>
+          <li>Motor de realocação no modelo Luma Health: a vaga vai para a lista de espera, ordenada por tempo na lista (quem espera há mais tempo primeiro), com ofertas em sequência.</li>
           <li>Gerador de dados sintéticos rastreável até as fontes (horário, valor, urgência, distância, respostas).</li>
           <li>Estimativa de receita recuperada por unidade nos cenários convênio e SUS, para justificar a mensalidade.</li>
           <li>Demo ponta a ponta no MVP + este HTML de projeto.</li>
@@ -331,7 +331,7 @@
           <li>Integração real com WhatsApp/SMS ou com a agenda/prontuário da unidade (será simulada).</li>
           <li>Cancelar consulta só pela previsão — nunca, sem resposta do paciente.</li>
           <li>Overbooking ou penalizar quem tem risco alto (negar ou adiar vaga).</li>
-          <li>Triagem clínica de urgência — usamos a cor de risco como dado sintético.</li>
+          <li>Triagem clínica de urgência — a prioridade da fila é só o tempo de espera (D34).</li>
           <li>Usar campos sintéticos para treinar ou avaliar o modelo.</li>
           <li>Dados pessoais reais além dos datasets anonimizados.</li>
         </ul>
@@ -351,9 +351,9 @@
       <tr><td class="id">R5</td><td>Enviar mensagem simulada com três respostas: “Vou”, “Não vou”, “Quero remarcar”. Sem resposta = nada muda; reenvio único.</td><td>Contatar</td></tr>
       <tr><td class="id">R6</td><td>A vaga só é liberada após resposta “Não vou” ou “Quero remarcar”, registrada com data e hora.</td><td>Contatar</td></tr>
       <tr><td class="id">R7</td><td>Lista de espera: pacientes com consulta futura na mesma unidade que aceitaram receber ofertas, com data de entrada (= data do agendamento real). Elegível = mesma unidade e horário livre no slot.</td><td>Realocar</td></tr>
-      <tr><td class="id">R8</td><td>Ordem das ofertas: cor de risco (vermelho → amarelo → verde → azul) e, dentro da cor, mais tempo na lista primeiro. Modo <b>sequencial</b> (padrão): um paciente por vez, 30 min para responder; modo <b>simultâneo</b> disponível no botão.</td><td>Realocar</td></tr>
+      <tr><td class="id">R8</td><td>Ordem das ofertas: mais tempo na lista primeiro (D34). Modo <b>sequencial</b> (padrão): um paciente por vez, 30 min para responder; modo <b>simultâneo</b> disponível no botão.</td><td>Realocar</td></tr>
       <tr><td class="id">R8b</td><td>Regras herdadas do Luma: quem aceita fica 7 dias sem novas ofertas; quem recusa 30 ofertas sai da lista; aprovação da equipe opcional.</td><td>Realocar</td></tr>
-      <tr><td class="id">R9</td><td>Cascata (seção 09, 2.5): quem aceita libera o horário antigo, que entra no mesmo ciclo. Fila única com tipo A (já tem consulta depois) e tipo B (fila sem horário), por cor e depois mais tempo esperando. Tipo A só recebe oferta se a consulta atual estiver a 5+ dias úteis de hoje.</td><td>Realocar</td></tr>
+      <tr><td class="id">R9</td><td>Cascata (seção 09, 2.5): quem aceita libera o horário antigo, que entra no mesmo ciclo. Fila única com tipo A (já tem consulta depois) e tipo B (fila sem horário), por quem espera há mais tempo. Tipo A só recebe oferta se a consulta atual estiver a 5+ dias úteis de hoje.</td><td>Realocar</td></tr>
       <tr><td class="id">R10</td><td>Painel com: consultas do dia e faixa de risco (ALTO/MÉDIO/BAIXO), status dos contatos, vagas liberadas e realocadas, receita recuperada e dias de espera economizados. Botões Oferta (simultânea/sequencial) e Valor (convênio/SUS); selo “simulado” em todo campo sintético.</td><td>UI</td></tr>
       <tr><td class="id">R11</td><td>Gerador sintético com semente fixa seguindo a tabela “Dados sintéticos” da seção 03; cada campo guarda a fonte e os parâmetros num arquivo de configuração.</td><td>Dados</td></tr>
       <tr><td class="id">R12</td><td>Campos sintéticos ficam em tabela separada e não são lidos pelo treino do modelo.</td><td>Dados</td></tr>
@@ -372,7 +372,7 @@
       <tr><td class="id">M4</td><td>Erro de calibração (ECE) ≤ <b>0,03</b></td><td>Probabilidade prevista × taxa real, em 10 faixas</td><td><code>python avaliar.py --metrica ece</code></td><td><span class="tag ok">mvp 0,028</span></td></tr>
       <tr><td class="id">M5</td><td>Diferença ≤ <b>10 p.p.</b> entre grupos na chance de quem faltaria receber contato</td><td>Cobertura de contato entre faltosos, por faixa etária, sexo e Bolsa Família (D32). M5a, ordenação do modelo, segue como informativo.</td><td><code>python simular.py</code> (resumo: <code>M5_cobertura_gap_pp</code>)</td><td><span class="tag open">final 27,5 p.p. · abaixo</span></td></tr>
       <tr><td class="id">M6</td><td><b>0</b> vagas liberadas sem resposta ativa</td><td>Teste automático sobre o log de eventos da simulação</td><td><code>pytest tests/test_confirmacao.py</code></td><td><span class="tag ok">mvp 0</span></td></tr>
-      <tr><td class="id">M7</td><td><b>100%</b> das ofertas seguem as regras da lista de espera</td><td>Ordem por cor e depois tempo na lista, só elegíveis, expiração de 30 min, passa ao próximo, carência de 7 dias</td><td><code>pytest tests/test_lista_espera.py</code></td><td><span class="tag ok">mvp 100%</span></td></tr>
+      <tr><td class="id">M7</td><td><b>100%</b> das ofertas seguem as regras da lista de espera</td><td>Ordem por tempo na lista, só elegíveis, expiração de 30 min, passa ao próximo, carência de 7 dias</td><td><code>pytest tests/test_lista_espera.py</code></td><td><span class="tag ok">mvp 100%</span></td></tr>
       <tr><td class="id">M8</td><td>≥ <b>45%</b> das vagas liberadas reocupadas</td><td>Simulação no período de teste (25/05–08/06; referência Luma: 42–48%)</td><td><code>python simular.py --periodo teste --seed 42</code></td><td><span class="tag ok">final 45,3% (5 sementes)</span></td></tr>
       <tr><td class="id">M9</td><td>Recuperar ≥ <b>10%</b> da receita perdida com faltas</td><td>Só conta vaga recuperada de fato: cadeia que termina em paciente tipo B ou em buraco que volta à agenda (D25). Protótipo da cascata: 7,2% → 15,8% com D26–D27</td><td><code>python simular.py --periodo teste --relatorio receita</code></td><td><span class="tag ok">final 17,0%</span></td></tr>
       <tr><td class="id">M10</td><td>Realocação de uma vaga em &lt; <b>2 s</b></td><td>Tempo da seleção de elegíveis sobre agenda de 10 mil consultas futuras</td><td><code>python simular.py --benchmark</code></td><td><span class="tag ok">mvp 0,4 ms</span></td></tr>
@@ -429,9 +429,9 @@
       <table>
         <tr><th>Elemento</th><th>Regra</th></tr>
         <tr><td><b>Faixa de risco</b></td><td><span class="risk r-hi">ALTO</span> = 20% de maior risco do dia (entra na fila de contato) · <span class="risk r-md">MÉDIO</span> = próximos 30% (lembrete com botão “não vou”, D26) · <span class="risk r-lo">BAIXO</span> = restante. A porcentagem fica só no log e na avaliação, nunca na tela.</td></tr>
-        <tr><td><b>Botão Oferta</b></td><td>Sequencial (padrão): um por vez, na ordem cor de risco → tempo na lista, 30 min cada. Simultânea: envia a todos os elegíveis, primeiro que aceitar leva. A troca vale para as próximas vagas, não para ofertas já enviadas.</td></tr>
+        <tr><td><b>Botão Oferta</b></td><td>Sequencial (padrão): um por vez, na ordem de tempo na lista, 30 min cada. Simultânea: envia a todos os elegíveis, primeiro que aceitar leva. A troca vale para as próximas vagas, não para ofertas já enviadas.</td></tr>
         <tr><td><b>Botão Valor</b></td><td>Convênio (padrão): R$ 150 por vaga. SUS: R$ 13,85 por vaga + “dias de espera economizados”. Muda todos os totais do painel ao mesmo tempo.</td></tr>
-        <tr><td><b>Selo “simulado”</b></td><td>Todo dado sintético aparece com borda tracejada e o texto “simulado” ao lado: cor de risco, distância, horário e valor. Legenda fixa no rodapé da tela. Dados reais (tempo na lista, faixa de risco) aparecem normais.</td></tr>
+        <tr><td><b>Selo “simulado”</b></td><td>Todo dado sintético aparece com borda tracejada e o texto “simulado” ao lado: distância, horário e valor. Legenda fixa no rodapé da tela. Dados reais (tempo na lista, faixa de risco) aparecem normais.</td></tr>
       </table>
     </div>
   </section>
@@ -446,7 +446,7 @@
       <tr><td class="id">D2</td><td>Nenhuma vaga é liberada sem resposta ativa do paciente.</td><td>Evita cancelar quem iria comparecer.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D3</td><td>Modelo: gradient boosting (scikit-learn), com explicação por fatores.</td><td>Melhor baseline (AUC 0,738 × 0,678 da logística) e roda sem GPU.</td><td><span class="tag open">aberta</span></td></tr>
       <tr><td class="id">D4</td><td>Urgência, distância, horário e valor são sintéticos, com semente fixa, gerados a partir das fontes da seção 03 e desenhados para a regra da D5.</td><td>O dataset não tem esses campos; usar números das próprias fontes torna a simulação defensável.</td><td><span class="tag ok">tomada</span></td></tr>
-      <tr><td class="id">D5</td><td>Realocação no modelo Luma Health: vaga vai para a lista de espera (só elegíveis), ofertas uma de cada vez (D11), ordenadas por cor de risco (D13) e tempo na lista.</td><td>Regra usada no mercado, simples de explicar e de auditar.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D5</td><td>Realocação no modelo Luma Health: vaga vai para a lista de espera (só elegíveis), ofertas uma de cada vez (D11), ordenadas por tempo na lista (D34).</td><td>Regra usada no mercado, simples de explicar e de auditar.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D6</td><td>Quem contatar: top-K por dia (capacidade da equipe) em vez de limiar fixo de 50%.</td><td>Poucas consultas passam de 50%; o recurso escasso é o contato. Fechada junto com a D15: K = faixa ALTO (20% do dia).</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D7</td><td>Não usar SMS_received como variável.</td><td>Removida: está confundida com a antecedência e tirar não piora o modelo (AUC 0,737 × 0,738).</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D8</td><td>MVP em Python.</td><td>Decisão da equipe. Interface em Streamlit (D20).</td><td><span class="tag ok">tomada</span></td></tr>
@@ -454,7 +454,7 @@
       <tr><td class="id">D10</td><td>Cobrança: mensalidade fixa por unidade.</td><td>Decisão da equipe. Preço a definir a partir da receita recuperada simulada (M9).</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D11</td><td>Modo padrão da realocação: <b>sequencial</b>.</td><td>Decisão da equipe. Respeita a ordem da fila; preenche mais devagar que o simultâneo — acompanhar M8. Reconfirmada em 08/11 após o MVP mostrar que a simultânea recupera mais vagas mas não respeita a prioridade.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D12</td><td>Modelo treinado só no dataset de Vitória; o de Itajaí serve só para horários e motivos de falta.</td><td>Itajaí não tem data de agendamento nem ID do paciente; com divisão temporal, AUC ~0,51.</td><td><span class="tag ok">no código</span></td></tr>
-      <tr><td class="id">D13</td><td>Usar a cor de risco SisReg antes do tempo na lista: vermelho → amarelo → verde → azul; dentro da cor, mais antigo primeiro.</td><td>Decisão da equipe. É como a regulação do SUS ordena a fila; urgência é sintética (selo “simulado”).</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D13</td><td><s>Usar a cor de risco SisReg antes do tempo na lista: vermelho → amarelo → verde → azul; dentro da cor, mais antigo primeiro.</s> → revogada pela D34.</td><td>Decisão da equipe. É como a regulação do SUS ordena a fila; urgência é sintética (selo “simulado”).</td><td><span class="tag open">revogada</span></td></tr>
       <tr><td class="id">D14</td><td>Campos sintéticos nunca entram no treino nem na avaliação do modelo.</td><td>Evita que o modelo “descubra” padrões que nós mesmos inventamos.</td><td><span class="tag ok">no código</span></td></tr>
       <tr><td class="id">D15</td><td>Risco aparece em faixa: ALTO (20% de maior risco do dia), MÉDIO (próximos 30%), BAIXO (restante).</td><td>Decisão da equipe. Faixa por posição no dia casa com o top-K da D6 e não promete uma precisão que o modelo não tem.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D16</td><td>Botões na interface: Oferta (simultânea/sequencial) e Valor (convênio/SUS).</td><td>Decisão da equipe. Mostra na demo os dois modos do Luma e os dois públicos do produto.</td><td><span class="tag ok">tomada</span></td></tr>
@@ -464,7 +464,7 @@
       <tr><td class="id">D20</td><td>Interface em Streamlit; sem banco de dados (arquivos parquet/csv/jsonl).</td><td>Tudo em Python (D8), rápido de montar e de mostrar; banco só faria sentido no produto real.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D21</td><td>Simulação roda no período de teste (25/05–08/06), não em 4 semanas.</td><td>Só nesse período as previsões são fora da amostra; usar dias do treino inflaria o resultado.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D22</td><td>Resposta simulada ao contato depende do resultado real da consulta.</td><td>Mantém a simulação coerente: não pode haver mais “não vou” do que faltas que existiriam.</td><td><span class="tag ok">tomada</span></td></tr>
-      <tr><td class="id">D23</td><td>Lista de espera única com dois tipos: A (já tem consulta depois, dado real) e B (fila da regulação sem horário, sintético). Ordem: cor de risco → mais tempo esperando.</td><td>Sem o tipo B, a cascata só empurra o buraco; com ele, as vagas recuperadas sobem de 387 para 524 e os beneficiados esperavam 68 dias em média.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D23</td><td>Lista de espera única com dois tipos: A (já tem consulta depois, dado real) e B (fila da regulação sem horário, sintético). Ordem: <s>cor de risco →</s> mais tempo esperando (D34).</td><td>Sem o tipo B, a cascata só empurra o buraco; com ele, as vagas recuperadas sobem de 387 para 524 e os beneficiados esperavam 68 dias em média.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D24</td><td>Regra de guarda: tipo A só recebe oferta se a consulta atual estiver a 5+ dias úteis de hoje.</td><td>Buracos perdidos caem de ~390 para ~80; o horário deixado para trás ainda pode ser marcado normalmente.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D25</td><td>Vaga só conta como recuperada quando a cadeia termina em paciente tipo B ou em buraco que volta à agenda.</td><td>Evita contar duas vezes a mesma vaga e inflar a receita (a 2.4 contava 715; o real é ~524).</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D26</td><td>Faixa MÉDIO recebe lembrete com botão “não vou”, não só lembrete.</td><td>A faixa MÉDIO tem 41% das faltas. Continua exigindo resposta ativa (D2). Sozinha, leva M9 de 7,2% a 10,2%.</td><td><span class="tag ok">tomada</span></td></tr>
@@ -475,6 +475,7 @@
       <tr><td class="id">D31</td><td>Aviso com botão “não vou” <b>3 dias antes</b> para pacientes de 60+ que ficaram na faixa BAIXO.</td><td>Proposta da equipe para a D29. Cobertura dos faltosos 60+ vai de 49% para 100%; M9 sobe para 16,8%; M8 cai para 44,3% (alternativa na D-3 mantém 45,2%). Versão final: 3 dias antes (M8 45,3% na média de 5 sementes).</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D32</td><td>Medir M5 como cobertura de contato entre quem faltaria (por idade, sexo e Bolsa Família), não pela ordenação do modelo.</td><td>Mede o que importa para o paciente: ser avisado. Com D31: 27,5 p.p. (40–59 anos em 73%). A medida antiga fica visível como M5a (41 p.p.), por transparência. Meta mantida em ≤ 10 p.p.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D33</td><td>M8 e M9 no placar são a média de 5 sementes, com a faixa registrada.</td><td>O ruído de uma semente (±1 p.p.) é maior que a folga da M8; uma rodada só não decide se a meta foi atingida.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D34</td><td>Prioridade da fila só por tempo de espera: a cor de risco (urgência) sai da ordem das ofertas e dos dados sintéticos. Revoga a D13.</td><td>Decisão da equipe: a urgência era sintética e subjetiva. Média de 5 sementes: M8 44,5% (antes 45,3%), M9 16,6% (antes 17,0%); quem ganha a vaga esperava 25 dias em média (antes 21).</td><td><span class="tag ok">tomada</span></td></tr>
     </table>
   </section>
 
@@ -499,7 +500,7 @@
       <tr><td><b>Beltrame et al. (2019)</b></td><td>Valor e contexto</td><td>666 mil consultas SisReg-ES</td><td>R$ 13,85 por consulta perdida no SUS; taxas de falta por especialidade</td></tr>
       <tr><td><b>Farias et al. (2019)</b></td><td>Contexto da fila</td><td>Mesma base</td><td>Espera mediana 16–20 dias; relação espera × falta</td></tr>
       <tr><td><b>APM 2025</b> · operadoras</td><td>Valor convênio</td><td>—</td><td>Faixa R$ 128–195 por consulta → R$ 150</td></tr>
-      <tr><td><b>Protocolos SisReg</b></td><td>Urgência</td><td>—</td><td>Cores vermelho/amarelo/verde/azul e prazos de 30/90/180 dias</td></tr>
+      <tr><td><b>Protocolos SisReg</b></td><td>Urgência (não usada desde a D34)</td><td>—</td><td>Cores vermelho/amarelo/verde/azul e prazos de 30/90/180 dias</td></tr>
       <tr><td><b>Luma Health</b></td><td>Regras da lista de espera</td><td>—</td><td>Ofertas em sequência, 30 min para responder, 42–48% de preenchimento</td></tr>
     </table>
 
@@ -535,7 +536,7 @@
       </div>
     </div>
     <p class="small" data-edit><b>Perfil como variável do modelo?</b> Testado: AUC 0,7423 → 0,7432 e recall top 20% 39,0% → 39,1% — ganho desprezível, porque o perfil é feito das mesmas colunas que o modelo já usa. Sozinhas, as 6 regras chegam a AUC 0,698: servem bem para explicar, não para prever melhor.</p>
-    <p class="small muted" data-edit>Na simulação, cada paciente também recebe os atributos sintéticos da seção 03 (cor de risco, distância, horário, valor), sorteados de forma independente do perfil — não temos fonte que ligue perfil a urgência ou distância. 39% dos pacientes têm mais de uma consulta no período, o que limita o histórico.</p>
+    <p class="small muted" data-edit>Na simulação, cada paciente também recebe os atributos sintéticos da seção 03 (distância, horário, valor), sorteados de forma independente do perfil — não temos fonte que ligue perfil a distância. 39% dos pacientes têm mais de uma consulta no período, o que limita o histórico.</p>
 
     <h4 class="sub">1.4 Variáveis</h4>
     <table data-edit>
@@ -551,7 +552,7 @@
       <tr><td><s>sms_recebido</s></td><td><span class="conf c-real">real</span></td><td>Removida (D7)</td><td>Confundida com a antecedência</td></tr>
       <tr><td>perfil (P1–P6)</td><td><span class="conf c-der">derivada</span></td><td>Tela, mensagem, simulação</td><td>Não entra no modelo</td></tr>
       <tr><td>tempo_na_lista</td><td><span class="conf c-real">real</span></td><td>Realocação</td><td>Data do agendamento → hoje</td></tr>
-      <tr><td>horario, valor_convenio, valor_sus, cor_risco, distancia_km</td><td><span class="conf c-hip">sintética</span></td><td>Simulação e tela</td><td>Nunca no modelo (D14); selo “simulado”</td></tr>
+      <tr><td>horario, valor_convenio, valor_sus, distancia_km</td><td><span class="conf c-hip">sintética</span></td><td>Simulação e tela</td><td>Nunca no modelo (D14); selo “simulado”</td></tr>
       <tr><td>resposta_contato, aceite_oferta</td><td><span class="conf c-hip">sintética</span></td><td>Simulação</td><td>Parâmetros da seção 03</td></tr>
     </table>
 
@@ -579,7 +580,7 @@
       <div class="step"><span class="k">D-3 · 08:00</span><b>1. Prever</b><span class="small muted">Lê a agenda dos próximos 3 dias, calcula o risco e dá a faixa ALTO/MÉDIO/BAIXO.</span></div>
       <div class="step"><span class="k">D-3</span><b>2. Contatar</b><span class="small muted">ALTO recebe pedido de confirmação. MÉDIO recebe lembrete com botão “não vou”. BAIXO, nada.</span></div>
       <div class="step"><span class="k">até D-1</span><b>3. Ouvir</b><span class="small muted">“Vou” confirma. “Não vou/remarcar” libera a vaga. Sem resposta: um reenvio; depois, nada muda.</span></div>
-      <div class="step"><span class="k">imediato</span><b>4. Ofertar</b><span class="small muted">Lista de espera elegível, por cor e tempo na lista. Um por vez, 30 min cada.</span></div>
+      <div class="step"><span class="k">imediato</span><b>4. Ofertar</b><span class="small muted">Lista de espera elegível, por tempo na lista. Um por vez, 30 min cada.</span></div>
       <div class="step"><span class="k">até 2 h antes</span><b>5. Encaixar</b><span class="small muted">Quem aceita é movido; o horário antigo dele volta ao passo 4 (cascata).</span></div>
     </div>
     <table data-edit>
@@ -587,7 +588,7 @@
       <tr><td class="id">1</td><td>Agenda futura (consultas.parquet)</td><td>previsoes.csv: probabilidade, faixa, 3 fatores, perfil</td><td>Faixa por posição no dia da unidade (D15). Perfil só para a tela e o tom da mensagem.</td></tr>
       <tr><td class="id">2</td><td>Consultas ALTO e MÉDIO</td><td>Evento “contato” no log</td><td>Mensagem com 3 botões (R5). Tom muda pelo perfil: P2 facilita dizer “não vou”; P5 vai ao responsável.</td></tr>
       <tr><td class="id">3</td><td>Respostas</td><td>Eventos “resposta” e “vaga_liberada”</td><td>Vaga só é liberada com resposta ativa (D2). Quem pede remarcação recebe opções de nova data.</td></tr>
-      <tr><td class="id">4</td><td>Vaga liberada + lista de espera</td><td>Evento “oferta”</td><td>Elegível: mesma unidade, consulta marcada para depois da vaga, aceitou receber ofertas, fora da carência de 7 dias. Ordem: cor (D13) → tempo na lista. Sequencial (D11).</td></tr>
+      <tr><td class="id">4</td><td>Vaga liberada + lista de espera</td><td>Evento “oferta”</td><td>Elegível: mesma unidade, consulta marcada para depois da vaga, aceitou receber ofertas, fora da carência de 7 dias. Ordem: tempo na lista (D34). Sequencial (D11).</td></tr>
       <tr><td class="id">5</td><td>Aceite ou expiração</td><td>Eventos “aceite”/“expirou”; agenda atualizada</td><td>Expirou → próximo da lista. Paramos de ofertar 2 h antes do horário. Horário antigo de quem aceitou volta ao passo 4.</td></tr>
       <tr><td class="id">6</td><td>Log de eventos</td><td>Painel e placar</td><td>Vagas liberadas, reocupadas, receita (convênio/SUS), dias de espera economizados.</td></tr>
     </table>
@@ -605,10 +606,10 @@
 │   └── sinteticos.parquet <span># saída de sinteticos.py (tabela separada, R12)</span>
 ├── src/giro/
 │   ├── preparar.py        <span># limpeza, variáveis, perfil P1–P6</span>
-│   ├── sinteticos.py      <span># horário, valor, cor, distância, respostas</span>
+│   ├── sinteticos.py      <span># horário, valor, distância, respostas</span>
 │   ├── modelo.py          <span># treinar, prever, faixa, 3 fatores</span>
 │   ├── contato.py         <span># fila ALTO/MÉDIO, mensagens, respostas</span>
-│   ├── lista_espera.py    <span># elegibilidade, ordem cor → tempo, oferta sequencial, cascata</span>
+│   ├── lista_espera.py    <span># elegibilidade, ordem por tempo de espera, oferta sequencial, cascata</span>
 │   ├── simulador.py       <span># relógio, ciclo diário, eventos.jsonl</span>
 │   └── metricas.py        <span># M1–M12, escreve no placar</span>
 ├── preparar.py · treinar.py · avaliar.py · simular.py   <span># comandos da seção 06</span>
@@ -624,10 +625,8 @@
       <tr><td class="id">5</td><td><code>streamlit run app/app.py</code></td><td>tudo em saidas/</td><td>—</td></tr>
     </table>
     <p class="small" data-edit><b>Bibliotecas:</b> pandas, pyarrow, scikit-learn, pyyaml, streamlit, pytest. Python 3.11. Sem banco de dados: arquivos bastam para o MVP.</p>
-    <p class="small" data-edit><b>Exemplo do coração da realocação</b> (ordem da D13 + elegibilidade da 2.1):</p>
-<pre class="code">ORDEM_COR = {"vermelho": 0, "amarelo": 1, "verde": 2, "azul": 3}
-
-def candidatos(vaga, lista, hoje):
+    <p class="small" data-edit><b>Exemplo do coração da realocação</b> (ordem da D34 + elegibilidade da 2.1):</p>
+<pre class="code">def candidatos(vaga, lista, hoje):
     carencia = lista.ultimo_aceite &gt; hoje - pd.Timedelta(days=7)
     elegiveis = lista[
         (lista.unidade == vaga.unidade)
@@ -635,9 +634,7 @@ def candidatos(vaga, lista, hoje):
         &amp; lista.aceita_ofertas
         &amp; ~carencia
     ]
-    return (elegiveis
-            .assign(cor_ordem=elegiveis.cor_risco.map(ORDEM_COR))
-            .sort_values(["cor_ordem", "data_agendamento"]))  # cor, depois mais antigo</pre>
+    return elegiveis.sort_values("data_agendamento")  # quem espera há mais tempo primeiro</pre>
     <p class="small muted" data-edit>Ajuste do modelo para chegar à M1 (0,75) fica em <code>modelo.py</code>: testar profundidade e taxa de aprendizado, e variáveis de interação (antecedência × idade). Cada tentativa vira uma linha no placar.</p>
 
     <h4 class="sub">2.3 Como é o produto final</h4>
@@ -646,10 +643,10 @@ def candidatos(vaga, lista, hoje):
       <tr><th>Aba</th><th>O que mostra</th><th>O que dá para fazer</th></tr>
       <tr><td><b>Agenda</b> (tela A)</td><td>Consultas do dia com faixa ALTO/MÉDIO/BAIXO, perfil e os 3 fatores ao passar o mouse</td><td>Disparar contatos da faixa ALTO</td></tr>
       <tr><td><b>Contatos</b> (tela B)</td><td>Conversas simuladas e status: aguardando, vou, não vou, sem resposta</td><td>Ver a mensagem enviada a cada perfil</td></tr>
-      <tr><td><b>Realocação</b> (tela C)</td><td>Vaga liberada, fila única (tipo A e B) em ordem cor → tempo, oferta atual, contador de 30 min e a cadeia da cascata até o fim</td><td>Avançar o relógio passo a passo; ver a cascata acontecer</td></tr>
+      <tr><td><b>Realocação</b> (tela C)</td><td>Vaga liberada, fila única (tipo A e B) em ordem de tempo de espera, oferta atual, contador de 30 min e a cadeia da cascata até o fim</td><td>Avançar o relógio passo a passo; ver a cascata acontecer</td></tr>
       <tr><td><b>Painel</b></td><td>Vagas liberadas, reocupadas, R$ recuperados (ou R$ + dias de espera no SUS), comparação com “sem produto” e “contato aleatório”</td><td>Trocar cenário convênio/SUS e modo de oferta</td></tr>
     </table>
-    <p class="small muted" data-edit>Real × simulado na demo: pacientes, datas, antecedência, histórico, faixa de risco e tempo na lista são reais (dataset de Vitória, período de teste). Horário, valor, cor de risco, distância e respostas são sintéticos e levam o selo “simulado” (D17).</p>
+    <p class="small muted" data-edit>Real × simulado na demo: pacientes, datas, antecedência, histórico, faixa de risco e tempo na lista são reais (dataset de Vitória, período de teste). Horário, valor, distância e respostas são sintéticos e levam o selo “simulado” (D17).</p>
 
     <h4 class="sub">2.4 Qual é a eficácia</h4>
     <p class="small" data-edit>Medida em duas camadas, sempre no período de teste (25/05 a 08/06/2016: 9 dias úteis, 39.152 consultas, 7.296 faltas, 79 unidades) — nada que o modelo viu no treino.</p>
@@ -683,7 +680,7 @@ def candidatos(vaga, lista, hoje):
     <h4 class="sub" style="font-size:13px">Como a cascata funciona</h4>
     <div class="flow">
       <div class="step"><span class="k">1</span><b>Vaga liberada</b><span class="small muted">Paciente respondeu “não vou”.</span></div>
-      <div class="step"><span class="k">2</span><b>Fila única</b><span class="small muted">Dois tipos juntos, por cor de risco e depois por quem espera há mais tempo.</span></div>
+      <div class="step"><span class="k">2</span><b>Fila única</b><span class="small muted">Dois tipos juntos, por quem espera há mais tempo.</span></div>
       <div class="step"><span class="k">3</span><b>Aceite</b><span class="small muted">Tipo B: fim, vaga ganha. Tipo A: o horário antigo dele volta ao passo 1.</span></div>
       <div class="step"><span class="k">4</span><b>Fim da cadeia</b><span class="small muted">Paciente sem horário aceitou, ou o buraco final está longe e volta à agenda normal.</span></div>
     </div>
@@ -707,7 +704,7 @@ def candidatos(vaga, lista, hoje):
         <h4 class="sub" style="font-size:13px">Ordem da fila: o que muda (A + B, sem guarda)</h4>
         <ul class="small">
           <li><b>Cor → tempo</b> (D13): 45% dos beneficiados são vermelho/amarelo (eles são 20% da fila).</li>
-          <li><b>Só tempo</b>: beneficiados esperavam mais (74 dias), mas só 19% são urgentes.</li>
+          <li><b>Só tempo</b>: beneficiados esperavam mais (74 dias), mas só 19% são urgentes. É a regra atual (D34).</li>
           <li><b>Aleatório</b>: mesmo volume de vagas, beneficiados esperavam menos (51 dias) — a ordem decide <i>quem</i> ganha, não <i>quantos</i>.</li>
         </ul>
       </div>
@@ -778,7 +775,7 @@ def candidatos(vaga, lista, hoje):
       <tr><td>Preparar</td><td>Limpa 110.521 consultas, cria 18 variáveis e os perfis P1–P6; gera os sintéticos e a fila B (1.620 pacientes)</td><td><code>preparar.py</code></td></tr>
       <tr><td>Modelo</td><td>Gradient boosting; probabilidade, faixa por unidade/dia e 3 fatores em linguagem simples</td><td><code>treinar.py</code>, <code>avaliar.py</code></td></tr>
       <tr><td>Simulação</td><td>Contato na D-3, respostas, ofertas sequenciais ou simultâneas, cascata com guarda e carência; log de eventos</td><td><code>simular.py</code></td></tr>
-      <tr><td>Testes</td><td>20 testes automáticos (M6, M7, M11, M12)</td><td><code>tests/</code></td></tr>
+      <tr><td>Testes</td><td>18 testes automáticos (M6, M7, M11, M12)</td><td><code>tests/</code></td></tr>
       <tr><td>Interface</td><td>Abas Agenda, Contatos, Realocação (cascata passo a passo) e Painel; botões Oferta e Valor; selo “simulado”</td><td><code>app/app.py</code></td></tr>
     </table>
 
@@ -826,6 +823,14 @@ def candidatos(vaga, lista, hoje):
     </table>
     <p class="small muted" data-edit>Contato sorteado com o mesmo volume, sem modelo: R$ 130 mil. Atingidas: M3, M4, M6–M12. Próximas: M1 (teto do dataset, faltam 0,007 de AUC) e M2 (faltam 0,4 p.p.). Abaixo: M5 (40–59 anos com 72% de cobertura).</p>
 
+    <h4 class="sub">Versão sem cor de risco (mvp-sem-cor, D34)</h4>
+    <p class="small" data-edit>A fila passa a ser ordenada só por quem espera há mais tempo; a cor de risco sai também dos dados sintéticos. O resto do ciclo é igual ao da mvp-final.</p>
+    <table data-edit>
+      <tr><th>Contatos</th><th>Vagas liberadas</th><th>Vagas recuperadas</th><th>M8</th><th>M9</th><th>R$ convênio (9 dias úteis)</th><th>Por unidade/mês</th><th>Espera média de quem ganhou a vaga</th></tr>
+      <tr><td class="mono">24.717 (63%)</td><td class="mono">3.108</td><td class="mono">1.186</td><td class="mono">44,5% <span class="muted">(43,2–45,6)</span></td><td class="mono">16,6% <span class="muted">(16,2–17,2)</span></td><td class="mono">R$ 187 mil</td><td class="mono">R$ 5,8 mil</td><td class="mono">25 dias</td></tr>
+    </table>
+    <p class="small muted" data-edit>Contato sorteado com o mesmo volume, sem modelo: R$ 122 mil. Atingidas: M3, M4, M6, M7, M9–M12. Próximas: M1, M2 e M8 (44,5% para meta de 45%, dentro da variação entre sementes). Abaixo: M5.</p>
+
     <h3>Fase 4 · Pitch <span class="tag pend">próxima</span></h3>
     <p class="small muted" data-edit>Roteiro, números do placar, preço da mensalidade e demo.</p>
 
@@ -847,8 +852,9 @@ def candidatos(vaga, lista, hoje):
       <tr><td class="mono">08/11 00:46</td><td>mvp-v1</td><td class="mono">0,743</td><td class="mono">39,6%</td><td class="mono">36,9%</td><td class="mono">0,028</td><td class="mono">41,1</td><td class="mono">0</td><td class="mono">100%</td><td class="mono">45,4%</td><td class="mono">15,6%</td><td class="mono">0,4 ms</td><td class="mono">100%</td><td class="mono">100%</td><td>Primeira versão completa; sequencial, semente 42</td></tr>
       <tr><td class="mono">08/11 01:05</td><td>mvp-v2</td><td class="mono">0,743</td><td class="mono">39,6%</td><td class="mono">36,9%</td><td class="mono">0,028</td><td class="mono">41,1</td><td class="mono">0</td><td class="mono">100%</td><td class="mono">43,4%</td><td class="mono">16,4%</td><td class="mono">0,4 ms</td><td class="mono">100%</td><td class="mono">100%</td><td>Aviso D-2 para 60+ (D31)</td></tr>
       <tr><td class="mono">08/11 01:22</td><td><b>mvp-final</b></td><td class="mono">0,743</td><td class="mono">39,6%</td><td class="mono">36,9%</td><td class="mono">0,028</td><td class="mono">27,5*</td><td class="mono">0</td><td class="mono">100%</td><td class="mono">45,3%</td><td class="mono">17,0%</td><td class="mono">0,4 ms</td><td class="mono">100%</td><td class="mono">100%</td><td>Aviso D-3 para 60+; M5 = cobertura; M8/M9 média de 5 sementes</td></tr>
+      <tr><td class="mono">08/11 06:08</td><td><b>mvp-sem-cor</b></td><td class="mono">0,743</td><td class="mono">39,6%</td><td class="mono">36,9%</td><td class="mono">0,028</td><td class="mono">27,5</td><td class="mono">0</td><td class="mono">100%</td><td class="mono">44,5%</td><td class="mono">16,6%</td><td class="mono">0,3 ms</td><td class="mono">100%</td><td class="mono">100%</td><td>Prioridade só por tempo de espera; cor de risco removida dos dados (D34)</td></tr>
     </table>
-    <p class="small muted">* A partir da mvp-final, M5 mede a cobertura de contato (D32); nas linhas anteriores, a ordenação do modelo (hoje M5a = 41,1). Versão final — atingidas: M3, M4, M6–M12; próximas: M1 e M2; abaixo: M5. Histórico em <code>saidas/placar.csv</code>.</p>
+    <p class="small muted">* A partir da mvp-final, M5 mede a cobertura de contato (D32); nas linhas anteriores, a ordenação do modelo (hoje M5a = 41,1). Versão atual (mvp-sem-cor) — atingidas: M3, M4, M6, M7, M9–M12; próximas: M1, M2 e M8; abaixo: M5. Histórico em <code>saidas/placar.csv</code>.</p>
   </section>
 </main>
 
