@@ -23,7 +23,10 @@ RESPOSTA = {"nao_vou": "Não vou", "remarcar": "Quero remarcar", "vou": "Vou"}
 
 st.markdown("""
 <style>
-  .block-container{padding-top:1.6rem;max-width:1180px}
+  .block-container{padding-top:3.4rem;max-width:1180px}
+  [data-testid="stHeader"]{background:transparent}
+  [data-testid="stTabs"] [role="tablist"]{gap:28px}
+  [data-testid="stTab"] p{font-size:1.02rem;font-weight:600}
   h1{font-size:1.9rem!important;letter-spacing:-.01em;margin-bottom:.1rem!important}
   .sub{color:#4E6462;margin:0 0 1rem 0;font-size:.98rem}
   .cab{background:#fff;border:1px solid #D3DDDA;border-radius:14px;padding:16px 22px 14px;margin:0 0 10px 0}
