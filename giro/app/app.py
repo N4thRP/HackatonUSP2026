@@ -14,10 +14,10 @@ from giro import DADOS, SAIDAS, carregar_config  # noqa: E402
 
 OFERTAS_POR_DIA = carregar_config()[1]["tentativas_por_dia"]
 
-st.set_page_config(page_title="Giro", page_icon="🩺", layout="wide")
+st.set_page_config(page_title="Giro", page_icon=":material/autorenew:", layout="wide")
 
-FAIXA = {"ALTO": ("Alto", "#B43C2A", "#F7E3DE"), "MÉDIO": ("Médio", "#8A6512", "#F5ECD2"),
-         "BAIXO": ("Baixo", "#3E6B52", "#E1EEE6")}
+FAIXA = {"ALTO": ("Alto", "#C2412F", "#FFE6E1"), "MÉDIO": ("Médio", "#9A6200", "#FFF0D4"),
+         "BAIXO": ("Baixo", "#0E7C70", "#D7F5EE")}
 RESPOSTA = {"nao_vou": "Não vou", "remarcar": "Quero remarcar", "vou": "Vou"}
 
 st.markdown("""
@@ -27,97 +27,100 @@ st.markdown("""
   [data-testid="stTabs"] [role="tablist"]{gap:28px}
   [data-testid="stTab"] p{font-size:1.02rem;font-weight:600}
   h1{font-size:1.9rem!important;letter-spacing:-.01em;margin-bottom:.1rem!important}
-  .sub{color:#4E6462;margin:0 0 1rem 0;font-size:.98rem}
-  .cab{background:#fff;border:1px solid #D3DDDA;border-radius:14px;padding:16px 22px 14px;margin:0 0 10px 0}
+  .sub{color:#3E5568;margin:0 0 1rem 0;font-size:.98rem}
+  .cab{background:#fff;border:1px solid #DCE5EA;border-radius:14px;padding:16px 22px 14px;margin:0 0 10px 0}
   .cab-l1{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-  .cab-t{font-size:1.75rem;font-weight:800;letter-spacing:-.01em;color:#17302F;margin-right:12px}
-  .cab-tag{font-size:.9rem;color:#6B7B79}
-  .cab-st{display:inline-flex;align-items:center;gap:7px;padding:3px 12px;border-radius:999px;background:#E4F0E1;
-          color:#2F6F2A;font-weight:600;font-size:.85rem;white-space:nowrap}
-  .cab-st i{width:8px;height:8px;border-radius:50%;background:#3F8F3A}
-  .cab-un{font-size:1.02rem;font-weight:600;color:#1D5C63;margin-top:2px}
+  .cab-id{display:flex;align-items:center;flex-wrap:wrap;gap:6px 16px}
+  .cab-tag{font-size:.9rem;color:#3E5568;padding-left:16px;border-left:3px solid #FF6B57}
+  .cab-st{display:inline-flex;align-items:center;gap:7px;padding:3px 12px;border-radius:999px;background:#D7F5EE;
+          color:#0E7C70;font-weight:600;font-size:.85rem;white-space:nowrap}
+  .cab-st i{width:8px;height:8px;border-radius:50%;background:#14B8A6}
+  .cab-un{font-size:1.02rem;font-weight:600;color:#0B4F6C;margin-top:2px}
   .cab-l2{display:flex;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;margin-top:12px;padding-top:10px;
-          border-top:1px solid #E3E9E7;font-size:.92rem;color:#4E6462}
-  .cab-dia{font-weight:600;color:#17302F}
+          border-top:1px solid #E4EBEF;font-size:.92rem;color:#3E5568}
+  .cab-dia{font-weight:600;color:#0F1E2E}
   .faixa{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:600;font-size:.82rem;white-space:nowrap}
-  .sim{border:1px dashed #A8753F;background:#FBF3E8;color:#7A4A22;border-radius:4px;padding:0 6px;font-size:.82rem;white-space:nowrap}
+  .sim{border:1px dotted currentColor;background:transparent;color:inherit;border-radius:4px;padding:0 6px;font-size:.82rem;white-space:nowrap}
   .sim small{opacity:.75;margin-left:3px}
   table.ag{width:100%;border-collapse:collapse;font-size:.92rem}
-  table.ag th{text-align:left;font-weight:600;color:#4E6462;border-bottom:2px solid #C9D5D2;padding:6px 8px;font-size:.85rem}
-  table.ag td{border-bottom:1px solid #DCE4E2;padding:8px;vertical-align:top}
-  .fat{color:#4E6462;font-size:.83rem}
-  .st-ok{color:#2F6F2A;font-weight:600}.st-lib{color:#B43C2A;font-weight:600}.st-prox{color:#A87A00;font-weight:600}.st-cin{color:#6B7B79}
-  .of{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:5px 0;border-bottom:1px dashed #DCE4E2;font-size:.9rem}
+  table.ag th{text-align:left;font-weight:600;color:#3E5568;border-bottom:2px solid #C9D6DE;padding:6px 8px;font-size:.85rem}
+  table.ag td{border-bottom:1px solid #E1E9ED;padding:8px;vertical-align:top}
+  .fat{color:#3E5568;font-size:.83rem}
+  .st-ok{color:#0E7C70;font-weight:600}.st-lib{color:#C2412F;font-weight:600}.st-prox{color:#9A6200;font-weight:600}.st-cin{color:#5D7183}
+  .of{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:5px 0;border-bottom:1px dashed #E1E9ED;font-size:.9rem}
   .of:last-child{border-bottom:0}
-  .of .n{color:#6B7B79;text-align:right;font-variant-numeric:tabular-nums}
-  .ac{color:#2F6F2A;font-weight:600}.ex{color:#8C9997}
-  .subt{font-size:.85rem;font-weight:600;color:#4E6462;margin:10px 0 2px 0}
-  .ganhou{background:#E4F0E1;border-radius:8px;padding:0 10px}
+  .of .n{color:#5D7183;text-align:right;font-variant-numeric:tabular-nums}
+  .ac{color:#0E7C70;font-weight:600}.ex{color:#8597A6}
+  .subt{font-size:.85rem;font-weight:600;color:#3E5568;margin:10px 0 2px 0}
+  .ganhou{background:#D7F5EE;border-radius:8px;padding:0 10px}
   .ganhou .of{border-bottom:0}
-  .fim{border-left:4px solid #1D5C63;background:#E6F0EE;padding:8px 12px;border-radius:0 8px 8px 0;margin-top:8px;font-size:.92rem}
-  .fim.perdida{border-color:#B43C2A;background:#F7E3DE}
-  .bolha{background:#fff;border:1px solid #D3DDDA;border-radius:12px 12px 12px 3px;padding:9px 12px;margin:4px 0;max-width:620px;font-size:.92rem}
-  .bolha.eu{margin-left:auto;background:#DCEDE8;border-radius:12px 12px 3px 12px;max-width:260px;text-align:right}
+  .fim{border-left:4px solid #0B4F6C;background:#E8F7F4;padding:8px 12px;border-radius:0 8px 8px 0;margin-top:8px;font-size:.92rem}
+  .fim.perdida{border-color:#C2412F;background:#FFE6E1}
+  .bolha{background:#fff;border:1px solid #DCE5EA;border-radius:12px 12px 12px 3px;padding:9px 12px;margin:4px 0;max-width:620px;font-size:.92rem}
+  .bolha.eu{margin-left:auto;background:#D7F5EE;border-radius:12px 12px 3px 12px;max-width:260px;text-align:right}
   .barras{display:grid;gap:8px;margin:8px 0}
   .br{display:grid;grid-template-columns:190px 1fr 120px;gap:12px;align-items:center;font-size:.92rem}
-  .br .t{height:16px;background:#DCE4E2;border-radius:3px;overflow:hidden}
-  .br .t div{height:100%;background:#1D5C63}
-  .legenda{font-size:.82rem;color:#4E6462;margin-top:6px}
+  .br .t{height:16px;background:#E1E9ED;border-radius:3px;overflow:hidden}
+  .br .t div{height:100%;background:#0B4F6C}
+  .legenda{font-size:.82rem;color:#3E5568;margin-top:6px}
   section[data-testid="stSidebar"][data-collapsed="false"]{width:272px!important;min-width:272px!important}
   [data-testid="stSidebar"] [data-testid="stSidebarContent"]{padding-top:0}
   [data-testid="stSidebarUserContent"]{padding:0 16px 16px 16px}
-  [data-testid="stSidebar"] [data-testid="stVerticalBlock"] [data-testid="stVerticalBlock"]{background:#fff;border-radius:12px;
-          border-color:#D3DDDA!important}
-  .sb-marca{display:flex;align-items:center;gap:10px;margin:-2.2rem 0 14px 0}
-  .sb-nome{font-size:1.35rem;font-weight:800;letter-spacing:-.01em;color:#17302F;line-height:1.1}
-  .sb-desc{font-size:.78rem;color:#6B7B79}
-  .sb-sec{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6B7B79;margin:-2px 0 2px 0}
-  .sb-nota{font-size:.78rem;color:#4E6462;line-height:1.5;margin-top:4px}
+  [data-testid="stSidebar"] [data-testid="stVerticalBlock"] [data-testid="stVerticalBlock"]{background:rgba(255,255,255,.06);border-radius:12px;
+          border-color:rgba(255,255,255,.16)!important}
+  .sb-marca{margin:-2.2rem 0 16px 0}
+  .sb-desc{font-size:.8rem;color:rgba(255,255,255,.75);margin-top:6px}
+  .sb-sec{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7FE3D5;margin:-2px 0 2px 0}
+  .sb-nota{font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.5;margin-top:4px}
+  .sb-nota b{color:#fff}
+  .marca{display:inline-flex;align-items:center;gap:8px;vertical-align:middle}
+  .marca-nome{font-family:"Sora",sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1}
+  h1,h2,h3,h4,.painel-t,.cab-un,.cx-resumo b{font-family:"Sora",sans-serif}
   .mapa{width:100%;height:auto;display:block;margin:-4px 0 6px 0}
-  .painel{background:#fff;border:1px solid #D3DDDA;border-radius:14px;padding:18px 22px 16px;margin:4px 0 14px 0}
+  .painel{background:#fff;border:1px solid #DCE5EA;border-radius:14px;padding:18px 22px 16px;margin:4px 0 14px 0}
   .painel-t{font-size:1.15rem;font-weight:700;margin-bottom:12px}
   .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 24px}
-  .kpi-t{display:flex;align-items:center;gap:8px;font-size:.88rem;color:#4E6462}
+  .kpi-t{display:flex;align-items:center;gap:8px;font-size:.88rem;color:#3E5568}
   .kpi-v{font-size:2.1rem;font-weight:700;line-height:1.15;margin:6px 0 2px;font-variant-numeric:tabular-nums}
-  .kpi-s{font-size:.82rem;color:#6B7B79}
-  .painel-g{display:grid;grid-template-columns:1fr 1fr;gap:12px 32px;margin-top:16px;padding-top:14px;border-top:1px solid #E3E9E7}
-  .painel-s{font-size:.85rem;font-weight:600;color:#4E6462;margin-bottom:6px}
-  .pilha{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#E3E9E7;gap:2px}
-  .pilha-leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.82rem;color:#4E6462;margin-top:6px}
+  .kpi-s{font-size:.82rem;color:#5D7183}
+  .painel-g{display:grid;grid-template-columns:1fr 1fr;gap:12px 32px;margin-top:16px;padding-top:14px;border-top:1px solid #E4EBEF}
+  .painel-s{font-size:.85rem;font-weight:600;color:#3E5568;margin-bottom:6px}
+  .pilha{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#E4EBEF;gap:2px}
+  .pilha-leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.82rem;color:#3E5568;margin-top:6px}
   .pilha-leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
   .semantica{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 18px;margin:2px 0 12px 0}
   .semantica>div{display:flex;align-items:flex-start;gap:8px;font-size:.88rem}
-  .semantica small{display:block;color:#6B7B79;font-size:.78rem}
+  .semantica small{display:block;color:#5D7183;font-size:.78rem}
   .pac{display:flex;align-items:flex-start;gap:10px}
-  .chip-sem{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.74rem;font-weight:600;color:#1D5C63;
-            background:#DCEDE8;white-space:nowrap}
-  .chip60{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;font-weight:700;color:#1F5A99;background:#DCE9F7}
+  .chip-sem{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.74rem;font-weight:600;color:#0B4F6C;
+            background:#D7F5EE;white-space:nowrap}
+  .chip60{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;font-weight:700;color:#0B4F6C;background:#DCEAF1}
   details.rk{position:relative;flex:none;margin-top:3px}
   details.rk summary{list-style:none;cursor:pointer;display:block}
   details.rk summary::-webkit-details-marker{display:none}
-  .rk-dot{display:block;width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 0 0 4px #C9D5D2;transition:box-shadow .15s}
-  details.rk summary:hover .rk-dot,details.rk[open] .rk-dot{box-shadow:0 0 0 3px #fff,0 0 0 5px #1D5C63}
-  .rk-pop{position:absolute;left:-6px;top:24px;z-index:20;width:320px;background:#fff;border:1px solid #C9D5D2;border-radius:10px;
-          box-shadow:0 8px 24px rgba(23,48,47,.16);padding:12px 14px;font-size:.86rem;color:#17302F}
+  .rk-dot{display:block;width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 0 0 4px #C9D6DE;transition:box-shadow .15s}
+  details.rk summary:hover .rk-dot,details.rk[open] .rk-dot{box-shadow:0 0 0 3px #fff,0 0 0 5px #0B4F6C}
+  .rk-pop{position:absolute;left:-6px;top:24px;z-index:20;width:320px;background:#fff;border:1px solid #C9D6DE;border-radius:10px;
+          box-shadow:0 8px 24px rgba(23,48,47,.16);padding:12px 14px;font-size:.86rem;color:#0F1E2E}
   .rk-cab{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:6px}
-  .rk-sec{font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:#4E6462;margin:8px 0 2px}
+  .rk-sec{font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:#3E5568;margin:8px 0 2px}
   .rk-pop ul{margin:0;padding-left:18px}
-  .rk-pe{margin-top:8px;color:#6B7B79;font-size:.8rem}
+  .rk-pe{margin-top:8px;color:#5D7183;font-size:.8rem}
   @media (max-width:760px){.kpis,.semantica{grid-template-columns:repeat(2,minmax(0,1fr))}.painel-g{grid-template-columns:1fr}}
-  .cx-svg{width:100%;height:auto;background:#fff;border:1px solid #D3DDDA;border-radius:10px;margin:6px 0 2px 0}
-  .cx-svg .cx-dt{font-size:15px;font-weight:600;fill:#1F2D2B}
-  .cx-svg .cx-sub{font-size:12.5px;fill:#6B7B79}
-  .cx-svg .cx-rot{font-size:13px;font-weight:600;fill:#1D5C63}
+  .cx-svg{width:100%;height:auto;background:#fff;border:1px solid #DCE5EA;border-radius:10px;margin:6px 0 2px 0}
+  .cx-svg .cx-dt{font-size:15px;font-weight:600;fill:#0F1E2E}
+  .cx-svg .cx-sub{font-size:12.5px;fill:#5D7183}
+  .cx-svg .cx-rot{font-size:13px;font-weight:600;fill:#0B4F6C}
   .cx-svg .cx-n{font-size:12px;font-weight:700;fill:#fff}
   .cx-arco{stroke-dasharray:1200;stroke-dashoffset:1200;animation:cxdesenha .9s ease-out forwards}
   @keyframes cxdesenha{to{stroke-dashoffset:0}}
   .cx-resumo{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:4px 0 10px 0;font-size:.95rem}
   .cx-tag{padding:2px 10px;border-radius:999px;font-weight:600;font-size:.85rem}
-  .cx-tag.ok{background:#E4F0E1;color:#2F6F2A}.cx-tag.perdida{background:#F7E3DE;color:#B43C2A}
+  .cx-tag.ok{background:#D7F5EE;color:#0E7C70}.cx-tag.perdida{background:#FFE6E1;color:#C2412F}
   .cx-etapa{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;margin:14px 0 2px 0;font-weight:600}
-  .cx-num{width:26px;height:26px;border-radius:50%;background:#1D5C63;color:#fff;display:flex;align-items:center;
+  .cx-num{width:26px;height:26px;border-radius:50%;background:#0B4F6C;color:#fff;display:flex;align-items:center;
           justify-content:center;font-size:.85rem}
-  .cx-mov{margin:4px 0 4px 13px;padding:6px 0 6px 22px;border-left:3px solid #1D5C63;font-size:.93rem;color:#1F2D2B}
+  .cx-mov{margin:4px 0 4px 13px;padding:6px 0 6px 22px;border-left:3px solid #0B4F6C;font-size:.93rem;color:#0F1E2E}
 </style>
 """, unsafe_allow_html=True)
 
@@ -192,7 +195,7 @@ def mapa_unidade(unidade):
         return "M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in (f(*p) for p in anel)) + "Z"
 
     h = [f'<svg viewBox="0 0 {W} {H:.0f}" class="mapa" role="img" aria-label="Mapa de Vitória com a unidade escolhida">']
-    h += [f'<path d="{caminho(anel)}" fill="#B9C3C1"/>' for anel in M["vitoria"]]
+    h += [f'<path d="{caminho(anel)}" fill="#2C7896"/>' for anel in M["vitoria"]]
     for nome, (lat, lon) in M["bairros"].items():
         x, y = f(lon, lat)
         h.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.2" fill="#fff" fill-opacity=".85">'
@@ -200,7 +203,7 @@ def mapa_unidade(unidade):
     if unidade in M["bairros"]:
         x, y = f(*M["bairros"][unidade][::-1])
         h.append(f'<g transform="translate({x:.1f},{y:.1f})"><title>{escape(unidade.title())}</title>'
-                 '<path d="M0,0 C-2.5,-6 -9,-10 -9,-16 A9,9 0 1 1 9,-16 C9,-10 2.5,-6 0,0Z" fill="#C0392B" '
+                 '<path d="M0,0 C-2.5,-6 -9,-10 -9,-16 A9,9 0 1 1 9,-16 C9,-10 2.5,-6 0,0Z" fill="#FF6B57" '
                  'stroke="#fff" stroke-width="1.5"/><circle cx="0" cy="-16" r="3.4" fill="#fff"/></g>')
     h.append("</svg>")
     return "".join(h)
@@ -210,15 +213,23 @@ VERSAO = versao_dados()
 prev, resumo, placar = carregar(VERSAO)
 
 # ---------------- barra lateral ----------------
-LOGO = ('<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#1D5C63"/>'
-        '<path d="M24.5 12.5A9 9 0 1 0 25.6 19" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>'
-        '<path d="M20.6 11.6l4.3 1.2-.9-4.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" '
-        'stroke-linejoin="round"/><circle cx="17" cy="17" r="2.6" fill="#E8B04A"/></svg>')
+def simbolo(cor="#0B4F6C", tam=34):
+    """Símbolo Giro (identidade v1.0): G que vira seta, traço 16u, raio 40u."""
+    return (f'<svg width="{tam}" height="{tam}" viewBox="0 0 120 120" aria-hidden="true">'
+            f'<path d="M84.6,28.5 A40,40 0 1 0 100,60" fill="none" stroke="{cor}" stroke-width="16"/>'
+            f'<path d="M100,60 L72,60" stroke="{cor}" stroke-width="16" stroke-linecap="round"/>'
+            f'<path d="M102,42 L70.4,40.2 L92.6,11.8Z" fill="{cor}" stroke="{cor}" stroke-width="3" stroke-linejoin="round"/></svg>')
+
+
+def marca(cor="#0B4F6C", tam=34):
+    """Símbolo + nome "giro" em Sora (assinatura horizontal)."""
+    return (f'<span class="marca">{simbolo(cor, tam)}'
+            f'<span class="marca-nome" style="color:{cor};font-size:{tam * 0.95:.0f}px">giro</span></span>')
 
 
 with st.sidebar:
-    st.markdown(f'<div class="sb-marca">{LOGO}<div><div class="sb-nome">Giro</div>'
-                '<div class="sb-desc">Menos faltas, mais vagas</div></div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sb-marca">{marca("#FFFFFF", 30)}'
+                '<div class="sb-desc">Cada vaga encontra seu paciente.</div></div>', unsafe_allow_html=True)
     with st.container(border=True):
         st.markdown('<div class="sb-sec">Cenário</div>', unsafe_allow_html=True)
         valor = st.radio(":material/apartment: Tipo de serviço", ["Particular", "SUS"], index=0, horizontal=True,
@@ -257,8 +268,8 @@ MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "a
          "novembro", "dezembro"]
 ini, fim_per = prev.data_consulta.min(), prev.data_consulta.max()
 st.markdown(
-    f'<div class="cab"><div class="cab-l1"><div><span class="cab-t">Giro</span>'
-    f'<span class="cab-tag">Previsão de faltas e realocação de vagas</span></div>'
+    f'<div class="cab"><div class="cab-l1"><div class="cab-id">{marca("#0B4F6C", 36)}'
+    f'<span class="cab-tag">Realocação inteligente de consultas para clínicas privadas e para o SUS</span></div>'
     f'<span class="cab-st" title="Consultas reais de 2016; horários, respostas e fila são simulados">'
     f'<i></i>Simulação</span></div>'
     f'<div class="cab-un">Unidade {escape(unidade.title())} · Vitória (ES)</div>'
@@ -280,12 +291,12 @@ lib_u = ev_u[ev_u.tipo == "vaga_liberada"]
 aba1, aba2, aba3, aba4 = st.tabs(["Agenda", "Contatos", "Realocação", "Painel"])
 
 # ---------------- Agenda ----------------
-PONTO_RISCO = {"ALTO": "#C0392B", "MÉDIO": "#D4A017", "BAIXO": "#3F8F3A"}
+PONTO_RISCO = {"ALTO": "#FF6B57", "MÉDIO": "#FFB547", "BAIXO": "#14B8A6"}
 SEMANTICA = [  # (rótulo, cor do texto, fundo, significado, o que o Giro faz)
-    ("Alto", "#B43C2A", "#F7E3DE", "Requer atenção prioritária", "20% de maior risco do dia: pedido de confirmação 3 dias antes"),
-    ("Médio", "#8A6512", "#F5ECD2", "Requer acompanhamento", "30% seguintes: lembrete com botão “não vou”"),
-    ("Baixo", "#3E6B52", "#E1EEE6", "Sem alerta relevante", "Sem contato"),
-    ("Aviso 60+", "#1F5A99", "#DCE9F7", "Idoso na faixa Baixo", "Aviso 3 dias antes com botão “não vou”"),
+    ("Alto", "#C2412F", "#FFE6E1", "Requer atenção prioritária", "20% de maior risco do dia: pedido de confirmação 3 dias antes"),
+    ("Médio", "#9A6200", "#FFF0D4", "Requer acompanhamento", "30% seguintes: lembrete com botão “não vou”"),
+    ("Baixo", "#0E7C70", "#D7F5EE", "Sem alerta relevante", "Sem contato"),
+    ("Aviso 60+", "#0B4F6C", "#DCEAF1", "Idoso na faixa Baixo", "Aviso 3 dias antes com botão “não vou”"),
 ]
 ICONE = {  # ícones de traço, 18 px
     "agenda": '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/>',
@@ -336,17 +347,17 @@ with aba1:
     vagas_dia = [i for i in agenda.id_consulta if resp.get(i) in ("nao_vou", "remarcar")]
     st.markdown(
         '<div class="painel"><div class="painel-t">Visão geral do dia</div><div class="kpis">'
-        + kpi("agenda", "#2F6FB0", "Consultas no dia", n_cons, "Total agendado")
-        + kpi("contato", "#1D5C63", "Contatadas", n_cont, f"{n_cont / max(n_cons, 1):.0%} das consultas")
-        + kpi("vaga", "#3F8F3A", "Vagas liberadas", len(vagas_dia), "Disponíveis para realocação")
-        + kpi("falta", "#C77A1A", "Faltas reais", int(agenda.falta.sum()), "Do dataset, só para avaliar o modelo",
+        + kpi("agenda", "#0B4F6C", "Consultas no dia", n_cons, "Total agendado")
+        + kpi("contato", "#0B4F6C", "Contatadas", n_cont, f"{n_cont / max(n_cons, 1):.0%} das consultas")
+        + kpi("vaga", "#14B8A6", "Vagas liberadas", len(vagas_dia), "Disponíveis para realocação")
+        + kpi("falta", "#E0951F", "Faltas reais", int(agenda.falta.sum()), "Do dataset, só para avaliar o modelo",
               "Vem do dataset real. Serve só para avaliar; a unidade não vê esse número antes da consulta.")
         + '</div><div class="painel-g"><div><div class="painel-s">Risco das consultas</div>'
         + barra_empilhada([(FAIXA[f][0], int((agenda.faixa == f).sum()), PONTO_RISCO[f]) for f in FAIXA])
         + '</div><div><div class="painel-s">Respostas aos contatos</div>'
-        + barra_empilhada([("Confirmaram", sum(resp.get(i) == "vou" for i in agenda.id_consulta), "#3F8F3A"),
-                           ("Liberaram a vaga", len(vagas_dia), "#C0392B"),
-                           ("Sem resposta", n_cont - sum(i in resp for i in agenda.id_consulta), "#AEBBB8")])
+        + barra_empilhada([("Confirmaram", sum(resp.get(i) == "vou" for i in agenda.id_consulta), "#14B8A6"),
+                           ("Liberaram a vaga", len(vagas_dia), "#FF6B57"),
+                           ("Sem resposta", n_cont - sum(i in resp for i in agenda.id_consulta), "#C5D1D8")])
         + '</div></div></div>', unsafe_allow_html=True)
 
     st.markdown('<div class="semantica">' + "".join(
@@ -413,8 +424,8 @@ FIM_TXT = {
     "nao_preenchida": ("perdida", "Vaga não preenchida",
                        "Ninguém da fila aceitou a vaga antes do prazo."),
 }
-FIM_PONTO = {"fila_sem_horario": ("#3F8F3A", "preenchida pela fila"), "volta_agenda": ("#3F8F3A", "volta à agenda"),
-             "perdida": ("#B43C2A", "perdido")}
+FIM_PONTO = {"fila_sem_horario": ("#14B8A6", "preenchida pela fila"), "volta_agenda": ("#14B8A6", "volta à agenda"),
+             "perdida": ("#C2412F", "perdido")}
 FIM_CURTO = {"fila_sem_horario": "paciente da fila atendido", "volta_agenda": "volta para a agenda",
              "perdida": "último horário perdido", "nao_preenchida": "não preenchida"}
 
@@ -462,11 +473,11 @@ def svg_mapa(etapas, fim, passo):
     x = lambda d: X0 + (X1 - X0) * (d - d0).days / vao if len(set(datas)) > 1 else (X0 + X1) / 2
     partes = [f'<svg viewBox="0 0 {W} 215" class="cx-svg" role="img" aria-label="Mapa da cascata">',
               '<defs><marker id="pt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" '
-              'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1D5C63"/></marker></defs>',
-              f'<line x1="{X0 - 30}" y1="{Y}" x2="{X1 + 30}" y2="{Y}" stroke="#C9D5D2" stroke-width="2"/>']
+              'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0B4F6C"/></marker></defs>',
+              f'<line x1="{X0 - 30}" y1="{Y}" x2="{X1 + 30}" y2="{Y}" stroke="#C9D6DE" stroke-width="2"/>']
     # semanas no eixo
     for d in pd.date_range(d0.normalize(), d1.normalize(), freq="W-MON"):
-        partes.append(f'<line x1="{x(d):.0f}" y1="{Y - 5}" x2="{x(d):.0f}" y2="{Y + 5}" stroke="#C9D5D2"/>')
+        partes.append(f'<line x1="{x(d):.0f}" y1="{Y - 5}" x2="{x(d):.0f}" y2="{Y + 5}" stroke="#C9D6DE"/>')
     vis = etapas[:passo]
     for k, e in enumerate(vis):
         a = e["aceite"]
@@ -476,29 +487,29 @@ def svg_mapa(etapas, fim, passo):
         h = 70 + 45 * (k % 2)  # alterna a altura para os rótulos de arcos vizinhos não se sobreporem
         meio = (xa + xb) / 2
         partes.append(f'<path d="M{xa:.0f},{Y - 10} Q{meio:.0f},{Y - h} {xb + 6:.0f},{Y - 12}" fill="none" '
-                      f'stroke="#1D5C63" stroke-width="2.5" marker-end="url(#pt)" class="cx-arco"/>')
+                      f'stroke="#0B4F6C" stroke-width="2.5" marker-end="url(#pt)" class="cx-arco"/>')
         dias = (etapas[k + 1]["data"] - e["data"]).days
         ytop = Y - h / 2 - 18  # logo acima do topo da curva
-        partes.append(f'<circle cx="{meio - 34:.0f}" cy="{ytop - 5:.0f}" r="10" fill="#1D5C63"/>'
+        partes.append(f'<circle cx="{meio - 34:.0f}" cy="{ytop - 5:.0f}" r="10" fill="#0B4F6C"/>'
                       f'<text x="{meio - 34:.0f}" y="{ytop:.0f}" text-anchor="middle" class="cx-n">{k + 1}</text>'
                       f'<text x="{meio - 19:.0f}" y="{ytop:.0f}" class="cx-rot">−{plural(dias, "dia", "dias")}</text>')
     for k, e in enumerate(vis):
         final = k == len(etapas) - 1 and passo == len(etapas)
         if k == 0:
-            cor, rot = "#B43C2A", "liberada"
+            cor, rot = "#C2412F", "liberada"
         elif final and fim in FIM_PONTO:
             cor, rot = FIM_PONTO[fim]
         else:
-            cor, rot = "#1D5C63", "ficou livre"
+            cor, rot = "#0B4F6C", "ficou livre"
         xx = x(e["data"])
         partes.append(f'<circle cx="{xx:.0f}" cy="{Y}" r="9" fill="{cor}" stroke="#fff" stroke-width="3"/>')
         partes.append(f'<text x="{xx:.0f}" y="{Y + 30}" text-anchor="middle" class="cx-dt">{e["data"]:%d/%m}</text>')
         partes.append(f'<text x="{xx:.0f}" y="{Y + 48}" text-anchor="middle" class="cx-sub">{escape(rot)}</text>')
     if passo == len(etapas) and fim == "fila_sem_horario":
         xx = x(etapas[-1]["data"])
-        partes.append(f'<path d="M{xx:.0f},22 L{xx:.0f},{Y - 14}" stroke="#3F8F3A" stroke-width="2.5" '
+        partes.append(f'<path d="M{xx:.0f},22 L{xx:.0f},{Y - 14}" stroke="#14B8A6" stroke-width="2.5" '
                       f'stroke-dasharray="5 4" marker-end="url(#pt)"/>'
-                      f'<text x="{xx:.0f}" y="16" text-anchor="middle" class="cx-rot" fill="#3F8F3A">'
+                      f'<text x="{xx:.0f}" y="16" text-anchor="middle" class="cx-rot" fill="#14B8A6">'
                       f'fila da regulação</text>')
     partes.append("</svg>")
     return "".join(partes)
@@ -586,8 +597,8 @@ with aba3:
         c1.metric("Vagas liberadas na unidade", len(todas))
         c2.metric("Com remarcação", int((todas.remarcacoes > 0).sum()),
                   f"{(todas.remarcacoes > 0).mean():.0%} das liberadas".replace(".", ","), delta_color="off")
-        c3.metric("Pacientes que mudaram de horário", int(todas.remarcacoes.sum()))
-        c4.metric("Maior cascata", f"{int(todas.remarcacoes.max())} remarcações")
+        c3.metric("Pacientes remarcados", int(todas.remarcacoes.sum()), help="Pacientes que mudaram de horário.")
+        c4.metric("Maior cascata", int(todas.remarcacoes.max()), help="Número de remarcações na maior cascata.")
 
         tem_dia = (do_dia.remarcacoes > 0).any()
         origem = st.radio("Cascatas", ["Deste dia", "De todo o período"], horizontal=True,

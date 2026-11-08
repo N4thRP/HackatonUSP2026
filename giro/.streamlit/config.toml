@@ -1,10 +1,19 @@
+# Identidade visual Giro v1.0 (Figma): Azul Giro, Verde Cuidado, Coral Pulso, Âmbar Atenção,
+# Menta, Tinta, Ardósia e Névoa; Sora para títulos e marca, Inter para interface e texto.
 [theme]
 base = "light"
-primaryColor = "#1D5C63"
-backgroundColor = "#F3F6F5"
-secondaryBackgroundColor = "#E6ECEA"
-textColor = "#17302F"
-font = "sans serif"
+primaryColor = "#0B4F6C"            # Azul Giro: marca, títulos, seleção
+backgroundColor = "#F4F7F8"         # Névoa: superfícies
+secondaryBackgroundColor = "#E7EEF1"
+textColor = "#0F1E2E"               # Tinta: texto principal
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+headingFont = "Sora:https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap"
+
+[theme.sidebar]
+backgroundColor = "#0B4F6C"         # barra lateral em Azul Giro, como no mockup da clínica
+secondaryBackgroundColor = "#135E7F"
+textColor = "#FFFFFF"
+primaryColor = "#14B8A6"            # Verde Cuidado: ações
 
 [server]
 headless = true
