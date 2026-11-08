@@ -1,823 +1,433 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vaga Viva · Predição de cancelamento de última hora e reocupação de horários pela fila · Hackathon USP 2026</title>
-  <meta name="description" content="Documento vivo do projeto Vaga Viva (Hackathon USP 2026): prevê cancelamentos e faltas de última hora, confirma ativamente com o paciente e oferece o horário vago a quem está na fila. Para hospitais privados e públicos.">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projeto — Vaga Viva · Previsão de no-show e realocação de consultas</title>
+<style>
+  :root{
+    --bg:#f6f4ef; --paper:#fffdf8; --ink:#1d1f1e; --muted:#5f6461; --line:#dedad0;
+    --accent:#0f6b5c; --accent-soft:#e2efe9; --warn:#a4501b; --warn-soft:#f6e6da;
+    --ok:#2f6f2a; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans)}
+  header.top{position:sticky;top:0;z-index:5;background:rgba(246,244,239,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .bar{max-width:1080px;margin:0 auto;padding:10px 24px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .bar strong{font-size:15px;letter-spacing:.02em}
+  nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+  nav a{font:12px var(--mono);color:var(--muted);text-decoration:none;padding:4px 7px;border-radius:4px}
+  nav a:hover{background:var(--accent-soft);color:var(--accent)}
+  .tools{display:flex;gap:6px}
+  button{font:12px var(--mono);border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 10px;border-radius:5px;cursor:pointer}
+  button:hover{border-color:var(--accent);color:var(--accent)}
+  button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  main{max-width:1080px;margin:0 auto;padding:32px 24px 96px}
+  .hero{padding:24px 0 8px}
+  .hero .kicker{font:12px var(--mono);color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
+  .hero h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:8px 0 10px;letter-spacing:-.01em}
+  .hero p{max-width:720px;color:var(--muted);margin:0}
+  section{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:26px 28px;margin:22px 0;scroll-margin-top:70px}
+  section > h2{display:flex;gap:14px;align-items:baseline;margin:0 0 14px;font-size:20px;letter-spacing:.01em}
+  section > h2 .n{font:600 13px var(--mono);color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:4px}
+  h3{font-size:15px;margin:20px 0 6px}
+  p{margin:8px 0}
+  ul,ol{margin:8px 0;padding-left:22px}
+  li{margin:4px 0}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+  code,.mono{font-family:var(--mono);font-size:13px}
+  code{background:#f0ede5;padding:1px 5px;border-radius:3px}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:#fff}
+  .card h4{margin:0 0 6px;font-size:14px}
+  .stat{font:600 26px var(--mono);color:var(--accent);line-height:1.1}
+  .stat + .lbl{font-size:13px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font:600 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.04em;background:#faf8f3}
+  td.id{font:600 13px var(--mono);color:var(--accent);white-space:nowrap}
+  .tag{display:inline-block;font:11px var(--mono);padding:2px 7px;border-radius:10px;border:1px solid var(--line);white-space:nowrap}
+  .tag.pend{background:#f1efe9;color:var(--muted)}
+  .tag.base{background:var(--accent-soft);color:var(--accent);border-color:#bcd9cf}
+  .tag.open{background:var(--warn-soft);color:var(--warn);border-color:#e9c9b1}
+  .tag.ok{background:#e4f0e1;color:var(--ok);border-color:#c3dcbd}
+  .bars{display:grid;gap:6px;margin:10px 0}
+  .brow{display:grid;grid-template-columns:150px 1fr 60px;gap:10px;align-items:center;font-size:13px}
+  .btrack{height:12px;background:#efece4;border-radius:3px;overflow:hidden}
+  .bfill{height:100%;background:var(--accent)}
+  .bfill.hi{background:var(--warn)}
+  .note{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 6px 6px 0;margin:12px 0;font-size:14px}
+  .note.info{border-color:var(--accent);background:var(--accent-soft)}
+  .flow{display:flex;gap:0;flex-wrap:wrap;margin:14px 0}
+  .step{flex:1 1 160px;border:1px solid var(--line);background:#fff;padding:12px 14px;position:relative}
+  .step:first-child{border-radius:8px 0 0 8px}
+  .step:last-child{border-radius:0 8px 8px 0}
+  .step .k{font:11px var(--mono);color:var(--accent)}
+  .step b{display:block;margin:2px 0 4px}
+  /* UI lab */
+  .lab{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:10px}
+  .frame{border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+  .frame .fh{font:11px var(--mono);color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--line);background:#faf8f3;display:flex;justify-content:space-between}
+  .frame .fb{padding:12px}
+  .row{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:8px 6px;border-bottom:1px dashed var(--line);font-size:13px}
+  .row:last-child{border-bottom:0}
+  .risk{font:600 11px var(--mono);padding:3px 7px;border-radius:4px;text-align:center}
+  .r-hi{background:var(--warn-soft);color:var(--warn)}
+  .r-md{background:#f4efd9;color:#7a6412}
+  .r-lo{background:#e4f0e1;color:var(--ok)}
+  .chat{background:#ece9e1;border-radius:8px;padding:12px;display:grid;gap:8px}
+  .bubble{background:#fff;border-radius:10px 10px 10px 2px;padding:9px 12px;font-size:13px;max-width:88%}
+  .bubble.me{justify-self:end;background:#d6ece4;border-radius:10px 10px 2px 10px}
+  .opts{display:flex;gap:6px;flex-wrap:wrap}
+  .opts span{font:12px var(--mono);border:1px solid var(--accent);color:var(--accent);padding:3px 9px;border-radius:12px;background:#fff}
+  .rank{display:grid;grid-template-columns:22px 1fr;gap:8px;padding:8px 4px;border-bottom:1px dashed var(--line);font-size:13px}
+  .rank:last-child{border-bottom:0}
+  .rank .p{font:600 13px var(--mono);color:var(--accent)}
+  .chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+  .chips i{font-style:normal;font:11px var(--mono);background:#f1efe9;padding:1px 6px;border-radius:3px;color:var(--muted)}
+  .empty{border:2px dashed var(--line);border-radius:8px;padding:28px;text-align:center;color:var(--muted);font:13px var(--mono)}
+  .sources{font-size:13px}
+  .sources a{color:var(--accent)}
+  body.editing [data-edit]{outline:1px dashed #b8c9c3;outline-offset:4px;border-radius:2px}
+  body.editing [data-edit]:focus{outline:2px solid var(--accent);background:#fbfffd}
+  footer{max-width:1080px;margin:0 auto;padding:0 24px 40px;color:var(--muted);font:12px var(--mono)}
+  @media print{header.top,.tools{display:none} section{break-inside:avoid}}
+</style>
 </head>
 <body>
 
-  <header class="topbar">
-    <a class="brand" href="#inicio">Vaga Viva</a>
-    <nav aria-label="Seções do documento">
-      <a href="#intencao">Intenção</a>
-      <a href="#dores">Dores</a>
-      <a href="#pesquisa">Pesquisa</a>
-      <a href="#objetivos">Objetivos</a>
-      <a href="#requisitos">Requisitos</a>
-      <a href="#metricas">Métricas</a>
-      <a href="#lab">Lab de UI</a>
-      <a href="#decisoes">Decisões</a>
-      <a href="#workflow">Workflow</a>
-      <a href="#diario">Diário</a>
+<header class="top">
+  <div class="bar">
+    <strong>Vaga Viva</strong>
+    <nav>
+      <a href="#s01">01 Intenção</a><a href="#s02">02 Dores</a><a href="#s03">03 Pesquisa</a>
+      <a href="#s04">04 Objetivos</a><a href="#s05">05 Requisitos</a><a href="#s06">06 Métricas</a>
+      <a href="#s07">07 UI</a><a href="#s08">08 Decisões</a><a href="#s09">09 Workflow</a><a href="#s10">10 Placar</a>
     </nav>
-  </header>
+    <div class="tools">
+      <button id="btnEdit" title="Liga/desliga edição direta do texto">Editar</button>
+      <button id="btnSave" title="Baixa este arquivo com as suas edições">Baixar .html</button>
+      <button id="btnReset" title="Descarta edições salvas neste navegador">Restaurar</button>
+    </div>
+  </div>
+</header>
 
-  <main>
+<main>
+  <div class="hero">
+    <div class="kicker">Hackathon USP · Saúde para todos: soluções para reduzir barreiras no acesso à saúde</div>
+    <h1 data-edit>Prever a falta, confirmar com o paciente e devolver a vaga para quem está na fila.</h1>
+    <p data-edit>Documento vivo do projeto. Cada seção tem um texto inicial curto para a equipe corrigir antes de escrever o MVP. Nome “Vaga Viva” é provisório.</p>
+  </div>
 
-    <!-- ABERTURA -->
-    <section id="inicio" class="hero">
-      <p class="eyebrow">Hackathon USP 2026 · Saúde para todos</p>
-      <h1>Nenhum horário de saúde deve ficar vazio enquanto alguém espera na fila.</h1>
-      <p class="lead">
-        Material de produto de uma empresa (simulada) que vende a hospitais, públicos e privados, um
-        sistema que <strong>prevê quais agendamentos têm risco de cair em cima da hora, confirma
-        ativamente com o paciente e, quando o horário vaga, oferece-o a quem está na fila</strong>.
-        O hospital recupera atendimentos que hoje se perdem, e a fila anda mais rápido.
-      </p>
-      <p class="hero-note">
-        Status: <strong>em construção</strong>. Preços, taxas de falta do cliente, pesos do modelo e taxa de
-        aceite das ofertas são hipóteses a validar e estão marcados como tal. O sistema apoia o gestor e a recepção e
-        não substitui a regulação nem a decisão clínica. Nome provisório.
-      </p>
-    </section>
+  <!-- 01 -->
+  <section id="s01">
+    <h2><span class="n">01</span>INTENÇÃO</h2>
+    <div data-edit>
+      <p>Construir um produto que <b>prevê quais pacientes têm maior chance de faltar</b> (no-show) a uma consulta agendada, <b>entra em contato</b> com eles antes da data e, quando o paciente <b>confirma ativamente</b> que não vai, <b>realoca o horário</b> para outro paciente da agenda futura.</p>
+      <p><b>Quem tem o problema:</b> o paciente que espera na fila por uma vaga que, no dia, fica vazia.<br>
+      <b>Quem paga pela solução:</b> o hospital ou clínica, que deixa de perder receita e capacidade com horários ociosos.</p>
+      <p>Três atividades, nesta ordem: <b>1. Prever → 2. Contatar → 3. Realocar.</b></p>
+      <p><b>Como ganha dinheiro:</b> mensalidade fixa por unidade de saúde (clínica, ambulatório ou hospital). O argumento de venda é que a mensalidade custa uma fração da receita que a unidade recupera com as vagas reocupadas.</p>
+    </div>
+    <div class="flow">
+      <div class="step"><span class="k">ETAPA 1</span><b>Prever</b><span class="small muted">Modelo dá a probabilidade de falta de cada consulta futura.</span></div>
+      <div class="step"><span class="k">ETAPA 2</span><b>Contatar</b><span class="small muted">Mensagem para os de maior risco. Só cancela com resposta ativa do paciente.</span></div>
+      <div class="step"><span class="k">ETAPA 3</span><b>Realocar</b><span class="small muted">Vaga liberada é oferecida à lista de espera: quem espera há mais tempo primeiro, ou todos ao mesmo tempo.</span></div>
+    </div>
+  </section>
 
-    <!-- 1. INTENÇÃO -->
-    <section id="intencao">
-      <p class="kicker">1 · Intenção</p>
-      <h2>Visão, produto e cliente</h2>
+  <!-- 02 -->
+  <section id="s02">
+    <h2><span class="n">02</span>DORES</h2>
+    <div class="grid g3" data-edit>
+      <div class="card"><h4>Paciente na fila</h4><p class="small">Espera semanas por uma consulta enquanto horários ficam vazios porque alguém faltou sem avisar. Ninguém oferece a ele o horário que sobrou.</p></div>
+      <div class="card"><h4>Hospital / clínica</h4><p class="small">Médico, sala e equipe pagos e parados. Receita perdida em cada falta, sem previsibilidade para remanejar a agenda.</p></div>
+      <div class="card"><h4>Equipe de agendamento</h4><p class="small">Confirma por telefone, sem saber em quem focar. Quando descobre a desistência, já é tarde para encaixar outro paciente.</p></div>
+      <div class="card"><h4>Paciente que vai faltar</h4><p class="small">Muitas vezes esqueceu, ou não tem como avisar com facilidade. Um canal simples de “não vou” resolve parte do problema.</p></div>
+    </div>
+  </section>
 
-      <blockquote class="intent">
-        Que cada horário de consulta, exame ou cirurgia que seria perdido vá para quem está esperando,
-        e que isso seja bom negócio para o hospital que o oferece.
-      </blockquote>
+  <!-- 03 -->
+  <section id="s03">
+    <h2><span class="n">03</span>PESQUISA</h2>
+    <h3>Dataset fornecido</h3>
+    <p data-edit class="small muted"><code>KaggleV2-May-2016.csv</code> — consultas na rede pública de Vitória (ES). Agendamentos de 10/11/2015 a 08/06/2016; consultas de 29/04 a 08/06/2016. Colunas: paciente, consulta, sexo, data do agendamento, data da consulta, idade, bairro da unidade, Bolsa Família, hipertensão, diabetes, alcoolismo, deficiência, SMS recebido, no-show.</p>
+    <div class="grid g3" style="margin:12px 0">
+      <div class="card"><div class="stat">110.527</div><div class="lbl">consultas</div></div>
+      <div class="card"><div class="stat">62.299</div><div class="lbl">pacientes distintos · 81 bairros</div></div>
+      <div class="card"><div class="stat">20,2%</div><div class="lbl">taxa de no-show geral</div></div>
+    </div>
 
-      <p>
-        O tema do desafio é <em>"Saúde para todos: soluções para reduzir barreiras no acesso à saúde"</em>, e a
-        entrega esperada é principalmente <strong>um modelo</strong> de negócio que escala. A barreira que atacamos é a
-        <strong>espera</strong>: há gente na fila por especialista, ao mesmo tempo em que uma parte dos horários é
-        perdida por faltas e cancelamentos sem aviso.
-      </p>
-
-      <h3>O teste da startup</h3>
-      <div class="table-wrap">
-        <table>
-          <tbody>
-            <tr><th scope="row">Quem sofre</th><td>O paciente que espera meses na fila por consulta, exame ou cirurgia. Em segundo plano, o paciente que falta por falta de transporte, esquecimento ou horário ruim.</td></tr>
-            <tr><th scope="row">Quem paga</th><td>O hospital ou a clínica: gestor financeiro e gestor de agenda no privado; secretaria de saúde, direção do hospital e regulação no público.</td></tr>
-            <tr><th scope="row">Por que paga</th><td>Privado: cada horário vazio é receita perdida, e a equipe e a estrutura já estão pagas. Público: o horário vazio é capacidade desperdiçada e fila que não anda, e há metas de redução de espera.</td></tr>
-            <tr><th scope="row">Onde entra</th><td>Na agenda e na confirmação de consultas que o hospital já faz (recepção, central de agendamento, WhatsApp).</td></tr>
-            <tr><th scope="row">Como escala</th><td>Por especialidade, por hospital, por rede e por município; depois exames de imagem, laboratórios e centrais de regulação.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Os quatro pacientes que o produto encontra</h3>
-      <p>Todo agendamento termina em um destes quatro casos. O produto age de um jeito diferente em cada um, e o valor vem sobretudo dos casos 1 e 2.</p>
-      <div class="table-wrap">
-        <table class="draft-table">
-          <thead><tr><th>Caso</th><th>Quem é</th><th>Hoje, sem o produto</th><th>Com o produto</th><th>Valor gerado</th></tr></thead>
-          <tbody>
-            <tr><td><strong>1</strong></td><td>Não vai à consulta e não avisaria.</td><td>Falta sem aviso; o horário fica vazio.</td><td>Pela notificação, avisa que não vai. A vaga é liberada e oferecida pelo <strong>motor de reoferta</strong>.</td><td>Horário reocupado e fila andando. <strong>É o diferencial.</strong></td></tr>
-            <tr><td><strong>2</strong></td><td>Iria, mas esqueceu a data.</td><td>Falta por esquecimento.</td><td>É lembrado, confirma e vai.</td><td>Falta evitada.</td></tr>
-            <tr><td><strong>3</strong></td><td>Vai e confirma.</td><td>Comparece.</td><td>Confirma em um toque. A agenda ganha previsibilidade.</td><td>Certeza; o contato com ele é leve.</td></tr>
-            <tr><td><strong>4</strong></td><td>Não vai e não responde aos avisos.</td><td>Falta sem aviso.</td><td>Contato escalonado (mensagem e ligação). Sem resposta, segue a política do hospital para horário não confirmado (D13).</td><td>Perda residual, que medimos e tentamos reduzir.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="small">O modelo de risco (7.1) estima a chance de o paciente cair nos casos 1, 2 ou 4. A confirmação ativa tenta transformar o caso 4 em caso 1 ou caso 2.</p>
-
-      <h3>O produto, em três movimentos</h3>
-      <div class="cards">
-        <article class="card focus">
-          <span class="tag">1 · Prever</span>
-          <h3>RISCO DE CANCELAR EM CIMA DA HORA</h3>
-          <p>Para cada agendamento, uma probabilidade explicável de falta ou cancelamento tardio, a partir de histórico,
-            antecedência, deslocamento, tipo de atendimento e resposta à confirmação.</p>
-        </article>
-        <article class="card focus">
-          <span class="tag">2 · Confirmar</span>
-          <h3>CONFIRMAÇÃO ATIVA</h3>
-          <p>O contato é mais intenso onde o risco é maior (dias antes, véspera e poucas horas antes). Quem não vai avisa
-            com um toque, e o horário é liberado a tempo.</p>
-        </article>
-        <article class="card focus">
-          <span class="tag">3 · Reocupar</span>
-          <h3>MOTOR DE REOFERTA</h3>
-          <p>Ao vagar, o horário é oferecido por mensagem automática a quem já tem consulta futura ou está na fila. A ordem é
-            <strong>primeiro a urgência</strong> e, dentro dela, a maior chance de aceitar (horário parecido, sem histórico de cancelamento,
-            perto do hospital). A primeira aceitação ocupa a vaga.</p>
-        </article>
-      </div>
-
-      <h3>Público e privado: mesmo motor, regras diferentes</h3>
-      <div class="two-col">
-        <div>
-          <h4>Hospitais e clínicas privados</h4>
-          <ul>
-            <li>Ganho direto: receita do atendimento recuperado.</li>
-            <li>Fila: lista de espera própria, filtrada por autorização do convênio.</li>
-            <li>Cobrança: mensalidade e parte do que for recuperado (hipótese).</li>
-          </ul>
-        </div>
-        <div>
-          <h4>Hospitais e ambulatórios públicos</h4>
-          <ul>
-            <li>Ganho: capacidade usada, mais produção e fila menor.</li>
-            <li>Fila: segue a ordem da regulação; o sistema sugere e a regulação valida.</li>
-            <li>Cobrança: contrato por serviço ou por município (hipótese a validar).</li>
-          </ul>
+    <div class="grid g2">
+      <div>
+        <h3>Antecedência do agendamento × falta</h3>
+        <div class="bars">
+          <div class="brow"><span>mesmo dia</span><div class="btrack"><div class="bfill" style="width:14%"></div></div><span class="mono">4,6%</span></div>
+          <div class="brow"><span>1–7 dias</span><div class="btrack"><div class="bfill" style="width:73%"></div></div><span class="mono">24,1%</span></div>
+          <div class="brow"><span>8–30 dias</span><div class="btrack"><div class="bfill hi" style="width:96%"></div></div><span class="mono">31,7%</span></div>
+          <div class="brow"><span>&gt; 30 dias</span><div class="btrack"><div class="bfill hi" style="width:100%"></div></div><span class="mono">33,0%</span></div>
         </div>
       </div>
-
-      <h3>O que não somos</h3>
-      <ul class="cross">
-        <li>Não somos um sistema que pune quem falta: sem multa ao paciente do SUS e sem queda de prioridade clínica por risco alto.</li>
-        <li>Não somos overbooking disfarçado: o MVP não agenda acima da capacidade.</li>
-        <li>Não somos um lembrete genérico por WhatsApp. O lembrete resolve os casos 2 e 3; o diferencial é o caso 1: a vaga liberada vai, em minutos, para quem mais precisa e tem mais chance de aceitar.</li>
-      </ul>
-    </section>
-
-    <!-- 2. DORES -->
-    <section id="dores" class="alt">
-      <p class="kicker">2 · Dores</p>
-      <h2>Quem sente o problema, e como</h2>
-      <p>Cada dor aponta para uma pessoa real e para o que ela perde. O status diz o quanto já está sustentado por fonte (seção 3).</p>
-
-      <div class="table-wrap">
-        <table class="draft-table">
-          <thead>
-            <tr><th>#</th><th>Quem</th><th>A dor</th><th>O que perde</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>P1</td><td>Paciente na fila</td><td>Espera meses por especialista, exame ou cirurgia enquanto horários ficam vazios.</td><td>Saúde, tempo e renda.</td><td>Sustentada (3.1, 3.3)</td></tr>
-            <tr><td>P2</td><td>Paciente que falta</td><td>Falta por transporte, esquecimento, horário inoportuno ou não consegue avisar.</td><td>Perde o lugar e volta ao fim da fila.</td><td>Parcial (3.2)</td></tr>
-            <tr><td>P3</td><td>Gestor do hospital privado</td><td>Horário vazio é custo fixo sem receita; a perda quase não é medida.</td><td>Receita e produtividade.</td><td>Parcial (3.1); validar</td></tr>
-            <tr><td>P4</td><td>Gestor do hospital público e regulação</td><td>Faltas sem aviso desperdiçam oferta limitada e aumentam a fila.</td><td>Capacidade, metas de espera.</td><td>Sustentada (3.1)</td></tr>
-            <tr><td>P5</td><td>Recepção e central de agendamento</td><td>Confirma por telefone, manualmente, e não sabe quem priorizar.</td><td>Horas de trabalho.</td><td>Hipótese (H5)</td></tr>
-            <tr><td>P6</td><td>Médico e equipe</td><td>Ociosidade e agenda irregular; dificuldade de planejar.</td><td>Tempo clínico.</td><td>Hipótese</td></tr>
-            <tr><td>P7</td><td>Paciente da fila</td><td>Não é avisado quando surge vaga e não consegue chegar em poucas horas sem apoio.</td><td>A vaga que surgiu.</td><td>Hipótese (H4)</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 3. PESQUISA -->
-    <section id="pesquisa">
-      <p class="kicker">3 · Pesquisa</p>
-      <h2>O que sabemos, o que supomos e o que falta descobrir</h2>
-
-      <h3>3.1 Tamanho da perda</h3>
-      <div class="table-wrap">
-        <table class="draft-table">
-          <thead><tr><th>#</th><th>Achado</th><th>Fonte</th><th>Confiança</th></tr></thead>
-          <tbody>
-            <tr><td>A1</td><td>No SUS, as faltas em consultas e exames agendados giram em torno de 25% em levantamentos nacionais antigos.</td><td>[2], [3]</td><td>Média (dado antigo)</td></tr>
-            <tr><td>A2</td><td>Campo Largo (PR), 1º semestre de 2026: 26,85% de faltas, 7.172 horários perdidos entre terapias, consultas e exames.</td><td>[1]</td><td>Média (secretaria municipal)</td></tr>
-            <tr><td>A3</td><td>Região metropolitana do Espírito Santo, 2014 a 2016: 38,6% de faltas em consultas especializadas, com desperdício estimado em R$ 3,56 milhões.</td><td>[4]</td><td>Média (estudo acadêmico)</td></tr>
-            <tr><td>A4</td><td>Há variação grande: Santa Maria (RS) teve média anual de 9,4% em consultas especializadas (2016 a 2021). A taxa depende do serviço e da especialidade.</td><td>[5]</td><td>Média</td></tr>
-            <tr><td>A5</td><td>Carreta do programa Agora Tem Especialistas em Mauá: faltas de até 20% em ultrassom; num sábado, 27 de 80 agendados não vieram.</td><td>[6]</td><td>Média (notícia)</td></tr>
-            <tr><td>A6</td><td>Privado: o no-show chega a 32% da agenda em algumas clínicas (software de gestão) e seria de cerca de 20% em hospitais privados (empresa de chatbot, que vende a solução).</td><td>[7], [8]</td><td>Baixa (fonte comercial)</td></tr>
-            <tr><td>A7</td><td>Uma estimativa editorial indica perda de até R$ 144 mil por ano numa clínica de São Paulo com 30 faltas por mês a R$ 300 cada. É conta de exemplo, não medição.</td><td>[9]</td><td>Baixa</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>3.2 Por que os pacientes faltam</h3>
-      <ul>
-        <li>Estudos internacionais e brasileiros listam transporte, comunicação, esquecimento e horários inoportunos como causas frequentes <span class="small">[10]</span>.</li>
-        <li>Revisões sobre lembretes apontam redução de faltas, mas a efetividade varia com o contexto e o canal <span class="small">[11]</span>. Esperamos ganho da confirmação ativa, não um número mágico.</li>
-        <li>A causa importa: quem falta por transporte precisa de ajuda, não só de lembrete (ideia de módulo futuro, D8).</li>
-      </ul>
-
-      <h3>3.3 O contexto do SUS</h3>
-      <ul>
-        <li>O programa Agora Tem Especialistas credencia hospitais privados e filantrópicos para atender pacientes do SUS e dá crédito financeiro em troca de procedimentos <span class="small">[12]</span>. Quem é chamado vem da fila da regulação; o paciente sem cadastro prévio não tem atendimento direto <span class="small">[13]</span>.</li>
-        <li>Consequência para o produto: no público, a reocupação precisa respeitar a regulação (RR2). Isso é restrição, mas também oportunidade, porque a regulação enfrenta a fila e as faltas.</li>
-      </ul>
-
-      <h3>3.4 Concorrência e alternativas</h3>
-      <p>
-        Existem ferramentas de confirmação e lembrete para clínicas, de software de gestão a empresas de chatbot
-        <span class="small">[7], [8]</span>. <strong>Não mapeamos quais fazem predição, lista de espera ou reocupação.</strong>
-        Isso é prioridade antes do pitch (Q8). A hipótese é que o diferencial está em fechar o ciclo (prever, confirmar e reocupar) e em respeitar regras de fila pública.
-      </p>
-
-      <h3>3.5 Hipóteses</h3>
-      <div class="table-wrap">
-        <table class="draft-table">
-          <thead><tr><th>#</th><th>Hipótese</th><th>Como validar</th></tr></thead>
-          <tbody>
-            <tr><td>H1</td><td>Gestores aceitam pagar mensalidade mais parte do recuperado se o piloto mostrar horários reocupados.</td><td>Entrevistas com gestores e piloto (Q3)</td></tr>
-            <tr><td>H2</td><td>Grande parte da perda vem de faltas e cancelamentos feitos em cima da hora, não com semanas de antecedência.</td><td>Distribuição do aviso do cancelamento na base real (Q1)</td></tr>
-            <tr><td>H3</td><td>A confirmação ativa reduz as faltas, mais onde o risco é alto.</td><td>Teste com grupo de controle</td></tr>
-            <tr><td>H4</td><td>Há paciente na fila que aceita e chega em poucas horas.</td><td>Taxa de aceite e tempo de chegada em piloto (Q5)</td></tr>
-            <tr><td>H5</td><td>A recepção gasta muito tempo ligando e aceitaria uma lista priorizada.</td><td>Observar a rotina</td></tr>
-            <tr><td>H6</td><td>Um modelo simples com poucos dados de agenda já separa bem quem tende a faltar.</td><td>AUC em base real (M4)</td></tr>
-            <tr><td>H7</td><td>A regulação pública aceita reocupar horários dinamicamente a partir da própria fila.</td><td>Conversa com regulação (Q6)</td></tr>
-            <tr><td>H8</td><td>Quem já tem consulta futura aceita antecipá-la com mais facilidade que alguém da fila sem data, e cada antecipação libera outro horário com mais folga (efeito cascata).</td><td>Aceite por origem do candidato no piloto (M14)</td></tr>
-            <tr><td>H9</td><td>Horário parecido com o habitual, proximidade e histórico sem cancelamento aumentam o aceite da oferta.</td><td>Aceite por critério (M14); calibrar os pesos do 7.3</td></tr>
-            <tr><td>H10</td><td>Uma parte relevante dos pacientes do caso 1 avisa quando recebe a notificação, sem precisar de incentivo.</td><td>Distribuição dos quatro casos (M13)</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>3.6 Perguntas em aberto</h3>
-      <ol>
-        <li><strong>Q1.</strong> Quantas faltas e cancelamentos ocorrem com menos de 24 horas e menos de 4 horas de aviso?</li>
-        <li><strong>Q2.</strong> Que dados de agenda o hospital tem (histórico por paciente, deslocamento, canal de contato)?</li>
-        <li><strong>Q3.</strong> Quanto vale um horário vazio por especialidade e como o hospital quer pagar?</li>
-        <li><strong>Q4.</strong> Qual a base legal e o consentimento adequados para contatar por WhatsApp (LGPD)? Precisa de parecer jurídico.</li>
-        <li><strong>Q5.</strong> Qual a taxa de aceite de uma oferta com 3 a 6 horas de antecedência?</li>
-        <li><strong>Q6.</strong> A regulação e a secretaria aceitam o fluxo de reocupação? Que regras de prioridade se aplicam?</li>
-        <li><strong>Q7.</strong> Cirurgias e exames de preparo têm regras próprias (jejum, preparo, autorização)? Quais entram no piloto?</li>
-        <li><strong>Q8.</strong> Quais concorrentes já fazem predição ou reocupação no Brasil?</li>
-        <li><strong>Q9.</strong> Como integrar com os sistemas de agenda do hospital (API, arquivo ou planilha)?</li>
-        <li><strong>Q10.</strong> Qual o risco de viés (a ajuda ir só a quem responde mais rápido)?</li>
-        <li><strong>Q11.</strong> Como o hospital define urgência (classificação da regulação, prioridade do médico) e em que dado ela está?</li>
-        <li><strong>Q12.</strong> O que o hospital faz hoje com um horário não confirmado (caso 4)? Libera, mantém ou faz encaixe?</li>
-        <li><strong>Q13.</strong> Qual a distribuição real dos quatro casos na base do piloto?</li>
-      </ol>
-
-      <h3>3.7 Fontes</h3>
-      <ol class="sources">
-        <li id="f1">[1] Band B: faltas no SUS em Campo Largo, 1º semestre de 2026 · <a href="https://www.bandab.com.br/regiao-metropolitana-de-curitiba/pacientes-faltam-consultas-exames-sus-grande-curitiba-campo-largo/">bandab.com.br</a></li>
-        <li id="f2">[2] UNA-SUS/UNIFESP, trabalho sobre absenteísmo (cita ~25% no SUS) · <a href="https://ares.unasus.gov.br/acervo/bitstream/ARES/22594/1/41420_RAFAEL%2520MARTINS%2520PEREIRA.pdf">ares.unasus.gov.br</a></li>
-        <li id="f3">[3] Estudo de Santa Maria (cita ~25% no Brasil) · <a href="https://publicacoeseventos.unijui.edu.br/index.php/conintsau/article/download/23176/21917/58432">unijui.edu.br</a></li>
-        <li id="f4">[4] Beltrame et al., Saúde em Debate, 2019 · <a href="https://scielosp.org/pdf/sdeb/2019.v43n123/1015-1030/pt">scielosp.org</a></li>
-        <li id="f5">[5] Mesmo estudo de Santa Maria (9,4% de média, perda de R$ 146.590) · <a href="https://publicacoeseventos.unijui.edu.br/index.php/conintsau/article/download/23176/21917/58432">unijui.edu.br</a></li>
-        <li id="f6">[6] DGABC: carreta com especialistas em Mauá · <a href="https://www.dgabc.com.br/Noticia/4287157/carreta-com-especialistas-realizou-mais-de-1-4-mil-exames-em-maua">dgabc.com.br</a></li>
-        <li id="f7">[7] Conclínica, calculadora de no-show (jan/2026) · <a href="https://acontecendoaqui.com.br/empreendedorismo/alerta-falta-de-pacientes-pode-comprometer-ate-32-da-agenda-de-clinicas-no-pais/">acontecendoaqui.com.br</a></li>
-        <li id="f8">[8] Botdesigner, no-show em hospitais privados (fonte comercial) · <a href="https://www.bnews.com.br/noticias/economia-e-mercado/atendimento-virtual-aumenta-receita-de-hospitais-revela-pesquisa-veja-numeros.html">bnews.com.br</a></li>
-        <li id="f9">[9] Medicina S/A, estimativa de perda por faltas · <a href="https://medicinasa.com.br/agendamento-consultas/">medicinasa.com.br</a></li>
-        <li id="f10">[10] Costa et al., Revista de Medicina de Ribeirão Preto/USP, absenteísmo em oncologia · <a href="https://revistas.usp.br/rmrp/article/download/159626/154332/356524">revistas.usp.br</a></li>
-        <li id="f11">[11] Digisac, como reduzir faltas (cita revisões sobre lembretes) · <a href="https://digisac.com.br/blog/como-reduzir-faltas-de-pacientes">digisac.com.br</a></li>
-        <li id="f12">[12] Tribuna Online: hospitais privados no programa e créditos financeiros · <a href="https://tribunaonline.com.br/saude/cirurgias-liberadas-em-hospitais-particulares-para-reduzir-fila-do-sus-284819">tribunaonline.com.br</a></li>
-        <li id="f13">[13] Correio: 259 hospitais credenciados; acesso pela fila da regulação · <a href="https://www.correio24horas.com.br/economia/com-r-1-bilhao-programa-do-sus-aciona-259-hospitais-privados-para-realizar-600-mil-procedimentos-veja-os-prioritarios-0826">correio24horas.com.br</a></li>
-      </ol>
-    </section>
-
-    <!-- 4. OBJETIVOS -->
-    <section id="objetivos" class="alt">
-      <p class="kicker">4 · Objetivos</p>
-      <h2>O que o produto precisa alcançar</h2>
-      <div class="table-wrap">
-        <table class="draft-table">
-          <thead><tr><th>#</th><th>Objetivo</th><th>Para quem</th><th>Métrica</th></tr></thead>
-          <tbody>
-            <tr><td>O1</td><td>Antecipar quem tem risco alto de faltar ou cancelar tarde.</td><td>Gestor e recepção</td><td>M2, M3, M4</td></tr>
-            <tr><td>O2</td><td>Reduzir faltas sem aviso com confirmação ativa proporcional ao risco.</td><td>Hospital e paciente</td><td>M1, M5, M6</td></tr>
-            <tr><td>O3</td><td>Reocupar o horário que vagar, a tempo, com quem espera, priorizando a urgência e depois a chance de aceite.</td><td>Paciente da fila ou com consulta futura</td><td>M7, M8, M14</td></tr>
-            <tr><td>O4</td><td>Mostrar o retorno financeiro ou de capacidade ao gestor.</td><td>Gestor</td><td>M9, M10</td></tr>
-            <tr><td>O5</td><td>Garantir que a ferramenta não piora a equidade nem a prioridade clínica.</td><td>Paciente e regulação</td><td>M11</td></tr>
-            <tr><td>O6</td><td>Operar com a rotina atual (planilha ou sistema de agenda).</td><td>Recepção</td><td>M12</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 5. REQUISITOS -->
-    <section id="requisitos">
-      <p class="kicker">5 · Requisitos</p>
-      <h2>O que o sistema precisa fazer e respeitar</h2>
-
-      <h3>Valor (RV)</h3>
-      <ul>
-        <li><strong>RV1.</strong> O gestor enxerga quanto custa cada horário vazio e quanto o produto recupera.</li>
-        <li><strong>RV2.</strong> A recepção trabalha com uma lista simples: a quem confirmar, e para quem oferecer a vaga.</li>
-      </ul>
-
-      <h3>Funcionais (RF)</h3>
-      <ul>
-        <li><strong>RF1.</strong> Importar agenda e fila (planilha ou integração).</li>
-        <li><strong>RF2.</strong> Calcular o risco por agendamento, com os fatores que pesaram.</li>
-        <li><strong>RF3.</strong> Montar o plano de confirmação por faixa de risco (canal e momento).</li>
-        <li><strong>RF4.</strong> Registrar a resposta: confirma, cancela ou sem resposta.</li>
-        <li><strong>RF5.</strong> Ao cancelar (caso 1), gerar a lista de candidatos: pacientes da fila e pacientes com consulta futura na mesma especialidade (antecipação).</li>
-        <li><strong>RF5a.</strong> Ordenar os candidatos primeiro pela urgência e, dentro da mesma urgência, pela chance de aceite ou pelo tempo de espera, conforme a regra do serviço.</li>
-        <li><strong>RF5b.</strong> Estimar a chance de aceite com fatores explicáveis: horário parecido com o habitual, histórico de cancelamento, deslocamento, antecedência da oferta, tempo que o paciente ganha e taxa de resposta a mensagens.</li>
-        <li><strong>RF5c.</strong> Excluir quem não chegaria a tempo e, no privado, quem não tem autorização do convênio.</li>
-        <li><strong>RF6.</strong> Fazer ofertas em rodadas (uma ou mais pessoas por vez) com tempo de resposta; a primeira aceitação ocupa; os demais são avisados.</li>
-        <li><strong>RF6a.</strong> Mensagens automáticas: confirmação, oferta, confirmação do aceite e aviso de vaga já preenchida.</li>
-        <li><strong>RF6b.</strong> Se o aceite vier de uma antecipação, liberar a consulta antiga e repetir o ciclo (cascata).</li>
-        <li><strong>RF7.</strong> Atualizar agenda e fila, com registro de auditoria.</li>
-        <li><strong>RF8.</strong> Painel do gestor com faltas, reocupação, receita ou capacidade recuperada e tempo de espera.</li>
-      </ul>
-
-      <h3>Regras e ética (RR)</h3>
-      <ul>
-        <li><strong>RR1.</strong> O risco só orienta o contato; nunca reduz prioridade clínica nem nega horário.</li>
-        <li><strong>RR2.</strong> No público, a ordem da oferta segue a regulação; o sistema sugere e a regulação valida.</li>
-        <li><strong>RR3.</strong> Dados de saúde são sensíveis (LGPD): minimização, base legal definida, opt-out e retenção limitada. Requer parecer jurídico (Q4).</li>
-        <li><strong>RR4.</strong> Sem multa de falta ao paciente do SUS. No privado, qualquer cobrança é decisão do hospital, com aviso prévio.</li>
-        <li><strong>RR5.</strong> Overbooking fora do MVP.</li>
-        <li><strong>RR6.</strong> Revisão periódica de viés: taxa de reocupação e de falta por território e renda.</li>
-        <li><strong>RR7.</strong> Recusar uma oferta não muda nada para o paciente: ele mantém a consulta ou a posição na fila.</li>
-        <li><strong>RR8.</strong> Histórico de cancelamento e distância só ordenam candidatos <em>da mesma urgência</em>; nunca passam alguém menos urgente à frente de alguém mais urgente.</li>
-      </ul>
-
-      <h3>Não funcionais (RNF)</h3>
-      <ul>
-        <li><strong>RNF1.</strong> A oferta sai em minutos depois da vaga, pois o tempo é o limite do produto.</li>
-        <li><strong>RNF2.</strong> Funciona com poucos dados no começo e melhora com o uso.</li>
-        <li><strong>RNF3.</strong> Modelo explicável e auditável.</li>
-        <li><strong>RNF4.</strong> Respeitar as regras do canal de mensagens escolhido (WhatsApp, SMS, ligação).</li>
-      </ul>
-    </section>
-
-    <!-- 6. MÉTRICAS -->
-    <section id="metricas" class="alt">
-      <p class="kicker">6 · Métricas</p>
-      <h2>Como saberemos se funcionou</h2>
-      <div class="table-wrap">
-        <table class="draft-table">
-          <thead><tr><th>#</th><th>Métrica</th><th>Como se calcula</th></tr></thead>
-          <tbody>
-            <tr><td>M1</td><td>Taxa de falta sem aviso</td><td>Faltas sem aviso ÷ agendamentos elegíveis. Mesmos critérios ao longo do tempo.</td></tr>
-            <tr><td>M2</td><td>Cobertura do modelo</td><td>Faltas que estavam nas faixas alta e média ÷ todas as faltas.</td></tr>
-            <tr><td>M3</td><td>Precisão na faixa alta</td><td>Faltas na faixa alta ÷ agendamentos na faixa alta.</td></tr>
-            <tr><td>M4</td><td>Discriminação</td><td>AUC e captura dos 20% de maior risco (base real, nunca a sintética).</td></tr>
-            <tr><td>M5</td><td>Resposta à confirmação</td><td>Pacientes que responderam ÷ contatados, por faixa e canal.</td></tr>
-            <tr><td>M6</td><td>Faltas evitadas</td><td>Diferença de M1 entre grupo com confirmação ativa e grupo de controle.</td></tr>
-            <tr><td>M7</td><td>Taxa de reocupação</td><td>Horários vagos reocupados ÷ horários vagos com aviso.</td></tr>
-            <tr><td>M8</td><td>Tempo de reocupação</td><td>Mediana de minutos entre o aviso e a aceitação.</td></tr>
-            <tr><td>M9</td><td>Receita ou produção recuperada</td><td>(Faltas evitadas + horários reocupados) × valor por atendimento.</td></tr>
-            <tr><td>M10</td><td>Fila</td><td>Mediana de dias de espera e pacientes atendidos a mais por mês.</td></tr>
-            <tr><td>M11</td><td>Equidade (trava)</td><td>M1 e M7 por faixa de renda e território; não pode haver piora de quem já tem menos acesso.</td></tr>
-            <tr><td>M12</td><td>Adoção</td><td>Uso pela recepção; opt-out e reclamações dos pacientes.</td></tr>
-            <tr><td>M13</td><td>Distribuição dos quatro casos</td><td>Parcela dos agendamentos em cada caso (1 a 4), antes e depois do produto.</td></tr>
-            <tr><td>M14</td><td>Aceite da oferta</td><td>Ofertas aceitas ÷ ofertas enviadas, por urgência, origem (fila ou antecipação) e critério; calibração da chance prevista.</td></tr>
-            <tr><td>M15</td><td>Urgência atendida</td><td>Parcela dos horários reocupados que foi para pacientes da maior urgência disponível.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 7. LAB -->
-    <section id="lab">
-      <p class="kicker">7 · Lab de UI</p>
-      <h2>Risco, confirmação, reocupação e retorno: testando o modelo</h2>
-      <p>
-        Este laboratório é um protótipo do que a recepção e o gestor veriam. Pacientes, taxas, valores e pesos são
-        <strong>fictícios e ilustrativos</strong>. Altere os dados e veja como o risco, o plano de contato, a oferta à fila e o
-        retorno financeiro respondem.
-      </p>
-      <p class="alert" role="note">
-        Os pesos do modelo são hipóteses e não foram calibrados com dados reais. O resultado do laboratório mostra
-        a mecânica do produto, não uma previsão do seu hospital. A seção 7.5 usa dados sintéticos só para testar o cálculo das métricas.
-      </p>
-
-      <h3>7.1 Risco de cancelar em cima da hora</h3>
-      <div class="lab-actions">
-        <label>
-          Carregar agendamento de exemplo
-          <select id="sel-ag"></select>
-        </label>
-      </div>
-
-      <div class="lab-controls" aria-label="Dados do agendamento">
-        <label>Faltas nos últimos 12 meses<input id="r-faltas" type="number" min="0" step="1" value="2"></label>
-        <label>Agendamentos anteriores no período<input id="r-total" type="number" min="0" step="1" value="6"></label>
-        <label>Antecedência do agendamento (dias)<input id="r-antec" type="number" min="0" step="1" value="30"></label>
-        <label>Tempo de deslocamento (min)<input id="r-desloc" type="number" min="0" step="5" value="90"></label>
-        <label>Transporte
-          <select id="r-transp">
-            <option value="proprio">Meio próprio ou a pé</option>
-            <option value="publico">Transporte público</option>
-            <option value="prefeitura" selected>Depende de transporte da prefeitura ou de terceiros</option>
-          </select>
-        </label>
-        <label>Tipo de atendimento
-          <select id="r-tipo">
-            <option value="consulta" selected>Consulta (primeira vez)</option>
-            <option value="retorno">Retorno</option>
-            <option value="exame">Exame</option>
-            <option value="cirurgia">Cirurgia</option>
-          </select>
-        </label>
-        <label>Situação da confirmação
-          <select id="r-conf">
-            <option value="nao" selected>Ainda não contatado</option>
-            <option value="confirmou">Confirmou ativamente</option>
-            <option value="sem">Contatado, sem resposta</option>
-          </select>
-        </label>
-      </div>
-
-      <details>
-        <summary>Pesos do modelo e faixas (hipóteses editáveis)</summary>
-        <div class="lab-controls" aria-label="Pesos do modelo">
-          <label>Constante (log-odds)<input id="w-b0" type="number" step="0.1" value="-3"></label>
-          <label>Peso: taxa de faltas<input id="w-hist" type="number" step="0.1" value="3"></label>
-          <label>Peso: antecedência (até 60 dias)<input id="w-antec" type="number" step="0.1" value="0.9"></label>
-          <label>Peso: deslocamento (até 180 min)<input id="w-desloc" type="number" step="0.1" value="0.9"></label>
-          <label>Multiplicador: transporte<input id="w-transp" type="number" step="0.1" value="1"></label>
-          <label>Multiplicador: tipo de atendimento<input id="w-tipo" type="number" step="0.1" value="1"></label>
-          <label>Multiplicador: confirmação<input id="w-conf" type="number" step="0.1" value="1"></label>
-          <label>Faixa alta a partir de (%)<input id="in-alto" type="number" min="1" max="99" step="1" value="40"></label>
-          <label>Faixa média a partir de (%)<input id="in-medio" type="number" min="1" max="99" step="1" value="20"></label>
-          <label>Horas antes para a decisão final<input id="in-hlib" type="number" min="1" max="24" step="1" value="3"></label>
-        </div>
-      </details>
-
-      <div class="formula">
-        <span class="formula-label">Modelo (logístico, transparente)</span>
-        <div class="formula-body">risco = 1 ÷ (1 + e<sup>−z</sup>), onde z = constante + peso·taxa de faltas suavizada + peso·antecedência + peso·deslocamento + efeito do transporte + efeito do tipo + efeito da confirmação</div>
-      </div>
-
-      <div class="results" aria-live="polite">
-        <div class="result"><span class="result-num" id="res-prob">0%</span><span class="result-label">risco de falta ou cancelamento tardio</span></div>
-        <div class="result"><span class="result-num" id="res-faixa">-</span><span class="result-label">faixa de risco</span></div>
-        <div class="result"><span class="result-num" id="res-taxa">0%</span><span class="result-label">taxa de faltas suavizada do paciente</span></div>
-      </div>
-
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead><tr><th>Fator</th><th>Valor informado</th><th class="num">Efeito no risco (log-odds)</th></tr></thead>
-          <tbody id="fat-body"></tbody>
-        </table>
-      </div>
-
-      <h3>7.2 Plano de confirmação ativa</h3>
-      <p id="plano-intro" class="small"></p>
-      <ol class="steps-mini" id="plano-lista"></ol>
-
-      <h3>Agenda do dia (exemplo)</h3>
-      <p class="small">A recepção vê quem contatar primeiro. A ordem é por risco; isso não muda a prioridade clínica de ninguém.</p>
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead><tr><th>Horário</th><th>Paciente (fictício)</th><th>Tipo</th><th class="num">Risco</th><th>Faixa</th><th>Próxima ação</th></tr></thead>
-          <tbody id="ag-body"></tbody>
-        </table>
-      </div>
-      <div class="results" aria-live="polite">
-        <div class="result"><span class="result-num" id="ag-n">0</span><span class="result-label">horários na agenda de exemplo</span></div>
-        <div class="result"><span class="result-num" id="ag-alta">0</span><span class="result-label">na faixa alta</span></div>
-        <div class="result"><span class="result-num" id="ag-esp">0,0</span><span class="result-label">faltas esperadas no dia</span></div>
-      </div>
-
-      <h3>7.3 Motor de reoferta: quem recebe a vaga liberada</h3>
-      <p>
-        Simule um horário liberado por um paciente do caso 1. Os candidatos são pacientes da fila e pacientes com consulta futura
-        que podem antecipá-la. A ordem é <strong>primeiro a urgência</strong>; dentro da mesma urgência, a maior chance de aceite
-        (ou o tempo de espera, se a regra do serviço exigir). Quem não chegaria a tempo fica de fora.
-      </p>
-      <div class="lab-controls" aria-label="Horário liberado">
-        <label>Modo
-          <select id="v-modo">
-            <option value="publico" selected>Hospital público</option>
-            <option value="privado">Hospital privado (convênio autorizado)</option>
-          </select>
-        </label>
-        <label>Especialidade do horário
-          <select id="v-esp">
-            <option value="Cardiologia" selected>Cardiologia</option>
-            <option value="Oftalmologia">Oftalmologia</option>
-          </select>
-        </label>
-        <label>Hora do atendimento (0 a 23)<input id="v-hora" type="number" min="0" max="23" step="1" value="14"></label>
-        <label>Horas até o atendimento<input id="v-horas" type="number" min="0.5" step="0.5" value="6"></label>
-        <label>Tempo de resposta por oferta (min)<input id="v-resp" type="number" min="1" step="1" value="20"></label>
-        <label>Pessoas contatadas por rodada<input id="v-par" type="number" min="1" max="10" step="1" value="2"></label>
-        <label>Dentro da mesma urgência, ordenar por
-          <select id="v-desempate">
-            <option value="aceite" selected>Maior chance de aceite</option>
-            <option value="espera">Maior tempo de espera (ordem da regulação)</option>
-          </select>
-        </label>
-      </div>
-
-      <details>
-        <summary>Pesos do modelo de aceite (hipóteses editáveis)</summary>
-        <div class="lab-controls" aria-label="Pesos do modelo de aceite">
-          <label>Constante (log-odds)<input id="a-b0" type="number" step="0.1" value="-1.5"></label>
-          <label>Peso: horário parecido com o habitual<input id="a-hor" type="number" step="0.1" value="1.2"></label>
-          <label>Peso: taxa de cancelamento (negativo)<input id="a-canc" type="number" step="0.1" value="-2.5"></label>
-          <label>Peso: proximidade<input id="a-dist" type="number" step="0.1" value="1"></label>
-          <label>Peso: antecedência da oferta<input id="a-antec" type="number" step="0.1" value="0.8"></label>
-          <label>Peso: tempo que o paciente ganha<input id="a-ganho" type="number" step="0.1" value="0.8"></label>
-          <label>Peso: costuma responder mensagens<input id="a-resp" type="number" step="0.1" value="1"></label>
-        </div>
-      </details>
-
-      <div class="formula">
-        <span class="formula-label">Ordem e chance de aceite</span>
-        <div class="formula-body">ordem = urgência (1 antes de 2 antes de 3) → depois chance de aceite (ou tempo de espera)<br>
-          aceite = 1 ÷ (1 + e<sup>−z</sup>), z = constante + horário parecido + taxa de cancelamento + proximidade + antecedência + tempo ganho + responsividade</div>
-      </div>
-
-      <div class="results" aria-live="polite">
-        <div class="result"><span class="result-num" id="v-chance">0%</span><span class="result-label">chance de reocupar o horário</span></div>
-        <div class="result"><span class="result-num" id="v-tempo">-</span><span class="result-label">tempo esperado até o aceite (se reocupar)</span></div>
-        <div class="result"><span class="result-num" id="v-ofertas">0</span><span class="result-label">pessoas que recebem oferta a tempo</span></div>
-        <div class="result"><span class="result-num" id="v-primeiro">-</span><span class="result-label">primeira oferta vai para</span></div>
-        <div class="result"><span class="result-num" id="v-cascata">0%</span><span class="result-label">chance de liberar uma consulta futura (cascata)</span></div>
-      </div>
-      <p class="alert" id="v-alerta" hidden></p>
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead><tr><th>#</th><th>Paciente (fictício)</th><th>Urgência</th><th>Origem</th><th class="num">Hora habitual</th><th class="num">Cancelou</th><th class="num">Chega em (min)</th><th class="num">Aceite (%)</th><th class="num">Fica com a vaga (%)</th><th>Situação</th></tr></thead>
-          <tbody id="v-body"></tbody>
-        </table>
-      </div>
-      <p class="small">Clique num candidato para ver os fatores do aceite e as mensagens automáticas que ele receberia.</p>
-
-      <h4 id="v-det-tit">Fatores do aceite</h4>
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead><tr><th>Fator</th><th>Valor</th><th class="num">Efeito (log-odds)</th></tr></thead>
-          <tbody id="v-det"></tbody>
-        </table>
-      </div>
-
-      <h4>Mensagens automáticas</h4>
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead><tr><th>Momento</th><th>Para quem</th><th>Mensagem</th></tr></thead>
-          <tbody id="v-msgs"></tbody>
-        </table>
-      </div>
-      <p class="small">Textos de exemplo. O canal, a base legal do contato e o texto final dependem do parecer jurídico (Q4). Recusar ou não responder nunca muda a consulta nem a posição na fila (RR7).</p>
-
-      <h3>7.4 Retorno para o hospital</h3>
-      <div class="lab-actions">
-        <button type="button" class="btn" id="btn-preset-priv">Padrões: hospital privado</button>
-        <button type="button" class="btn" id="btn-preset-pub">Padrões: hospital público</button>
-      </div>
-      <div class="lab-controls" aria-label="Premissas do retorno">
-        <label>Atendimentos agendados por mês<input id="s-agenda" type="number" min="1" step="100" value="4000"></label>
-        <label>Taxa de falta ou cancelamento tardio (%)<input id="s-falta" type="number" min="0" max="100" step="1" value="20"></label>
-        <label>Dos que faltariam: lembrados e vão (caso 2, %)<input id="s-evit" type="number" min="0" max="100" step="1" value="15"></label>
-        <label>Dos que ainda faltariam: avisam pela notificação (caso 1, %)<input id="s-aviso" type="number" min="0" max="100" step="1" value="50"></label>
-        <label>Vagas do caso 1 reocupadas pelo motor (%)<input id="s-reoc" type="number" min="0" max="100" step="1" value="60"></label>
-        <label>Valor por atendimento (R$)<input id="s-valor" type="number" min="0" step="10" value="300"></label>
-        <label>Mensalidade da plataforma (R$)<input id="s-fixo" type="number" min="0" step="500" value="3000"></label>
-        <label>Parte do recuperado (%)<input id="s-fee" type="number" min="0" max="100" step="1" value="8"></label>
-        <label>Pacientes na fila<input id="s-fila" type="number" min="1" step="100" value="5000"></label>
-      </div>
-      <p class="small" id="s-nota"></p>
-
-      <div class="results" aria-live="polite">
-        <div class="result"><span class="result-num" id="s-faltas">0</span><span class="result-label">horários perdidos por mês hoje</span></div>
-        <div class="result"><span class="result-num" id="s-rec">0</span><span class="result-label">atendimentos recuperados por mês</span></div>
-        <div class="result"><span class="result-num" id="s-rev">R$ 0</span><span class="result-label">valor recuperado por mês</span></div>
-        <div class="result"><span class="result-num" id="s-preco">R$ 0</span><span class="result-label">preço da plataforma por mês</span></div>
-        <div class="result"><span class="result-num" id="s-liq">R$ 0</span><span class="result-label">ganho líquido do hospital por mês</span></div>
-        <div class="result"><span class="result-num" id="s-roi">0×</span><span class="result-label">valor recuperado para cada R$ 1 pago</span></div>
-        <div class="result"><span class="result-num" id="s-fila-abs">0%</span><span class="result-label">da fila atual atendida em 1 ano pelos horários reocupados (sem novas entradas)</span></div>
-      </div>
-
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead><tr><th>Caso</th><th class="num">Agendamentos / mês</th><th>O que acontece com o horário</th></tr></thead>
-          <tbody id="s-casos"></tbody>
-        </table>
-      </div>
-
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead><tr><th>Cenário (muda os três percentuais de efeito)</th><th class="num">Atendimentos recuperados / mês</th><th class="num">Valor recuperado / mês</th><th class="num">Ganho líquido / mês</th></tr></thead>
-          <tbody id="s-cen"></tbody>
-        </table>
-      </div>
-
-      <h3>7.5 Teste das métricas com dados sintéticos</h3>
-      <p class="small">
-        Geramos agendamentos fictícios e comparamos a previsão com o resultado simulado. Como os dados vêm do nosso próprio modelo
-        com ruído, isso só confere se o cálculo das métricas (M2 a M4) funciona. <strong>Não prova que o modelo acerta.</strong>
-      </p>
-      <div class="lab-actions">
-        <label>Semente<input id="b-seed" type="number" min="1" step="1" value="42"></label>
-        <label>Quantidade<input id="b-n" type="number" min="100" max="5000" step="100" value="600"></label>
-        <button type="button" class="btn btn-primary" id="btn-bt">Gerar e avaliar</button>
-      </div>
-      <div class="results" aria-live="polite">
-        <div class="result"><span class="result-num" id="b-base">-</span><span class="result-label">taxa de falta simulada</span></div>
-        <div class="result"><span class="result-num" id="b-auc">-</span><span class="result-label">AUC</span></div>
-        <div class="result"><span class="result-num" id="b-top">-</span><span class="result-label">das faltas nos 20% de maior risco</span></div>
-        <div class="result"><span class="result-num" id="b-prec">-</span><span class="result-label">precisão na faixa alta</span></div>
-      </div>
-      <div class="table-wrap">
-        <table class="lab-table">
-          <thead><tr><th>Faixa</th><th class="num">Agendamentos</th><th class="num">Risco previsto médio</th><th class="num">Falta observada</th></tr></thead>
-          <tbody id="b-body"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 8. DECISÕES -->
-    <section id="decisoes" class="alt">
-      <p class="kicker">8 · Decisões</p>
-      <h2>Registro de decisões</h2>
-      <p>Cada decisão guarda contexto, alternativas e status. As decisões substituídas continuam registradas.</p>
-
-      <div class="adr-list">
-        <article class="adr">
-          <header><h3>D1 · Escopo final: prever cancelamento tardio, confirmar e reocupar pela fila</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> o orientador pediu um problema com sofredor claro e um comprador que lucra. Aqui o paciente espera e o hospital perde com o horário vazio.</p>
-          <p><strong>Alternativas:</strong> rotas de unidade móvel, hemodiálise, direitos e FGTS, SaaS de assistência social (ver histórico).</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D2 · Clientes: hospitais privados e públicos, mesmo motor e regras de fila diferentes</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> o público tem a regulação como regra; o privado tem convênio e receita direta.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D3 · Cobrança: mensalidade mais parte do recuperado</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Contexto:</strong> alinha o preço ao valor entregue; o público pode exigir contrato por serviço ou licitação. Valores são hipóteses (Q3).</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D4 · O risco só orienta o contato, nunca a prioridade clínica</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> usar o risco para negar ou adiar atendimento puniria quem tem mais barreiras de acesso. Contraria o tema do desafio.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D5 · Sem multa de falta ao paciente do SUS</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> a solução é facilitar o aviso, não cobrar. No privado, a política é do hospital.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D6 · Modelo inicial transparente (logístico, pesos editáveis)</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> sem dados reais, um modelo explicável é defensável. Será calibrado com a base do piloto.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D7 · Overbooking fora do MVP</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Contexto:</strong> agendar acima da capacidade pode lotar a espera e prejudicar o paciente. Reocupar é o caminho mais seguro.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D8 · Transporte como módulo futuro (reaproveita o trabalho de rotas)</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Contexto:</strong> transporte é causa frequente de falta. Pode ser um segundo produto, depois de provar o ciclo principal.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D11 · Os quatro casos de paciente organizam o produto</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> o lembrete atende os casos 2 e 3, que concorrentes já cobrem. O diferencial está no caso 1, a vaga liberada, e por isso o foco é o motor de reoferta.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D12 · Reoferta: urgência primeiro, depois chance de aceite</h3><span class="badge st-decidida">Decidida</span></header>
-          <p><strong>Contexto:</strong> o grupo definiu os critérios (horário parecido, sem histórico de cancelamento, perto do hospital) com a urgência acima de todos. Os critérios de aceite só ordenam dentro da mesma urgência (RR8). No público, o desempate pode ter de ser o tempo de espera (Q6).</p>
-          <p><strong>Alternativas:</strong> pontuação única somando urgência e aceite (descartada: poderia passar um caso menos urgente à frente).</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D13 · Caso 4: política para horário não confirmado</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Contexto:</strong> sem resposta, o horário pode ser mantido, liberado no prazo final ou receber um encaixe. É escolha do hospital (Q12); o MVP só mede o caso 4 e escalona o contato.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D14 · Candidatos incluem pacientes com consulta futura (antecipação em cascata)</h3><span class="badge st-proposta">Proposta</span></header>
-          <p><strong>Contexto:</strong> quem antecipa libera um horário futuro, que tem mais folga para ser reocupado. Hipótese H8.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D9 · Nome do produto</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Contexto:</strong> "Vaga Viva" é provisório.</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-        <article class="adr">
-          <header><h3>D10 · Primeiro piloto: um ambulatório de especialidade com fila e muita falta</h3><span class="badge st-pendente">Pendente</span></header>
-          <p><strong>Contexto:</strong> escolher a especialidade e o hospital certos define os dados e a prova de valor (Q1, Q2).</p>
-          <p class="adr-date">07/11/2026</p>
-        </article>
-      </div>
-
-      <details>
-        <summary>Histórico de pivôs (decisões arquivadas)</summary>
-        <div class="adr-list">
-          <article class="adr archived"><header><h3>H1 · Unidade móvel de prevenção e rotas</h3><span class="badge st-pendente">Arquivada</span></header>
-            <p>O orientador não aprovou a ideia. Rota não deixava claro quem paga.</p></article>
-          <article class="adr archived"><header><h3>H2 · Transporte para hemodiálise</h3><span class="badge st-pendente">Arquivada</span></header>
-            <p>Já existe obrigação legal de transporte pelos municípios, o que reduzia o espaço da novidade.</p></article>
-          <article class="adr archived"><header><h3>H3 · Crédito durante o tratamento</h3><span class="badge st-pendente">Arquivada</span></header>
-            <p>Risco de endividar quem perdeu renda.</p></article>
-          <article class="adr archived"><header><h3>H4 · Navegador de direitos e FGTS por diagnóstico</h3><span class="badge st-pendente">Arquivada</span></header>
-            <p>Pagador fraco: seguradoras trazem conflito (seleção de risco).</p></article>
-          <article class="adr archived"><header><h3>H5 · Amparo: SaaS de assistência social para hospitais</h3><span class="badge st-pendente">Arquivada</span></header>
-            <p>O orientador apontou que o interesse do hospital em pagar e o paciente atendido não estavam claros.</p></article>
-          <article class="adr archived"><header><h3>H6 · Desconto ou crédito para quem tem risco alto e comparece</h3><span class="badge st-pendente">Arquivada</span></header>
-            <p>O grupo decidiu tirar o incentivo em 07/11 (19:49). A evidência de efeito é mista e o desenho traz riscos de justiça, abuso e questão jurídica. Pode voltar depois do piloto.</p></article>
-        </div>
-      </details>
-    </section>
-
-    <!-- 9. WORKFLOW -->
-    <section id="workflow">
-      <p class="kicker">9 · Workflow</p>
-      <h2>Como o trabalho flui</h2>
-
-      <h3>9.1 Vida de um horário no produto</h3>
-      <ol class="flow">
-        <li class="flow-step"><h3>1 · Importação</h3>
-          <p><strong>Entra:</strong> agenda, fila e histórico.<br><strong>Sai:</strong> agendamentos com risco calculado.</p></li>
-        <li class="flow-step"><h3>2 · Plano de contato</h3>
-          <p><strong>Entra:</strong> faixa de risco.<br><strong>Sai:</strong> contatos previstos, por canal e momento.</p></li>
-        <li class="flow-step"><h3>3 · Confirmação ativa</h3>
-          <p><strong>Entra:</strong> mensagem ao paciente.<br><strong>Sai:</strong> caso 3 (confirma), caso 2 (lembrou e confirma), caso 1 (cancela) ou caso 4 (sem resposta).</p></li>
-        <li class="flow-step"><h3>4 · Vaga liberada</h3>
-          <p><strong>Entra:</strong> cancelamento do caso 1 (ou o caso 4, conforme a política do hospital).<br><strong>Sai:</strong> horário disponível.</p></li>
-        <li class="flow-step"><h3>5 · Motor de reoferta</h3>
-          <p><strong>Entra:</strong> fila e consultas futuras, ordenadas por urgência e chance de aceite.<br><strong>Sai:</strong> mensagens em rodadas; a primeira aceitação ocupa.</p></li>
-        <li class="flow-step"><h3>5b · Cascata</h3>
-          <p><strong>Entra:</strong> aceite de quem antecipou.<br><strong>Sai:</strong> a consulta antiga volta ao passo 4, com mais folga.</p></li>
-        <li class="flow-step"><h3>6 · Aprendizado</h3>
-          <p><strong>Entra:</strong> quem compareceu ou faltou.<br><strong>Sai:</strong> métricas e calibração do modelo.</p></li>
-      </ol>
-
-      <h3>9.2 Escopo do MVP do hackathon</h3>
-      <div class="two-col">
-        <div>
-          <h4>Entra</h4>
-          <ul class="check">
-            <li>Risco explicável por agendamento (lab 7.1).</li>
-            <li>Plano de confirmação por faixa (7.2).</li>
-            <li>Motor de reoferta com urgência, chance de aceite, cascata e mensagens automáticas (7.3).</li>
-            <li>Simulador de retorno pelos quatro casos (7.4).</li>
-            <li>Dados fictícios e métricas conferidas (7.5).</li>
-          </ul>
-        </div>
-        <div>
-          <h4>Fica fora</h4>
-          <ul class="cross">
-            <li>Envio real de mensagens.</li>
-            <li>Integração com sistema de agenda.</li>
-            <li>Modelo treinado com dados reais.</li>
-            <li>Transporte e overbooking.</li>
-          </ul>
+      <div>
+        <h3>Faltas anteriores do paciente × falta</h3>
+        <div class="bars">
+          <div class="brow"><span>0 faltas antes</span><div class="btrack"><div class="bfill" style="width:43%"></div></div><span class="mono">18,6%</span></div>
+          <div class="brow"><span>1 falta</span><div class="btrack"><div class="bfill" style="width:64%"></div></div><span class="mono">27,8%</span></div>
+          <div class="brow"><span>2 faltas</span><div class="btrack"><div class="bfill hi" style="width:71%"></div></div><span class="mono">31,2%</span></div>
+          <div class="brow"><span>3 ou mais</span><div class="btrack"><div class="bfill hi" style="width:100%"></div></div><span class="mono">43,7%</span></div>
         </div>
       </div>
+    </div>
 
-      <h3>9.3 Roteiro do pitch (5 minutos)</h3>
-      <ol class="steps">
-        <li><h3>O problema, com duas pessoas</h3><p>Uma paciente urgente que espera meses por um cardiologista, e um horário de cardiologia que fica vazio na tarde de hoje porque alguém faltou sem avisar.</p></li>
-        <li><h3>O tamanho</h3><p>Faltas de cerca de 9% a 39% em serviços do SUS, conforme o serviço, e perda de receita no privado (A1 a A7).</p></li>
-        <li><h3>Os quatro pacientes</h3><p>Quem confirma (3), quem esqueceu e é lembrado (2), quem não responde (4) e quem avisa que não vai (1). O lembrete resolve 2 e 3; nós resolvemos o 1.</p></li>
-        <li><h3>A solução: o motor de reoferta</h3><p>Demonstração no lab 7.3: a vaga liberada vai primeiro para o caso mais urgente e, entre eles, para quem tem mais chance de aceitar. Mensagem automática, aceite em minutos e cascata.</p></li>
-        <li><h3>Quem paga e por quê</h3><p>O hospital recupera atendimentos (simulador 7.4). Mensalidade mais parte do recuperado.</p></li>
-        <li><h3>Como escala</h3><p>De uma especialidade para o hospital, depois rede e município; exames de imagem; central de regulação; transporte como segundo módulo.</p></li>
-        <li><h3>Equidade e cuidados</h3><p>O risco nunca reduz prioridade; sem multa; fila pública segue a regulação; LGPD.</p></li>
-        <li><h3>O que pedimos</h3><p>Um hospital piloto e acesso a uma base de agenda anonimizada.</p></li>
-      </ol>
-
-      <h3>9.4 Cuidados do trabalho</h3>
-      <ul>
-        <li>Toda taxa e todo valor do pitch deve citar a fonte ou ser dito como hipótese.</li>
-        <li>Os pesos do modelo de aceite são hipóteses: dizer que serão calibrados no piloto (H9, M14).</li>
-        <li>Antes de dizer que somos diferentes, mapear concorrentes (Q8).</li>
-        <li>Evitar prometer redução da fila sem dado do hospital; o simulador mostra cenários, não garantia.</li>
-        <li>Parecer jurídico sobre LGPD e contato por mensagem antes de qualquer piloto (Q4).</li>
+    <div data-edit>
+      <h3>Outros achados</h3>
+      <ul class="small">
+        <li><b>SMS parece “piorar”</b> (27,6% com SMS × 16,7% sem), mas é confusão: o SMS é enviado para quem agendou com antecedência, que já falta mais. Não interpretar como causal.</li>
+        <li>Bolsa Família: 23,7% × 19,8%. Hipertensos e diabéticos faltam um pouco menos (17–18%). Sexo e dia da semana quase não mudam a taxa.</li>
+        <li>Sujeira: 5 consultas com data anterior ao agendamento e 1 idade negativa — remover.</li>
       </ul>
-    </section>
+      <h3>Baseline rápido (só para calibrar metas — não é o modelo final)</h3>
+      <p class="small">Divisão temporal: treino com consultas até 24/05/2016 (71.369), teste a partir de 25/05 (39.152, no-show 18,6%). Gradient boosting com antecedência, histórico de faltas, idade, SMS, comorbidades, dia, hora do agendamento e bairro:</p>
+      <table>
+        <tr><th>Modelo</th><th>AUC-ROC</th><th>PR-AUC</th><th>Precisão top 20%</th><th>Recall top 20%</th></tr>
+        <tr><td>Regressão logística (4 variáveis)</td><td class="mono">0,678</td><td class="mono">0,291</td><td class="mono">32,2%</td><td class="mono">34,6%</td></tr>
+        <tr><td>Gradient boosting (15 variáveis)</td><td class="mono">0,738</td><td class="mono">0,365</td><td class="mono">35,7%</td><td class="mono">38,3%</td></tr>
+      </table>
+      <p class="small muted">Leitura: contatando os 20% de maior risco, encontramos ~38% de todas as faltas, com quase o dobro da taxa base.</p>
 
-    <!-- 10. DIÁRIO -->
-    <section id="diario" class="alt">
-      <p class="kicker">10 · Diário de bordo</p>
-      <h2>Registro do processo de produção</h2>
-      <p>
-        Linha do tempo do que fizemos e decidimos, para permitir a transcrição do processo.
-        Você pode acrescentar entradas (ficam salvas só neste navegador) e copiar tudo como Markdown.
+      <div class="note"><b>Lacunas do dataset para a etapa 3 (realocação):</b> não há <b>hora</b> da consulta (só a data), nem <b>especialidade</b>, <b>urgência</b>, <b>endereço do paciente</b> (o bairro é da unidade), <b>valor da consulta</b> ou distinção entre cancelamento e falta. Urgência, distância, horário e valor terão de ser simulados no MVP — ver D4.</div>
+
+      <h3>Contexto externo</h3>
+      <ul class="small">
+        <li>Média de absenteísmo no SUS citada em torno de 25%.</li>
+        <li>Na Região Metropolitana do ES (mesma região do dataset), 2014–2016: 38,6% de faltas em consultas especializadas, com desperdício estimado de R$ 3,56 milhões.</li>
+        <li>Fornecedor de confirmação automatizada relata reduzir o no-show de hospitais privados pela metade.</li>
+      </ul>
+      <h3>Referência de realocação: Luma Health (EUA)</h3>
+      <ul class="small">
+        <li>Quando uma consulta é cancelada, o sistema oferece a vaga automaticamente à lista de espera. Por padrão, envia a oferta para todos ao mesmo tempo; o primeiro que confirma fica com a vaga e a oferta expira para os demais.</li>
+        <li>As primeiras ofertas vão para quem está há mais tempo na lista. Opcionalmente, envia para um paciente por vez.</li>
+        <li>O paciente tem 30 minutos para responder (configurável). Por padrão, a equipe aprova a vaga aceita.</li>
+        <li>Quem aceita uma oferta fica 7 dias sem receber outra; quem recusa 30 ofertas sai da lista.</li>
+        <li>Clientes relatam preencher entre 42% e 48% das ofertas enviadas.</li>
+      </ul>
+      <h3>Valor da consulta</h3>
+      <ul class="small">
+        <li>Em 2025, operadoras de planos pagavam entre R$ 128 e R$ 195 por consulta (Amil R$ 138, Assefaz R$ 128, Vivest R$ 148,53). Adotamos <b>R$ 150</b> — ver D9.</li>
+      </ul>
+      <p class="sources">Fontes:
+        <a href="https://revistas.usp.br/rmrp/article/download/159626/154332/356524" target="_blank" rel="noopener">Revista de Medicina (USP/RP)</a> ·
+        <a href="https://repositorio.ufes.br/bitstreams/1c92790a-df76-48d0-89c5-646c65b6e1a6/download" target="_blank" rel="noopener">Beltrame, UFES</a> ·
+        <a href="https://www.bnews.com.br/noticias/economia-e-mercado/atendimento-virtual-aumenta-receita-de-hospitais-revela-pesquisa-veja-numeros.html" target="_blank" rel="noopener">BNews / Botdesigner</a> ·
+        <a href="https://www.maxwell.vrac.puc-rio.br/32440/32440.PDF" target="_blank" rel="noopener">Dantas, PUC-Rio (revisão sistemática)</a> ·
+        <a href="https://www.lumahealth.io/product/smart-waitlist/" target="_blank" rel="noopener">Luma Health — Smart Waitlist</a> ·
+        <a href="https://www.tsihealthcare.com/wp-content/uploads/2022/11/How-To-Accept-Waitlist-Offers.pdf" target="_blank" rel="noopener">TSI — Luma waitlist offers</a> ·
+        <a href="https://go.lumahealth.io/luma-smart-waitlist-for-oracle-health" target="_blank" rel="noopener">Luma — resultados Oracle Health</a> ·
+        <a href="https://www.apm.org.br/wp-content/uploads/balanco-negociacoes-apm_2016-a-2025.pdf" target="_blank" rel="noopener">APM — negociações com operadoras 2025</a>
       </p>
+    </div>
+  </section>
 
-      <ol class="diary" id="diary-list"></ol>
-
-      <form class="diary-form" id="diary-form" aria-label="Adicionar entrada ao diário">
-        <label>
-          Tipo
-          <select id="diary-tag">
-            <option>Intenção</option>
-            <option>Descoberta</option>
-            <option>Pesquisa</option>
-            <option>Decisão</option>
-            <option>Entrega</option>
-            <option>Workflow</option>
-          </select>
-        </label>
-        <label class="grow">
-          O que aconteceu
-          <input id="diary-text" type="text" maxlength="400" placeholder="Ex.: Conversamos com a regulação do município sobre a fila ..." required>
-        </label>
-        <button type="submit" class="btn btn-primary">Adicionar</button>
-      </form>
-
-      <div class="lab-actions">
-        <button type="button" id="diary-copy" class="btn">Copiar como Markdown</button>
-        <button type="button" id="diary-reset" class="btn">Apagar entradas adicionadas</button>
-        <span id="diary-msg" class="small" role="status"></span>
+  <!-- 04 -->
+  <section id="s04">
+    <h2><span class="n">04</span>OBJETIVOS e fora de escopo</h2>
+    <div class="grid g2" data-edit>
+      <div>
+        <h3>Objetivos</h3>
+        <ol class="small">
+          <li>Modelo de previsão de no-show treinado no dataset, com validação temporal.</li>
+          <li>Fila de contato priorizada pelo risco, com mensagem pronta e resposta do paciente (vou / não vou / remarcar).</li>
+          <li>Motor de realocação no modelo Luma Health: a vaga vai para a lista de espera, priorizando quem espera há mais tempo, em envio simultâneo ou sequencial.</li>
+          <li>Estimativa de receita recuperada por unidade, para justificar a mensalidade (argumento de venda).</li>
+          <li>Demo ponta a ponta no MVP + este HTML de projeto.</li>
+        </ol>
       </div>
-    </section>
+      <div>
+        <h3>Fora de escopo</h3>
+        <ul class="small">
+          <li>Integração real com WhatsApp/SMS ou com o prontuário/agenda do hospital (será simulada).</li>
+          <li>Cancelar consulta só pela previsão — nunca, sem resposta do paciente.</li>
+          <li>Overbooking ou penalizar quem tem risco alto (negar ou adiar vaga).</li>
+          <li>Triagem clínica de urgência — usaremos um campo de urgência dado.</li>
+          <li>Dados pessoais reais além do dataset anonimizado.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-  </main>
+  <!-- 05 -->
+  <section id="s05">
+    <h2><span class="n">05</span>REQUISITOS</h2>
+    <table data-edit>
+      <tr><th>ID</th><th>Requisito</th><th>Etapa</th></tr>
+      <tr><td class="id">R1</td><td>Limpar o dataset (datas invertidas, idade negativa) e criar variáveis: antecedência, faltas e consultas anteriores do paciente, dia da semana, faixa etária.</td><td>Prever</td></tr>
+      <tr><td class="id">R2</td><td>Variáveis de histórico usam só consultas anteriores à data do agendamento (sem vazamento do futuro).</td><td>Prever</td></tr>
+      <tr><td class="id">R3</td><td>Treinar e salvar o modelo; para cada consulta futura, devolver probabilidade de falta e os 3 fatores que mais pesaram.</td><td>Prever</td></tr>
+      <tr><td class="id">R4</td><td>Gerar fila de contato com as consultas acima do limiar ou no top-K do dia, ordenadas por risco.</td><td>Contatar</td></tr>
+      <tr><td class="id">R5</td><td>Enviar mensagem simulada com três respostas: “Vou”, “Não vou”, “Quero remarcar”. Sem resposta = nada muda; reenvio único.</td><td>Contatar</td></tr>
+      <tr><td class="id">R6</td><td>A vaga só é liberada após resposta “Não vou” ou “Quero remarcar”, registrada com data e hora.</td><td>Contatar</td></tr>
+      <tr><td class="id">R7</td><td>Lista de espera: pacientes com consulta futura que aceitaram receber ofertas de antecipação, com data de entrada na lista. Só são elegíveis os da mesma especialidade e unidade da vaga.</td><td>Realocar</td></tr>
+      <tr><td class="id">R8</td><td>Ofertas em ordem de tempo na lista (mais antigo primeiro). Dois modos: <b>simultâneo</b> (padrão: todos os elegíveis recebem e o primeiro que aceita leva) e <b>sequencial</b> (um por vez). Cada oferta expira em 30 min (configurável).</td><td>Realocar</td></tr>
+      <tr><td class="id">R8b</td><td>Regras herdadas do Luma: quem aceita fica 7 dias sem novas ofertas; quem recusa 30 ofertas sai da lista; aprovação da equipe opcional.</td><td>Realocar</td></tr>
+      <tr><td class="id">R9</td><td>Quem aceita a vaga adiantada libera o horário antigo, que entra no mesmo ciclo (efeito cascata).</td><td>Realocar</td></tr>
+      <tr><td class="id">R10</td><td>Painel com: consultas do dia e risco, status dos contatos, vagas liberadas e realocadas, receita estimada recuperada.</td><td>UI</td></tr>
+      <tr><td class="id">R11</td><td>Gerador de dados sintéticos com semente fixa: hora da consulta, especialidade, quem está na lista de espera e desde quando, tempo de resposta e taxa de aceite das ofertas. Valor da consulta fixo em R$ 150 (parâmetro).</td><td>Dados</td></tr>
+    </table>
+  </section>
 
-  <footer>
-    <p>Hackathon USP 2026 · Vaga Viva (nome provisório) · documento vivo</p>
-  </footer>
+  <!-- 06 -->
+  <section id="s06">
+    <h2><span class="n">06</span>MÉTRICAS-ALVO</h2>
+    <p class="small muted" data-edit>Comandos são os previstos para o MVP (ainda não existem). Validação sempre com o corte temporal em 25/05/2016. Status: <span class="tag pend">pendente</span> <span class="tag base">baseline medido</span> <span class="tag ok">atingida</span> <span class="tag open">em risco</span></p>
+    <table data-edit>
+      <tr><th>ID</th><th>Meta</th><th>Como medir</th><th>Comando que mede</th><th>Status</th></tr>
+      <tr><td class="id">M1</td><td>AUC-ROC ≥ <b>0,75</b></td><td>Conjunto de teste temporal</td><td><code>python avaliar.py --metrica auc</code></td><td><span class="tag base">baseline 0,738</span></td></tr>
+      <tr><td class="id">M2</td><td>Recall no top 20% de risco ≥ <b>40%</b></td><td>% de todas as faltas do teste que caem nos 20% de maior risco</td><td><code>python avaliar.py --metrica recall_top --k 0.20</code></td><td><span class="tag base">baseline 38,3%</span></td></tr>
+      <tr><td class="id">M3</td><td>Precisão no top 20% ≥ <b>36%</b> (≈ 2× a taxa base)</td><td>% de faltas reais entre os contatados</td><td><code>python avaliar.py --metrica precisao_top --k 0.20</code></td><td><span class="tag base">baseline 35,7%</span></td></tr>
+      <tr><td class="id">M4</td><td>Erro de calibração (ECE) ≤ <b>0,03</b></td><td>Probabilidade prevista × taxa real, em 10 faixas</td><td><code>python avaliar.py --metrica ece</code></td><td><span class="tag pend">pendente</span></td></tr>
+      <tr><td class="id">M5</td><td>Diferença de recall entre grupos ≤ <b>10 p.p.</b></td><td>Recall top 20% por faixa etária, sexo e Bolsa Família</td><td><code>python avaliar.py --metrica equidade</code></td><td><span class="tag pend">pendente</span></td></tr>
+      <tr><td class="id">M6</td><td><b>0</b> vagas liberadas sem resposta ativa</td><td>Teste automático sobre o log de eventos da simulação</td><td><code>pytest tests/test_confirmacao.py</code></td><td><span class="tag pend">pendente</span></td></tr>
+      <tr><td class="id">M7</td><td><b>100%</b> das ofertas seguem as regras da lista de espera</td><td>Testes: ordem por tempo na lista, só elegíveis, expiração, 1º aceite leva, carência de 7 dias</td><td><code>pytest tests/test_lista_espera.py</code></td><td><span class="tag pend">pendente</span></td></tr>
+      <tr><td class="id">M8</td><td>≥ <b>45%</b> das vagas liberadas reocupadas</td><td>Simulação de 4 semanas com respostas sintéticas (referência Luma: 42–48% das ofertas preenchidas)</td><td><code>python simular.py --semanas 4 --seed 42</code></td><td><span class="tag pend">pendente</span></td></tr>
+      <tr><td class="id">M9</td><td>Recuperar ≥ <b>10%</b> da receita perdida com faltas</td><td>Receita das vagas reocupadas (R$ 150 cada) ÷ receita perdida sem o produto. Funil estimado: 40% das faltas no top 20% × ~50% respondem “não vou” × 45% reocupadas ≈ 9%</td><td><code>python simular.py --relatorio receita</code></td><td><span class="tag pend">pendente</span></td></tr>
+      <tr><td class="id">M10</td><td>Realocação de uma vaga em &lt; <b>2 s</b></td><td>Tempo do ranking sobre agenda de 10 mil consultas futuras</td><td><code>python simular.py --benchmark</code></td><td><span class="tag pend">pendente</span></td></tr>
+    </table>
+  </section>
 
-  <script src="script.js"></script>
+  <!-- 07 -->
+  <section id="s07">
+    <h2><span class="n">07</span>LABORATÓRIO DE UI</h2>
+    <p class="small muted" data-edit>Rascunhos estáticos das três telas do MVP. Servem para discutir o que aparece em cada uma, não o visual final.</p>
+    <div class="lab">
+      <div class="frame">
+        <div class="fh"><span>A · Agenda com risco</span><span>hospital</span></div>
+        <div class="fb">
+          <div class="row"><span class="risk r-hi">71%</span><span>08:30 · M.S., 24 anos<br><span class="muted small">agendou há 34 dias · 2 faltas antes</span></span><button>Contatar</button></div>
+          <div class="row"><span class="risk r-md">38%</span><span>09:00 · J.P., 51 anos<br><span class="muted small">agendou há 12 dias · 0 faltas</span></span><button>Contatar</button></div>
+          <div class="row"><span class="risk r-lo">6%</span><span>09:30 · A.L., 67 anos<br><span class="muted small">agendou hoje · 0 faltas</span></span><span class="tag ok">confirmado</span></div>
+          <div class="row"><span class="risk r-hi">64%</span><span>10:00 · R.C., 19 anos<br><span class="muted small">agendou há 40 dias · 1 falta</span></span><span class="tag open">liberada</span></div>
+        </div>
+      </div>
+      <div class="frame">
+        <div class="fh"><span>B · Contato com o paciente</span><span>celular</span></div>
+        <div class="fb">
+          <div class="chat">
+            <div class="bubble">Olá, M.! Sua consulta é <b>quinta, 12/06, às 08:30</b> na Unidade Jardim da Penha. Você vai conseguir comparecer?</div>
+            <div class="opts"><span>Vou</span><span>Não vou</span><span>Quero remarcar</span></div>
+            <div class="bubble me">Não vou</div>
+            <div class="bubble">Obrigado por avisar. Liberamos o horário para outro paciente. Quer escolher uma nova data?</div>
+          </div>
+        </div>
+      </div>
+      <div class="frame">
+        <div class="fh"><span>C · Realocação da vaga</span><span>hospital</span></div>
+        <div class="fb">
+          <p class="small" style="margin:0 0 6px">Vaga: <b>qui 12/06 · 08:30 · Clínica geral</b> · modo <b>simultâneo</b></p>
+          <div class="rank"><span class="p">1</span><span>F.O. — consulta em 03/07<div class="chips"><i>na lista há 41 dias</i><i>oferta enviada</i></div></span></div>
+          <div class="rank"><span class="p">2</span><span>L.T. — consulta em 28/06<div class="chips"><i>na lista há 33 dias</i><i>oferta enviada</i></div></span></div>
+          <div class="rank"><span class="p">3</span><span>C.B. — consulta em 15/07<div class="chips"><i>na lista há 19 dias</i><i>oferta enviada</i></div></span></div>
+          <p class="small muted" style="margin:8px 0 0">12 ofertas enviadas · expira em 30 min · o primeiro que aceitar leva · R$ 150 recuperados se preenchida</p>
+        </div>
+      </div>
+    </div>
+    <div data-edit>
+      <h3>Perguntas em aberto para a UI</h3>
+      <ul class="small">
+        <li>Mostrar a probabilidade em % ou só faixa (alto/médio/baixo)?</li>
+        <li>A tela C precisa de um botão para trocar entre modo simultâneo e sequencial na demo?</li>
+        <li>O painel de receita fica na tela A ou é uma tela separada para o pitch?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section id="s08">
+    <h2><span class="n">08</span>DECISÕES</h2>
+    <table data-edit>
+      <tr><th>ID</th><th>Decisão</th><th>Motivo</th><th>Status</th></tr>
+      <tr><td class="id">D1</td><td>Validar com divisão temporal (treino até 24/05, teste a partir de 25/05), não aleatória.</td><td>É como o produto será usado: prever o futuro com o passado. Divisão aleatória infla o resultado.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D2</td><td>Nenhuma vaga é liberada sem resposta ativa do paciente.</td><td>Pedido da equipe; evita cancelar quem iria comparecer.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D3</td><td>Modelo: gradient boosting (scikit-learn), com explicação por fatores.</td><td>Melhor baseline (AUC 0,738 × 0,678 da logística) e roda sem GPU.</td><td><span class="tag open">aberta</span></td></tr>
+      <tr><td class="id">D4</td><td>Dados sintéticos com semente fixa, desenhados para a regra da D5: hora, especialidade, lista de espera com data de entrada, aceite e tempo de resposta às ofertas.</td><td>O dataset não tem esses campos e a realocação depende deles.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D5</td><td>Realocação no modelo Luma Health: a vaga vai para a lista de espera (só elegíveis), com as primeiras ofertas para quem está há mais tempo na lista, ou para todos ao mesmo tempo. Substitui os 4 critérios iniciais (urgência, horário, proximidade, histórico).</td><td>Regra já usada no mercado, simples de explicar e de auditar; “quem espera mais, recebe primeiro” conversa com o tema de acesso.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D6</td><td>Quem contatar: top-K por dia (capacidade da equipe) em vez de limiar fixo de 50%.</td><td>Poucas consultas passam de 50%; o recurso escasso é o contato.</td><td><span class="tag open">aberta</span></td></tr>
+      <tr><td class="id">D7</td><td>Usar SMS_received como variável, sem atribuir efeito causal.</td><td>Ajuda a prever, mas está confundido com a antecedência.</td><td><span class="tag open">aberta</span></td></tr>
+      <tr><td class="id">D8</td><td>MVP em Python.</td><td>Decisão da equipe. Interface (Streamlit ou FastAPI + HTML) ainda a escolher.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D9</td><td>Valor médio da consulta: <b>R$ 150</b>, como parâmetro configurável.</td><td>Faixa paga por operadoras em 2025 (R$ 128–195). Conservador frente à consulta particular; no pitch, mostrar também R$ 100 e R$ 300.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D10</td><td>Cobrança: mensalidade fixa por unidade.</td><td>Decisão da equipe. Preço da mensalidade a definir a partir da receita recuperada simulada (M9).</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D11</td><td>Modo padrão da realocação: simultâneo (como o Luma) ou sequencial?</td><td>Simultâneo preenche mais rápido; sequencial é mais “justo” com quem está há mais tempo. Proposta: simultâneo por padrão.</td><td><span class="tag open">aberta</span></td></tr>
+    </table>
+  </section>
+
+  <!-- 09 -->
+  <section id="s09">
+    <h2><span class="n">09</span>PLANO DE WORKFLOW</h2>
+    <table data-edit>
+      <tr><th>#</th><th>Etapa</th><th>Entrega</th><th>Métricas / requisitos</th><th>Responsável</th></tr>
+      <tr><td class="id">1</td><td>Dados</td><td>Script de limpeza + variáveis + gerador sintético</td><td>R1, R2, R11</td><td class="muted">—</td></tr>
+      <tr><td class="id">2</td><td>Modelo</td><td>Treino, avaliação temporal, modelo salvo, explicações</td><td>R3 · M1–M5</td><td class="muted">—</td></tr>
+      <tr><td class="id">3</td><td>Contato</td><td>Fila priorizada, mensagem simulada, log de respostas</td><td>R4–R6 · M6</td><td class="muted">—</td></tr>
+      <tr><td class="id">4</td><td>Realocação</td><td>Ranking, ofertas em sequência, cascata</td><td>R7–R9 · M7, M10</td><td class="muted">—</td></tr>
+      <tr><td class="id">5</td><td>Simulação</td><td>4 semanas simuladas + relatório de receita</td><td>M8, M9</td><td class="muted">—</td></tr>
+      <tr><td class="id">6</td><td>UI</td><td>Telas A, B, C + painel de receita</td><td>R10</td><td class="muted">—</td></tr>
+      <tr><td class="id">7</td><td>Pitch</td><td>Roteiro de demo, números do placar, este HTML revisado</td><td>Seção 10</td><td class="muted">—</td></tr>
+    </table>
+    <p class="small muted" data-edit>Regra: toda mudança no modelo ou na realocação roda os comandos da seção 06 e adiciona uma linha no placar.</p>
+  </section>
+
+  <!-- 10 -->
+  <section id="s10">
+    <h2><span class="n">10</span>PLACAR</h2>
+    <table>
+      <tr><th>Data</th><th>Versão</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th><th>M6</th><th>M7</th><th>M8</th><th>M9</th><th>M10</th><th>Nota</th></tr>
+    </table>
+    <div class="empty">Nenhuma medição registrada ainda.</div>
+  </section>
+</main>
+
+<footer>projeto.html · arquivo único, sem dependências · edições ficam salvas neste navegador; use “Baixar .html” para compartilhar.</footer>
+
+<script>
+(function(){
+  var KEY='vagaviva-projeto-v2';
+  var nodes=[].slice.call(document.querySelectorAll('[data-edit]'));
+  var store=null;
+  try{store=window.localStorage;}catch(e){}
+  try{
+    var saved=store&&JSON.parse(store.getItem(KEY)||'null');
+    if(saved&&saved.length===nodes.length){nodes.forEach(function(n,i){n.innerHTML=saved[i];});}
+  }catch(e){}
+  function save(){
+    try{store&&store.setItem(KEY,JSON.stringify(nodes.map(function(n){return n.innerHTML;})));}catch(e){}
+  }
+  var btn=document.getElementById('btnEdit');
+  btn.onclick=function(){
+    var on=!document.body.classList.contains('editing');
+    document.body.classList.toggle('editing',on);
+    btn.classList.toggle('on',on);
+    btn.textContent=on?'Editando…':'Editar';
+    nodes.forEach(function(n){n.contentEditable=on?'true':'false';});
+    if(!on)save();
+  };
+  nodes.forEach(function(n){n.addEventListener('input',save);});
+  document.getElementById('btnSave').onclick=function(){
+    var wasOn=document.body.classList.contains('editing');
+    if(wasOn)btn.click();
+    var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+    a.download='projeto.html';document.body.appendChild(a);a.click();a.remove();
+  };
+  document.getElementById('btnReset').onclick=function(){
+    try{store&&store.removeItem(KEY);}catch(e){}
+    location.reload();
+  };
+})();
+</script>
 </body>
 </html>
