@@ -17,14 +17,14 @@ Passo a passo, se quiser rodar separado:
 | 1 | `python preparar.py` | Limpa o dataset de Vitória, cria variáveis, perfis P1–P6 e dados sintéticos |
 | 2 | `python treinar.py` | Treina o modelo e gera previsões, faixas e fatores do período de teste |
 | 3 | `python avaliar.py` | Mede M1–M5 |
-| 4 | `python simular.py --modo todos` | Simula contato e cascata (sequencial, simultânea e controle sem modelo); mede M6, M8–M10 |
+| 4 | `python simular.py` | Simula contato e cascata com ofertas sequenciais (D11), mais o controle sem modelo; mede M6, M8–M10 |
 | 5 | `python -m pytest` | Testes de M6, M7, M11, M12 |
 
 ## Estrutura
 
 ```
 config/fontes.yaml     parâmetros sintéticos e a fonte de cada um
-config/regras.yaml     regras aprovadas (faixas, D-3, guarda, carência, modo)
+config/regras.yaml     regras aprovadas (faixas, D-3, guarda, carência)
 dados/brutos/          vitoria.csv (treino) e itajai.csv (só horários)
 src/giro/          preparar, sinteticos, modelo, contato, lista_espera, simulador, metricas
 app/app.py             interface Streamlit (Agenda, Contatos, Realocação, Painel)
@@ -39,7 +39,6 @@ Simulado (com semente fixa, ver `config/fontes.yaml`): horário, valor da consul
 
 ## Opções em `config/regras.yaml`
 
-- `modo_padrao: sequencial | simultanea`
 - `aviso_idosos`: aviso 3 dias antes para pacientes de 60+ que ficaram na faixa Baixo (D31)
 - `faixa_por_idade: true` corta as faixas dentro de cada faixa etária (alternativa à D31, custa ~2,5 p.p. de recall)
 

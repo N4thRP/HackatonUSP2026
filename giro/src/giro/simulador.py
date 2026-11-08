@@ -1,7 +1,8 @@
 """Simulação do ciclo completo no período de teste (D21): contato, vagas liberadas e cascata.
 
 Relógio: cada dia útil tem `T` tentativas de 30 min. Instante t = dia_util * T + tentativa.
-Gera um log de eventos (eventos_<modo>.jsonl) e um resumo com M6–M10.
+Ofertas sempre sequenciais (D11): um paciente por vez, 30 min cada.
+Gera um log de eventos (eventos.jsonl) e um resumo com M6–M10.
 """
 import heapq
 import json
@@ -29,7 +30,7 @@ class Calendario:
         return self.datas[min(i, len(self.datas) - 1)]
 
 
-def simular(prev, sint, fila_b, fontes, regras, modo="sequencial", cenario="produto", semente=None):
+def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None):
     rng = np.random.default_rng(fontes["semente"] if semente is None else semente)
     T = regras["tentativas_por_dia"]
     p_aceite = fontes["aceite"]["chance_por_oferta"]
@@ -149,24 +150,13 @@ def simular(prev, sint, fila_b, fontes, regras, modo="sequencial", cenario="prod
                     "distancia_km": float(src["dist"][i])}
 
         vencedor, t_ac = None, None
-        if modo == "sequencial":
-            for n, k in enumerate(ordem[:tentativas]):
-                aceitou = rng.random() < p_aceite
-                log(t_rel + n, "oferta", raiz=v["raiz"], nivel=nivel, unidade=u, vaga_dia=int(dia_vaga),
-                    ordem=n + 1, resultado="aceite" if aceitou else "expirou", **info(k))
-                if aceitou:
-                    vencedor, t_ac = k, t_rel + n + 1
-                    break
-        else:  # simultânea: todos os elegíveis recebem; o primeiro que aceitar leva
-            for n in range(tentativas):
-                if not len(ordem):
-                    break
-                aceitaram = [k for k in ordem if rng.random() < p_aceite]
-                log(t_rel + n, "oferta_simultanea", raiz=v["raiz"], nivel=nivel, unidade=u, vaga_dia=int(dia_vaga),
-                    enviados=len(ordem), aceites=len(aceitaram))
-                if aceitaram:
-                    vencedor, t_ac = aceitaram[int(rng.integers(len(aceitaram)))], t_rel + n + 1
-                    break
+        for n, k in enumerate(ordem[:tentativas]):  # sequencial (D11): um por vez, na ordem da fila
+            aceitou = rng.random() < p_aceite
+            log(t_rel + n, "oferta", raiz=v["raiz"], nivel=nivel, unidade=u, vaga_dia=int(dia_vaga),
+                ordem=n + 1, resultado="aceite" if aceitou else "expirou", **info(k))
+            if aceitou:
+                vencedor, t_ac = k, t_rel + n + 1
+                break
 
         if vencedor is None:
             if nivel == 0:
@@ -224,7 +214,7 @@ def simular(prev, sint, fila_b, fontes, regras, modo="sequencial", cenario="prod
     cobertura = {k: contatado.groupby(np.asarray(g)).mean().round(3).to_dict() for k, g in grupos.items()}
     todas = [v for d in cobertura.values() for v in d.values()]
     resumo = {
-        "modo": modo, "cenario": cenario,
+        "cenario": cenario,
         "cobertura_faltosos": cobertura, "M5_cobertura_min": float(min(todas)),
         "M5_cobertura_gap_pp": float(max((max(d.values()) - min(d.values())) * 100 for d in cobertura.values())),
         "consultas": len(df), "faltas": n_faltas, "unidades": int(df["unidade"].nunique()),

@@ -36,12 +36,12 @@ def main():
     # M8 e M9: média de 5 sementes (o ruído de uma semente é maior que a folga das metas)
     extras = []
     for semente in [1, 2, 3, 4]:
-        rodar("simular.py", "--modo", "sequencial", "--sem-placar", "--seed", str(semente))
-        extras.append(json.load(open(SAIDAS / "resumo_simulacao.json"))["sequencial_produto"])
-    rodar("simular.py", "--modo", "todos", "--sem-placar")
+        rodar("simular.py", "--sem-controle", "--sem-placar", "--seed", str(semente))
+        extras.append(json.load(open(SAIDAS / "resumo_simulacao.json"))["produto"])
+    rodar("simular.py", "--sem-placar")
     bench = rodar("simular.py", "--benchmark")
     m = json.load(open(SAIDAS / "metricas_modelo.json"))
-    s = json.load(open(SAIDAS / "resumo_simulacao.json"))["sequencial_produto"]
+    s = json.load(open(SAIDAS / "resumo_simulacao.json"))["produto"]
     seg = float(bench.stdout.split("M10: ")[1].split(" ms")[0]) / 1000
     todas = [s] + extras
     m8 = [r["M8"] for r in todas]

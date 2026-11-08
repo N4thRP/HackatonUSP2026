@@ -72,8 +72,8 @@ def carregar():
 
 
 @st.cache_data
-def eventos(modo):
-    return pd.read_json(SAIDAS / f"eventos_{modo}.jsonl", lines=True)
+def eventos():
+    return pd.read_json(SAIDAS / "eventos.jsonl", lines=True)
 
 
 def sim(txt):
@@ -100,12 +100,9 @@ prev, resumo, placar = carregar()
 with st.sidebar:
     st.markdown("### Giro")
     st.caption("Simulação com consultas reais de Vitória (ES), 25/05 a 08/06/2016.")
-    modo_txt = st.radio("Oferta da vaga", ["Sequencial", "Simultânea"], index=0,
-                        help="Sequencial: um paciente por vez, 30 min cada. Simultânea: todos ao mesmo tempo, o primeiro que aceitar leva.")
-    modo = "sequencial" if modo_txt == "Sequencial" else "simultanea"
     valor = st.radio("Valor da consulta", ["Convênio", "SUS"], index=0,
                      help="Convênio: R$ 128–195 por consulta (média R$ 150). SUS: R$ 13,85 por consulta perdida.")
-    ev = eventos(modo)
+    ev = eventos()
     lib0 = ev[(ev.tipo == "vaga_liberada") & (ev.nivel == 0)]
     ranking = lib0.merge(prev[["id_consulta", "data_consulta"]], on="id_consulta").groupby(["unidade", "data_consulta"]).size()
     padrao_u, padrao_d = ranking.idxmax()
@@ -208,14 +205,14 @@ with aba3:
             l = agenda[agenda.id_consulta == rid].iloc[0]
             rotulos[rid] = f"{l.horario} · {paciente_curto(l.id_paciente)} ({RESPOSTA[resp[rid]].lower()})"
         preenchidas = set(ev_u.loc[(ev_u.tipo == "aceite") & (ev_u.nivel == 0), "raiz"].astype(int))
-        com_oferta = set(ev_u.loc[ev_u.tipo.isin(["oferta", "oferta_simultanea"]) & (ev_u.nivel == 0), "raiz"].astype(int))
+        com_oferta = set(ev_u.loc[(ev_u.tipo == "oferta") & (ev_u.nivel == 0), "raiz"].astype(int))
         raizes = sorted(raizes, key=lambda x: (x not in preenchidas, x not in com_oferta))
         for x in raizes:
             if x in preenchidas:
                 rotulos[x] += " · preenchida"
         rid = st.selectbox("Vaga liberada", raizes, format_func=lambda x: rotulos[x])
         cadeia = ev_u[ev_u.raiz == rid].sort_values(["t", "nivel"])
-        reais = cadeia[cadeia.tipo.isin(["oferta", "oferta_simultanea", "aceite"])
+        reais = cadeia[cadeia.tipo.isin(["oferta", "aceite"])
                        | ((cadeia.tipo == "fim_cadeia") & (cadeia.resultado != "fila_sem_horario"))]
         niveis = sorted(set(reais.nivel.dropna().astype(int)) | {0})
         passo = st.select_slider("Avançar a cascata", options=list(range(len(niveis) + 1)), value=len(niveis),
@@ -229,7 +226,6 @@ with aba3:
             bloco = cadeia[cadeia.nivel == nv]
             html = ['<div class="vaga">']
             ofertas = bloco[bloco.tipo == "oferta"]
-            simult = bloco[bloco.tipo == "oferta_simultanea"]
             if nv > 0:
                 html.append(f"<h4>Nível {nv}: o horário antigo de quem aceitou é oferecido à fila</h4>")
             else:
@@ -264,15 +260,10 @@ with aba3:
                                     'ninguém elegível para receber a oferta</div>')
                     else:
                         html.append('<div class="subt">Ninguém aceitou antes do prazo (até 2 h antes da consulta)</div>')
-            elif not len(simult):
+            else:
                 html.append('<p class="ex" style="margin:4px 0">Nenhuma oferta enviada: não havia ninguém elegível na fila '
                             'nesse momento (mesma unidade, consulta a 5+ dias úteis de hoje ou fila sem horário) '
                             'ou não sobrou tempo antes do prazo.</p>')
-            elif len(simult):
-                for k, o in enumerate(simult.itertuples(), 1):
-                    html.append(f'<div class="of"><span class="n">{k}ª</span><span></span>'
-                                f'<span>Oferta enviada a {int(o.enviados)} pessoas ao mesmo tempo</span>'
-                                f'<span class="{"ac" if o.aceites else "ex"}">{int(o.aceites)} aceite(s)</span></div>')
             ac = bloco[bloco.tipo == "aceite"]
             if len(ac):
                 a = ac.iloc[0]
@@ -294,8 +285,8 @@ with aba3:
 
 # ---------------- Painel ----------------
 with aba4:
-    r = resumo[f"{modo}_produto"]
-    ctl = resumo.get("sequencial_aleatorio")
+    r = resumo["produto"]
+    ctl = resumo.get("aleatorio")
     st.markdown(f"#### Período inteiro · {r['unidades']} unidades · {r['dias_uteis']} dias úteis · {r['consultas']:,} consultas".replace(",", "."))
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Faltas no período", f"{r['faltas']:,}".replace(",", "."))

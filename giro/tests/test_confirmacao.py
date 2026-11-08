@@ -24,9 +24,8 @@ def test_checagem_aceita_nao_vou_antes():
     assert checar_confirmacao(eventos) == 0
 
 
-@pytest.mark.parametrize("modo", ["sequencial", "simultanea"])
-def test_log_da_simulacao_sem_violacoes(modo):
-    arq = SAIDAS / f"eventos_{modo}.jsonl"
+def test_log_da_simulacao_sem_violacoes():
+    arq = SAIDAS / "eventos.jsonl"
     if not arq.exists():
         pytest.skip("rode simular.py antes")
     with open(arq, encoding="utf-8") as f:
@@ -34,11 +33,10 @@ def test_log_da_simulacao_sem_violacoes(modo):
     assert checar_confirmacao(eventos) == 0
 
 
-@pytest.mark.parametrize("modo", ["sequencial"])
-def test_ninguem_aceita_duas_vagas_em_7_dias(modo):
+def test_ninguem_aceita_duas_vagas_em_7_dias():
     """M7 (carência por paciente): nenhum paciente tem dois aceites a menos de 7 dias úteis."""
     import pandas as pd
-    arq = SAIDAS / f"eventos_{modo}.jsonl"
+    arq = SAIDAS / "eventos.jsonl"
     if not arq.exists():
         pytest.skip("rode simular.py antes")
     ev = pd.read_json(arq, lines=True)

@@ -37,7 +37,7 @@ def benchmark(n=10_000, repeticoes=200):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--periodo", default="teste")
-    ap.add_argument("--modo", default=None, help="sequencial | simultanea | todos")
+    ap.add_argument("--sem-controle", action="store_true", help="não roda o controle sem modelo")
     ap.add_argument("--relatorio", default=None)
     ap.add_argument("--benchmark", action="store_true")
     ap.add_argument("--seed", type=int, default=None)
@@ -52,24 +52,22 @@ def main():
 
     fontes, regras = carregar_config()
     prev, sint, fila_b = carregar()
-    rodadas = [("sequencial", "produto"), ("simultanea", "produto"), ("sequencial", "aleatorio")]
-    if a.modo and a.modo != "todos":
-        rodadas = [(a.modo, "produto")]
+    rodadas = ["produto"] if a.sem_controle else ["produto", "aleatorio"]
     resumos = {}
-    for modo, cenario in rodadas:
+    for cenario in rodadas:
         t0 = time.perf_counter()
-        eventos, r = simular(prev, sint, fila_b, fontes, regras, modo=modo, cenario=cenario, semente=a.seed)
+        eventos, r = simular(prev, sint, fila_b, fontes, regras, cenario=cenario, semente=a.seed)
         r["M6_violacoes"] = checar_confirmacao(eventos)
-        nome = f"{modo}_{cenario}"
+        nome = cenario
         if cenario == "produto":
-            salvar_eventos(eventos, SAIDAS / f"eventos_{modo}.jsonl")
+            salvar_eventos(eventos, SAIDAS / "eventos.jsonl")
         resumos[nome] = r
         print(f"{nome:22s} {time.perf_counter()-t0:5.1f}s | liberadas {r['vagas_liberadas']:,} | "
               f"M8 {r['M8']:.1%} | recuperadas {r['vagas_recuperadas']:,} | M9 {r['M9']:.1%} | "
               f"R$ {r['valor_recuperado_convenio']:,.0f} | M6 violações {r['M6_violacoes']}")
     salvar_json(resumos, "resumo_simulacao.json")
 
-    base = resumos.get(f"{regras['modo_padrao']}_produto")
+    base = resumos.get("produto")
     if base:
         if a.relatorio == "receita" or a.relatorio is None:
             print(f"\nReceita (convênio): R$ {base['valor_recuperado_convenio']:,.0f} recuperados de "
@@ -79,7 +77,7 @@ def main():
                   f"atendidos + {base['dias_antecipados_tipo_a']:,.0f} dias de consulta antecipados")
         if not a.sem_placar:
             registrar_placar({"M6": base["M6_violacoes"], "M8": base["M8"], "M9": base["M9"],
-                              "M10": base["M10_seg_max"]}, a.versao, f"simulação {regras['modo_padrao']}")
+                              "M10": base["M10_seg_max"]}, a.versao, "simulação")
 
 
 if __name__ == "__main__":
