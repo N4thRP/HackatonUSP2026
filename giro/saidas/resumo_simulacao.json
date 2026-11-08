@@ -1,6 +1,8 @@
 {
   "produto": {
     "cenario": "produto",
+    "regra": "geral",
+    "aceites_mesmo_horario": 0,
     "cobertura_faltosos": {
       "faixa_etaria": {
         "0-17": 0.857,
@@ -41,13 +43,15 @@
     "espera_media_beneficiados": 25.003072491598658,
     "M8": 0.4317889317889318,
     "M9": 0.16257570831557397,
-    "M10_seg_medio": 0.00018727432125802335,
-    "M10_seg_max": 0.003862678997393232,
+    "M10_seg_medio": 0.00018671738938126663,
+    "M10_seg_max": 0.0037480479950318113,
     "por_unidade_mes_convenio": 5791.467201125173,
     "M6_violacoes": 0
   },
   "aleatorio": {
     "cenario": "aleatorio",
+    "regra": "geral",
+    "aceites_mesmo_horario": 0,
     "cobertura_faltosos": {
       "faixa_etaria": {
         "0-17": 0.497,
@@ -88,9 +92,107 @@
     "espera_media_beneficiados": 28.11482014388489,
     "M8": 0.47853403141361256,
     "M9": 0.1062452210679776,
-    "M10_seg_medio": 0.00019098672000183843,
-    "M10_seg_max": 0.0032160720002138987,
+    "M10_seg_medio": 0.00018859695178520284,
+    "M10_seg_max": 0.0035176439996575937,
     "por_unidade_mes_convenio": 3784.7949085794703,
+    "M6_violacoes": 0
+  },
+  "particular": {
+    "cenario": "produto",
+    "regra": "particular",
+    "aceites_mesmo_horario": 42,
+    "cobertura_faltosos": {
+      "faixa_etaria": {
+        "0-17": 0.857,
+        "18-39": 0.892,
+        "40-59": 0.725,
+        "60+": 1.0
+      },
+      "sexo": {
+        "F": 0.861,
+        "M": 0.849
+      },
+      "bolsa_familia": {
+        "0": 0.855,
+        "1": 0.87
+      }
+    },
+    "M5_cobertura_min": 0.725,
+    "M5_cobertura_gap_pp": 27.500000000000004,
+    "consultas": 39152,
+    "faltas": 7296,
+    "unidades": 79,
+    "dias_uteis": 9,
+    "contatos": 24717,
+    "vagas_liberadas": 3108,
+    "primeira_vaga_preenchida": 1376,
+    "movimentos": 2108,
+    "fim_fila_sem_horario": 493,
+    "fim_volta_agenda": 705,
+    "fim_perdido": 178,
+    "nao_preenchidas": 1732,
+    "vagas_recuperadas": 1198,
+    "valor_recuperado_convenio": 188943.0800000001,
+    "perda_convenio": 1151277.1,
+    "valor_recuperado_sus": 16592.3,
+    "perda_sus": 101049.59999999999,
+    "dias_antecipados_tipo_a": 6908.0,
+    "pacientes_b_atendidos": 493,
+    "espera_media_beneficiados": 24.222153700189754,
+    "M8": 0.44272844272844275,
+    "M9": 0.1641160759646831,
+    "M10_seg_medio": 0.00022299479629556336,
+    "M10_seg_max": 0.07567839499097317,
+    "por_unidade_mes_convenio": 5846.340028129399,
+    "M6_violacoes": 0
+  },
+  "particular_aleatorio": {
+    "cenario": "aleatorio",
+    "regra": "particular",
+    "aceites_mesmo_horario": 26,
+    "cobertura_faltosos": {
+      "faixa_etaria": {
+        "0-17": 0.497,
+        "18-39": 0.49,
+        "40-59": 0.467,
+        "60+": 1.0
+      },
+      "sexo": {
+        "F": 0.564,
+        "M": 0.563
+      },
+      "bolsa_familia": {
+        "0": 0.572,
+        "1": 0.504
+      }
+    },
+    "M5_cobertura_min": 0.467,
+    "M5_cobertura_gap_pp": 53.29999999999999,
+    "consultas": 39152,
+    "faltas": 7296,
+    "unidades": 79,
+    "dias_uteis": 9,
+    "contatos": 23268,
+    "vagas_liberadas": 1910,
+    "primeira_vaga_preenchida": 932,
+    "movimentos": 1402,
+    "fim_fila_sem_horario": 377,
+    "fim_volta_agenda": 422,
+    "fim_perdido": 133,
+    "nao_preenchidas": 978,
+    "vagas_recuperadas": 799,
+    "valor_recuperado_convenio": 126309.40000000023,
+    "perda_convenio": 1151277.1,
+    "valor_recuperado_sus": 11066.15,
+    "perda_sus": 101049.59999999999,
+    "dias_antecipados_tipo_a": 4431.0,
+    "pacientes_b_atendidos": 377,
+    "espera_media_beneficiados": 27.34001426533524,
+    "M8": 0.48795811518324606,
+    "M9": 0.10971242283895008,
+    "M10_seg_medio": 0.000212319282998507,
+    "M10_seg_max": 0.0034704629943007603,
+    "por_unidade_mes_convenio": 3908.3077355836917,
     "M6_violacoes": 0
   }
 }

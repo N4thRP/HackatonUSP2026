@@ -17,7 +17,7 @@ Passo a passo, se quiser rodar separado:
 | 1 | `python preparar.py` | Limpa o dataset de Vitória, cria variáveis, perfis P1–P6 e dados sintéticos |
 | 2 | `python treinar.py` | Treina o modelo e gera previsões, faixas e fatores do período de teste |
 | 3 | `python avaliar.py` | Mede M1–M5 |
-| 4 | `python simular.py` | Simula contato e cascata com ofertas sequenciais (D11), mais o controle sem modelo; mede M6, M8–M10 |
+| 4 | `python simular.py` | Simula contato e cascata com ofertas sequenciais (D11) nas duas regras de realocação — geral/SUS (D34, tempo de espera) e particular (D35, mesmo horário uma semana depois) — mais o controle sem modelo; mede M6, M8–M10 |
 | 5 | `python -m pytest` | Testes de M6, M7, M11, M12 |
 
 ## Estrutura

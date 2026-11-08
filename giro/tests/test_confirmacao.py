@@ -24,8 +24,9 @@ def test_checagem_aceita_nao_vou_antes():
     assert checar_confirmacao(eventos) == 0
 
 
-def test_log_da_simulacao_sem_violacoes():
-    arq = SAIDAS / "eventos.jsonl"
+@pytest.mark.parametrize("arquivo", ["eventos.jsonl", "eventos_particular.jsonl"])
+def test_log_da_simulacao_sem_violacoes(arquivo):
+    arq = SAIDAS / arquivo
     if not arq.exists():
         pytest.skip("rode simular.py antes")
     with open(arq, encoding="utf-8") as f:

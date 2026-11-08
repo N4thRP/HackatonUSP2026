@@ -89,6 +89,8 @@ st.markdown("""
   .semantica>div{display:flex;align-items:flex-start;gap:8px;font-size:.88rem}
   .semantica small{display:block;color:#6B7B79;font-size:.78rem}
   .pac{display:flex;align-items:flex-start;gap:10px}
+  .chip-sem{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.74rem;font-weight:600;color:#1D5C63;
+            background:#DCEDE8;white-space:nowrap}
   .chip60{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;font-weight:700;color:#1F5A99;background:#DCE9F7}
   details.rk{position:relative;flex:none;margin-top:3px}
   details.rk summary{list-style:none;cursor:pointer;display:block}
@@ -133,8 +135,10 @@ def carregar():
 
 
 @st.cache_data
-def eventos():
-    return pd.read_json(SAIDAS / "eventos.jsonl", lines=True)
+def eventos(regra="geral"):
+    """regra "geral" (D34, SUS) ou "particular" (D35, hospital particular)."""
+    arquivo = "eventos.jsonl" if regra == "geral" else "eventos_particular.jsonl"
+    return pd.read_json(SAIDAS / arquivo, lines=True)
 
 
 def sim(txt):
@@ -204,10 +208,20 @@ LOGO = ('<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rec
 with st.sidebar:
     st.markdown(f'<div class="sb-marca">{LOGO}<div><div class="sb-nome">Giro</div>'
                 '<div class="sb-desc">Menos faltas, mais vagas</div></div></div>', unsafe_allow_html=True)
-    ev = eventos()
-    # dia sugerido ao abrir: o com mais remarcações a partir das vagas liberadas dele (mostra bem a cascata)
-    lib0 = ev[(ev.tipo == "vaga_liberada") & (ev.nivel == 0)]
-    n_ac = ev[ev.tipo == "aceite"].groupby("raiz").size()
+    with st.container(border=True):
+        st.markdown('<div class="sb-sec">Cenário</div>', unsafe_allow_html=True)
+        valor = st.radio(":material/apartment: Tipo de serviço", ["Convênio", "SUS"], index=0, horizontal=True,
+                         format_func={"Convênio": "Particular", "SUS": "SUS"}.get,
+                         help="Particular (convênio): R$ 128–195 por consulta; a vaga vai primeiro para quem tem consulta "
+                              "uma semana depois, no mesmo horário (D35). SUS: R$ 13,85 por consulta perdida; a vaga vai "
+                              "para quem espera há mais tempo (D34).")
+    REGRA = "particular" if valor == "Convênio" else "geral"
+    ev = eventos(REGRA)
+    # dia sugerido ao abrir: o com mais remarcações a partir das vagas liberadas dele (fixo pela regra geral,
+    # para não mudar de dia quando o cenário muda)
+    ev_g = eventos("geral")
+    lib0 = ev_g[(ev_g.tipo == "vaga_liberada") & (ev_g.nivel == 0)]
+    n_ac = ev_g[ev_g.tipo == "aceite"].groupby("raiz").size()
     lib0 = lib0.assign(remarc=lib0.id_consulta.map(n_ac).fillna(0))
     ranking = (lib0.merge(prev[["id_consulta", "data_consulta"]], on="id_consulta")
                .groupby(["unidade", "data_consulta"]).agg(remarc=("remarc", "sum"), vagas=("remarc", "size"))
@@ -224,10 +238,6 @@ with st.sidebar:
         dia = st.selectbox(":material/calendar_month: Dia da consulta", dias,
                            index=dias.index(padrao_d.date()) if padrao_d.date() in dias else 0,
                            format_func=lambda d: d.strftime("%d/%m/%Y"))
-    with st.container(border=True):
-        st.markdown('<div class="sb-sec">Valores</div>', unsafe_allow_html=True)
-        valor = st.radio(":material/payments: Valor da consulta", ["Convênio", "SUS"], index=0, horizontal=True,
-                         help="Convênio: R$ 128–195 por consulta (média R$ 150). SUS: R$ 13,85 por consulta perdida.")
     st.markdown('<div class="sb-nota"><b>Sobre os dados.</b> Consultas reais de Vitória (ES), de 25/05 a 08/06/2016. '
                 '<span class="sim">exemplo<small>simulado</small></span> marca dado sintético (horário, valor, '
                 'distância e respostas).</div>', unsafe_allow_html=True)
@@ -400,9 +410,9 @@ FIM_CURTO = {"fila_sem_horario": "paciente da fila atendido", "volta_agenda": "v
 
 
 @st.cache_data
-def cascatas_unidade(unidade):
+def cascatas_unidade(unidade, regra):
     """Uma linha por cascata (vaga liberada por 'não vou'/'quero remarcar') da unidade."""
-    ev = eventos()
+    ev = eventos(regra)
     e = ev[ev.unidade == unidade]
     raizes = e[(e.tipo == "vaga_liberada") & (e.nivel == 0)].id_consulta.astype(int)
     ac = e[e.tipo == "aceite"]
@@ -487,8 +497,9 @@ def svg_mapa(etapas, fim, passo):
 def html_ofertas(ofertas):
     def linha(o, res):
         tipo = "já tem consulta mais tarde" if o.tipo_fila == "A" else "fila sem horário"
+        chip = '<span class="chip-sem">mesmo horário, 1 semana depois</span>' if getattr(o, "criterio", "") == "semana" else ""
         return (f'<div class="of"><span class="n">{int(o.ordem)}º</span>'
-                f'<span>{paciente_curto(o.quem)} · {tipo} · espera {o.espera_dias:.0f} dias · '
+                f'<span>{paciente_curto(o.quem)}{chip} · {tipo} · espera {o.espera_dias:.0f} dias · '
                 f'{sim(f"{o.distancia_km:.1f} km")}</span>{res}</div>')
     if not len(ofertas):
         return ('<p class="ex" style="margin:4px 0">Nenhuma oferta enviada: não havia ninguém elegível na fila nesse '
@@ -538,6 +549,9 @@ def desenhar_cascata(etapas, fim, passo, raiz_resp):
                        f'oferta e antecipou a consulta de <b>{pd.Timestamp(a.dia_antigo):%d/%m}</b> para '
                        f'<b>{e["data"]:%d/%m}</b>: <b>{plural(dias, "dia", "dias")}</b> antes. '
                        f'Esperava havia {plural(int(a.espera_dias), "dia", "dias")}.')
+                ganhou = e["ofertas"][e["ofertas"].resultado == "aceite"]
+                if len(ganhou) and ganhou.iloc[0].get("criterio") == "semana":
+                    mov += ' <span class="chip-sem">mesmo horário, 1 semana depois</span>'
             else:
                 mov = (f'<b>{paciente_curto(a.quem)}</b>, que não tinha horário marcado, aceitou na '
                        f'{int(e["ofertas"].ordem.max())}ª oferta depois de {plural(int(a.espera_dias), "dia", "dias")} de espera.')
@@ -553,7 +567,7 @@ def desenhar_cascata(etapas, fim, passo, raiz_resp):
 
 with aba3:
     prev_id = prev.set_index("id_consulta")
-    todas = cascatas_unidade(unidade)
+    todas = cascatas_unidade(unidade, REGRA)
     do_dia = todas[todas.data_consulta == dia_ts]
     if todas.empty:
         st.info("Nenhuma vaga foi liberada nesta unidade no período. Escolha outra unidade na barra lateral.")
@@ -614,13 +628,18 @@ with aba3:
             else:
                 with area.container():
                     desenhar_cascata(etapas, fim, passo, resp.get(rid, "nao_vou"))
-        st.caption("Ordem da fila: quem espera há mais tempo recebe a oferta primeiro. "
-                   "Quem já tem consulta só recebe oferta se ela estiver a 5+ dias úteis.")
+        if REGRA == "particular":
+            st.caption("Ordem da fila (particular, D35): primeiro quem tem consulta uma semana depois, no mesmo horário; "
+                       "sem essa pessoa ou sem aceite, quem espera há mais tempo. "
+                       "Quem já tem consulta só recebe oferta se ela estiver a 5+ dias úteis.")
+        else:
+            st.caption("Ordem da fila (SUS, D34): quem espera há mais tempo recebe a oferta primeiro. "
+                       "Quem já tem consulta só recebe oferta se ela estiver a 5+ dias úteis.")
 
 # ---------------- Painel ----------------
 with aba4:
-    r = resumo["produto"]
-    ctl = resumo.get("aleatorio")
+    r = resumo["particular" if REGRA == "particular" else "produto"]
+    ctl = resumo.get("particular_aleatorio" if REGRA == "particular" else "aleatorio")
     st.markdown(f"#### Período inteiro · {r['unidades']} unidades · {r['dias_uteis']} dias úteis · {r['consultas']:,} consultas".replace(",", "."))
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Faltas no período", f"{r['faltas']:,}".replace(",", "."))
@@ -655,6 +674,12 @@ with aba4:
               help="Parte dos beneficiados que não tinha nenhum horário marcado.")
     c3.metric("Primeira vaga preenchida", f"{r['M8']:.1%}".replace(".", ","),
               help="Desta rodada (semente 42). O placar usa a média de 5 sementes. M8, meta 45%.")
+    if REGRA == "particular":
+        n_sem = r.get("aceites_mesmo_horario", 0)
+        pct = f"{n_sem / max(r['movimentos'], 1):.1%}".replace(".", ",")
+        tot = f"{r['movimentos']:,}".replace(",", ".")
+        st.caption(f"Particular (D35): {n_sem} das {tot} remarcações ({pct}) foram para quem tinha consulta uma semana "
+                   "depois, no mesmo horário; as outras caíram na regra geral (quem espera há mais tempo).")
 
     if "cobertura_faltosos" in r:
         st.markdown("#### Quem recebe contato, entre os que faltariam")

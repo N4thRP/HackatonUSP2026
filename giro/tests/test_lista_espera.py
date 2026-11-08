@@ -1,7 +1,7 @@
 """M7: as ofertas seguem as regras da lista de espera."""
 import numpy as np
 
-from giro.lista_espera import elegiveis_a, ordenar
+from giro.lista_espera import elegiveis_a, ordenar, semana_primeiro
 
 
 def agenda(**kw):
@@ -17,6 +17,17 @@ def test_quem_espera_mais_recebe_primeiro():
 
 def test_empate_mantem_ordem_original():
     assert list(ordenar([10, 30, 10, 30])) == [1, 3, 0, 2]
+
+
+def test_particular_mesmo_horario_uma_semana_depois_vai_na_frente():
+    # D35: ordem geral [3, 1, 2, 0]; quem tem consulta 7 dias depois no mesmo horário (índices 0 e 2) vai na frente,
+    # mantendo entre si a ordem geral; o resto segue a regra geral
+    mesmo_horario = [True, False, True, False]
+    assert list(semana_primeiro([3, 1, 2, 0], mesmo_horario)) == [2, 0, 3, 1]
+
+
+def test_particular_sem_ninguem_no_horario_cai_na_regra_geral():
+    assert list(semana_primeiro([3, 1, 2, 0], [False] * 4)) == [3, 1, 2, 0]
 
 
 def test_so_quem_seria_atendido_depois():

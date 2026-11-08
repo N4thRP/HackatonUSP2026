@@ -38,6 +38,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--periodo", default="teste")
     ap.add_argument("--sem-controle", action="store_true", help="não roda o controle sem modelo")
+    ap.add_argument("--regra", default="ambas", choices=["ambas", "geral", "particular"],
+                    help="geral = D34 (SUS, tempo de espera); particular = D35 (mesmo horário uma semana depois)")
     ap.add_argument("--relatorio", default=None)
     ap.add_argument("--benchmark", action="store_true")
     ap.add_argument("--seed", type=int, default=None)
@@ -52,15 +54,18 @@ def main():
 
     fontes, regras = carregar_config()
     prev, sint, fila_b = carregar()
-    rodadas = ["produto"] if a.sem_controle else ["produto", "aleatorio"]
+    cenarios = ["produto"] if a.sem_controle else ["produto", "aleatorio"]
+    regras_rodar = ["geral", "particular"] if a.regra == "ambas" else [a.regra]
+    # nomes: regra geral mantém "produto"/"aleatorio" (placar e histórico); a particular ganha prefixo
+    rodadas = [(rg, c, c if rg == "geral" else ("particular" if c == "produto" else f"particular_{c}"))
+               for rg in regras_rodar for c in cenarios]
     resumos = {}
-    for cenario in rodadas:
+    for regra, cenario, nome in rodadas:
         t0 = time.perf_counter()
-        eventos, r = simular(prev, sint, fila_b, fontes, regras, cenario=cenario, semente=a.seed)
+        eventos, r = simular(prev, sint, fila_b, fontes, regras, cenario=cenario, semente=a.seed, regra=regra)
         r["M6_violacoes"] = checar_confirmacao(eventos)
-        nome = cenario
         if cenario == "produto":
-            salvar_eventos(eventos, SAIDAS / "eventos.jsonl")
+            salvar_eventos(eventos, SAIDAS / ("eventos.jsonl" if regra == "geral" else "eventos_particular.jsonl"))
         resumos[nome] = r
         print(f"{nome:22s} {time.perf_counter()-t0:5.1f}s | liberadas {r['vagas_liberadas']:,} | "
               f"M8 {r['M8']:.1%} | recuperadas {r['vagas_recuperadas']:,} | M9 {r['M9']:.1%} | "

@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 from .contato import mensagem, sortear_resposta
-from .lista_espera import elegiveis_a, elegiveis_b, ordenar
+from .lista_espera import elegiveis_a, elegiveis_b, ordenar, semana_primeiro
 
 
 class Calendario:
@@ -30,7 +30,8 @@ class Calendario:
         return self.datas[min(i, len(self.datas) - 1)]
 
 
-def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None):
+def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None, regra="geral"):
+    """regra: "geral" (D34, SUS: tempo de espera) ou "particular" (D35: mesmo horário uma semana depois)."""
     rng = np.random.default_rng(fontes["semente"] if semente is None else semente)
     T = regras["tentativas_por_dia"]
     p_aceite = fontes["aceite"]["chance_por_oferta"]
@@ -56,7 +57,7 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
             "id": g["id_consulta"].to_numpy(), "pac": g["id_paciente"].astype(str).to_numpy(),
             "dia": g["dia"].to_numpy().astype(float), "dia_ag": g["dia_ag"].to_numpy(),
             "data_ag": g["data_agendamento"].to_numpy(),
-            "dist": g["distancia_km"].to_numpy(),
+            "dist": g["distancia_km"].to_numpy(), "hora": g["horario"].to_numpy(),
             "aceita": g["aceita_ofertas"].to_numpy().astype(bool),
             "ativa": np.ones(len(g), bool), "ultimo_aceite": np.full(len(g), -99.0),
             "valor": g["valor_convenio"].to_numpy(),
@@ -100,13 +101,14 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
             log(t_resp, "vaga_liberada", id_consulta=int(r.id_consulta), raiz=int(r.id_consulta), unidade=u, nivel=0,
                 valor=float(r.valor_convenio))
             heapq.heappush(heap, (t_resp, seq, {"unidade": u, "dia": int(r.dia), "nivel": 0, "raiz": int(r.id_consulta),
-                                                "origem": int(r.id_consulta), "valor": float(r.valor_convenio)}))
+                                                "origem": int(r.id_consulta), "valor": float(r.valor_convenio),
+                                                "hora": r.horario}))
             seq += 1
 
     # ---- 4-5: ofertas e cascata ---------------------------------------------
     stats = {"liberadas": 0, "preenchidas_n0": 0, "fim_b": 0, "fim_volta": 0, "fim_perdido": 0,
              "nao_preenchidas_n0": 0, "movimentos": 0, "dias_antecipados": 0.0, "valor_recuperado": 0.0,
-             "beneficiados": [], "tempos_selecao": []}
+             "beneficiados": [], "tempos_selecao": [], "aceites_semana": 0}
     raiz_valor = {}
 
     while heap:
@@ -130,6 +132,12 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
             esp_b = fb["espera0"][ib] + (data_agora - cal.data(inicio_teste)).days
             cand_esp += list(esp_b); cand_ref += [("B", i) for i in ib]
         ordem = ordenar(cand_esp) if cand_ref else []
+        semana = np.zeros(len(cand_ref), bool)
+        if regra == "particular" and len(ordem):  # D35: consulta 7 dias depois, no mesmo horário, vai na frente
+            alvo = cal.idx.get(cal.data(dia_vaga) + pd.Timedelta(days=7))
+            if alvo is not None:
+                semana[:len(ia)] = (ag["dia"][ia] == alvo) & (ag["hora"][ia] == v["hora"])  # só tipo A (vêm primeiro)
+                ordem = semana_primeiro(ordem, semana)
         vistos, unicos = set(), []          # uma oferta por paciente, mesmo com várias consultas futuras
         for k in ordem:
             tipo_k, i_k = cand_ref[k]
@@ -151,9 +159,11 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
         for n, k in enumerate(ordem[:tentativas]):  # sequencial (D11): um por vez, na ordem da fila
             aceitou = rng.random() < p_aceite
             log(t_rel + n, "oferta", raiz=v["raiz"], nivel=nivel, unidade=u, vaga_dia=int(dia_vaga),
-                ordem=n + 1, resultado="aceite" if aceitou else "expirou", **info(k))
+                ordem=n + 1, resultado="aceite" if aceitou else "expirou",
+                criterio="semana" if semana[k] else "geral", **info(k))
             if aceitou:
                 vencedor, t_ac = k, t_rel + n + 1
+                stats["aceites_semana"] += int(semana[k])
                 break
 
         if vencedor is None:
@@ -196,7 +206,8 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
             log(t_ac, "vaga_liberada", id_consulta=int(ag["id"][i]), raiz=v["raiz"], unidade=u, nivel=nivel + 1,
                 valor=float(ag["valor"][i]))
             heapq.heappush(heap, (t_ac, seq, {"unidade": u, "dia": dia_antigo, "nivel": nivel + 1, "raiz": v["raiz"],
-                                              "origem": int(ag["id"][i]), "valor": float(ag["valor"][i])}))
+                                              "origem": int(ag["id"][i]), "valor": float(ag["valor"][i]),
+                                              "hora": ag["hora"][i]}))
             seq += 1
 
     perda = float(df.loc[df["falta"] == 1, "valor_convenio"].sum())
@@ -212,7 +223,8 @@ def simular(prev, sint, fila_b, fontes, regras, cenario="produto", semente=None)
     cobertura = {k: contatado.groupby(np.asarray(g)).mean().round(3).to_dict() for k, g in grupos.items()}
     todas = [v for d in cobertura.values() for v in d.values()]
     resumo = {
-        "cenario": cenario,
+        "cenario": cenario, "regra": regra,
+        "aceites_mesmo_horario": stats["aceites_semana"],
         "cobertura_faltosos": cobertura, "M5_cobertura_min": float(min(todas)),
         "M5_cobertura_gap_pp": float(max((max(d.values()) - min(d.values())) * 100 for d in cobertura.values())),
         "consultas": len(df), "faltas": n_faltas, "unidades": int(df["unidade"].nunique()),

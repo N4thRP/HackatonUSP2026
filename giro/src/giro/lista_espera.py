@@ -2,7 +2,9 @@
 
 Tipo A: paciente que já tem consulta marcada mais tarde na mesma unidade (dado real).
 Tipo B: paciente na fila da regulação, sem horário (sintético).
-Ordem: quem espera há mais tempo recebe a oferta primeiro (a cor de risco não entra na prioridade).
+Ordem geral (D34, SUS): quem espera há mais tempo recebe a oferta primeiro.
+Hospital particular (D35): primeiro quem tem consulta 7 dias depois da vaga, no mesmo horário;
+sem essa pessoa ou sem aceite, segue a ordem geral.
 """
 import numpy as np
 
@@ -30,3 +32,13 @@ def elegiveis_b(fb):
 def ordenar(espera):
     """Índices em ordem de oferta: maior espera primeiro (empate mantém a ordem original)."""
     return np.argsort(-np.asarray(espera, dtype=float), kind="stable")
+
+
+def semana_primeiro(ordem, mesmo_horario):
+    """D35: põe na frente, sem mudar a ordem relativa, quem tem consulta 7 dias depois no mesmo horário.
+
+    ordem: índices já na ordem geral; mesmo_horario: máscara booleana indexada pelos mesmos índices.
+    """
+    ordem = np.asarray(ordem, dtype=int)
+    m = np.asarray(mesmo_horario, dtype=bool)[ordem] if len(ordem) else np.array([], bool)
+    return np.concatenate([ordem[m], ordem[~m]]).astype(int)
