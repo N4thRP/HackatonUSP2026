@@ -1,6 +1,6 @@
 # Giro — MVP
 
-Prevê quem tende a faltar à consulta, contata o paciente 3 dias antes (faixas Alto e Médio, mais um aviso para quem tem 60+) e, quando ele responde que não vai, oferece a vaga à lista de espera: no SUS, quem espera há mais tempo (D34); em hospital particular, primeiro quem tem consulta uma semana depois no mesmo horário (D35). Cobrança por coparticipação (D36): o Giro fica com um percentual da receita das consultas recuperadas, então só ganha quando a clínica ganha. Hackathon USP · Saúde para todos.
+Prevê quem tende a faltar à consulta, contata o paciente 3 dias antes (faixas Alto e Médio, mais um aviso para quem tem 60+) e, quando ele responde que não vai, oferece a vaga à lista de espera: no SUS, quem espera há mais tempo (D34); em hospital particular, primeiro quem tem consulta uma semana depois no mesmo horário (D35). Cobrança: no mercado privado, coparticipação (D36), em que o Giro fica com um percentual da receita das consultas recuperadas e só ganha quando a clínica ganha; no SUS, assinatura fixa por unidade (D37). Hackathon USP · Saúde para todos.
 
 ## Como rodar
 

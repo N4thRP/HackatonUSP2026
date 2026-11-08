@@ -311,6 +311,7 @@ ICONE = {  # ícones de traço, 18 px
     "falta": '<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/>',
     "dinheiro": '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/>',
     "giro": '<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v3.8h-3.8"/>',
+    "relogio": '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',
 }
 
 
@@ -701,34 +702,49 @@ with aba4:
         st.caption(f"No SUS o valor por consulta é baixo ({brl(r['valor_recuperado_sus'])} no período); "
                    "o ganho é a fila andar: pacientes atendidos antes.")
 
-    # ---- Coparticipação (D36): a alavanca do produto ----
-    st.markdown("#### Coparticipação: o Giro ganha quando a clínica ganha")
-    pct = st.slider("Percentual da coparticipação", 5, 40, 20, step=5, format="%d%%", key="copart",
-                    help="Percentual da receita das consultas recuperadas que fica com o Giro (D36). "
-                         "O valor final ainda será definido; este controle serve para simular.") / 100
-    receita = r["valor_recuperado_convenio"] if valor == "Particular" else r["valor_recuperado_sus"]
+    # ---- Cobrança: coparticipação no privado (D36), assinatura no SUS (D37) ----
     meses = r["dias_uteis"] / 22
-    por_mes = receita / r["unidades"] / meses
-    passos = [
-        ("vaga", "#0B4F6C", "Vagas liberadas antes da falta", f"{r['vagas_liberadas']:,}".replace(",", "."),
-         "pacientes avisaram que não iam"),
-        ("agenda", "#14B8A6", "Consultas a mais", f"{r['vagas_recuperadas']:,}".replace(",", "."),
-         "vagas que viraram atendimento"),
-        ("dinheiro", "#0B4F6C", "Receita recuperada pela " + ("clínica" if valor == "Particular" else "unidade"),
-         brl(receita), f"{brl(por_mes)} por unidade/mês"),
-        ("giro", "#FF6B57", f"Parte do Giro ({pct:.0%})", brl(receita * pct), f"{brl(por_mes * pct)} por unidade/mês"),
-    ]
-    st.markdown('<div class="alav">' + '<span class="alav-seta">→</span>'.join(
-        f'<div class="alav-p"><div class="kpi-t">{icone(ic, cor)}{tit}</div><div class="alav-v">{v}</div>'
-        f'<div class="kpi-s">{sub}</div></div>' for ic, cor, tit, v, sub in passos) + "</div>", unsafe_allow_html=True)
+    n_liberadas = f"{r['vagas_liberadas']:,}".replace(",", ".")
+    n_mais = f"{r['vagas_recuperadas']:,}".replace(",", ".")
     if valor == "Particular":
-        st.caption(f"A clínica fica com {brl(receita * (1 - pct))} ({1 - pct:.0%}) da receita recuperada e só paga quando há "
+        st.markdown("#### Coparticipação: o Giro ganha quando a clínica ganha")
+        pct = st.slider("Percentual da coparticipação", 5, 40, 20, step=5, format="%d%%", key="copart",
+                        help="Percentual da receita das consultas recuperadas que fica com o Giro (D36). "
+                             "O valor final ainda será definido; este controle serve para simular.") / 100
+        receita = r["valor_recuperado_convenio"]
+        por_mes = receita / r["unidades"] / meses
+        passos = [
+            ("vaga", "#0B4F6C", "Vagas liberadas antes da falta", n_liberadas, "pacientes avisaram que não iam"),
+            ("agenda", "#14B8A6", "Consultas a mais", n_mais, "vagas que viraram atendimento"),
+            ("dinheiro", "#0B4F6C", "Receita recuperada pela clínica", brl(receita), f"{brl(por_mes)} por unidade/mês"),
+            ("giro", "#FF6B57", f"Parte do Giro ({pct:.0%})", brl(receita * pct), f"{brl(por_mes * pct)} por unidade/mês"),
+        ]
+        legenda = (f"A clínica fica com {brl(receita * (1 - pct))} ({1 - pct:.0%}) da receita recuperada e só paga quando há "
                    "consulta recuperada. Menos faltas e vagas ociosas → mais pacientes atendidos → mais receita para a "
                    "clínica → mais receita para o Giro. Base: as vagas reocupadas registradas pelo Giro, que o cliente pode "
                    "auditar. Período simulado de 9 dias úteis.")
     else:
-        st.caption("No SUS a forma de cobrança ainda está em aberto (D36): não há lucro, e o valor acima é só ilustrativo, "
-                   "a R$ 13,85 por consulta recuperada. O ganho principal é a fila andar: mais pacientes atendidos antes.")
+        st.markdown("#### Assinatura: valor fixo por unidade no SUS")
+        assin = st.slider("Assinatura mensal por unidade (R$)", 100, 2000, 500, step=100, key="assin",
+                          help="Valor fixo que cada unidade pública paga por mês (D37). O valor final ainda será definido; "
+                               "este controle serve para simular.")
+        total = assin * r["unidades"] * meses
+        custo = total / max(r["vagas_recuperadas"], 1)
+        dias = f"{r['dias_antecipados_tipo_a']:,.0f}".replace(",", ".")
+        passos = [
+            ("vaga", "#0B4F6C", "Vagas liberadas antes da falta", n_liberadas, "pacientes avisaram que não iam"),
+            ("agenda", "#14B8A6", "Consultas a mais", n_mais, "pacientes atendidos que ficariam sem vaga"),
+            ("relogio", "#0B4F6C", "Dias de consulta antecipados", dias, "pacientes atendidos antes"),
+            ("giro", "#FF6B57", "Assinatura do Giro", f"{brl(assin)}/mês",
+             f"por unidade · ≈ {brl(custo)} por consulta a mais".replace("R$ ", "R$\u00a0")),
+        ]
+        legenda = (f"No SUS não há lucro a dividir: a cobrança é uma assinatura fixa por unidade (D37), previsível para o "
+                   f"orçamento público. Com {brl(assin)} por mês, as {r['unidades']} unidades pagariam {brl(total)} no período "
+                   f"simulado de 9 dias úteis, cerca de {brl(custo)} por consulta a mais; uma falta custa R$ 13,85 ao SUS.")
+    st.markdown('<div class="alav">' + '<span class="alav-seta">→</span>'.join(
+        f'<div class="alav-p"><div class="kpi-t">{icone(ic, cor)}{tit}</div><div class="alav-v">{v}</div>'
+        f'<div class="kpi-s">{sub}</div></div>' for ic, cor, tit, v, sub in passos) + "</div>", unsafe_allow_html=True)
+    st.caption(legenda)
 
     st.markdown("#### Quem ganhou as vagas")
     c1, c2, c3 = st.columns(3)
