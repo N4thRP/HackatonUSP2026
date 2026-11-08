@@ -164,7 +164,7 @@
     <div data-edit>
       <p>Construir um produto que <b>prevê quais pacientes têm maior chance de faltar</b> (no-show) a uma consulta agendada, <b>entra em contato</b> com eles antes da data e, quando o paciente <b>confirma ativamente</b> que não vai, <b>oferece o horário</b> à lista de espera.</p>
       <p><b>Quem tem o problema:</b> o paciente que espera na fila por uma vaga que, no dia, fica vazia.<br>
-      <b>Quem paga pela solução:</b> a unidade de saúde (clínica, ambulatório ou hospital), por meio de uma <b>mensalidade fixa por unidade</b>. O argumento: a mensalidade custa uma fração da receita recuperada com as vagas reocupadas.</p>
+      <b>Quem paga pela solução:</b> a unidade de saúde (clínica, ambulatório ou hospital), por <b>coparticipação</b> (D36): o Giro fica com um percentual da receita das consultas que deixaram de ser perdidas, ou seja, das vagas liberadas e reocupadas que o próprio Giro registra. Sem consulta recuperada, não há cobrança. A alavanca fica clara: menos faltas e vagas ociosas → mais pacientes atendidos → mais receita para a unidade → mais receita para o Giro. Exemplo com os números do MVP (R$ 5,8 mil recuperados por unidade por mês no cenário particular): com 20%, cerca de R$ 1,2 mil por unidade por mês para o Giro; o percentual ainda será definido.</p>
       <p>Três atividades, nesta ordem: <b>1. Prever → 2. Contatar → 3. Realocar.</b></p>
     </div>
     <div class="flow">
@@ -321,7 +321,7 @@
           <li>Fila de contato priorizada pelo risco, com mensagem pronta e resposta do paciente (vou / não vou / remarcar).</li>
           <li>Motor de realocação no modelo Luma Health: a vaga vai para a lista de espera, ordenada por tempo na lista (quem espera há mais tempo primeiro), com ofertas em sequência.</li>
           <li>Gerador de dados sintéticos rastreável até as fontes (horário, valor, urgência, distância, respostas).</li>
-          <li>Estimativa de receita recuperada por unidade nos cenários convênio e SUS, para justificar a mensalidade.</li>
+          <li>Estimativa de receita recuperada por unidade nos cenários convênio e SUS, base da coparticipação (D36).</li>
           <li>Demo ponta a ponta no MVP + este HTML de projeto.</li>
         </ol>
       </div>
@@ -451,7 +451,7 @@
       <tr><td class="id">D7</td><td>Não usar SMS_received como variável.</td><td>Removida: está confundida com a antecedência e tirar não piora o modelo (AUC 0,737 × 0,738).</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D8</td><td>MVP em Python.</td><td>Decisão da equipe. Interface em Streamlit (D20).</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D9</td><td>Valor da consulta em dois cenários: <b>convênio R$ 150</b> (padrão, faixa R$ 128–195) e <b>SUS R$ 13,85</b>.</td><td>Convênio: valores pagos por operadoras em 2025 (APM). SUS: valor implícito em Beltrame et al. (R$ 3,56 mi ÷ 257.025 faltas).</td><td><span class="tag ok">tomada</span></td></tr>
-      <tr><td class="id">D10</td><td>Cobrança: mensalidade fixa por unidade.</td><td>Decisão da equipe. Preço a definir a partir da receita recuperada simulada (M9).</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D10</td><td><s>Cobrança: mensalidade fixa por unidade.</s> → substituída pela D36.</td><td>Decisão da equipe. Preço a definir a partir da receita recuperada simulada (M9).</td><td><span class="tag open">revogada</span></td></tr>
       <tr><td class="id">D11</td><td>Modo padrão da realocação: <b>sequencial</b>.</td><td>Decisão da equipe. Respeita a ordem da fila; preenche mais devagar que o simultâneo — acompanhar M8. Reconfirmada em 08/11 após o MVP mostrar que a simultânea recupera mais vagas mas não respeita a prioridade.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D12</td><td>Modelo treinado só no dataset de Vitória; o de Itajaí serve só para horários e motivos de falta.</td><td>Itajaí não tem data de agendamento nem ID do paciente; com divisão temporal, AUC ~0,51.</td><td><span class="tag ok">no código</span></td></tr>
       <tr><td class="id">D13</td><td><s>Usar a cor de risco SisReg antes do tempo na lista: vermelho → amarelo → verde → azul; dentro da cor, mais antigo primeiro.</s> → revogada pela D34.</td><td>Decisão da equipe. É como a regulação do SUS ordena a fila; urgência é sintética (selo “simulado”).</td><td><span class="tag open">revogada</span></td></tr>
@@ -477,6 +477,7 @@
       <tr><td class="id">D33</td><td>M8 e M9 no placar são a média de 5 sementes, com a faixa registrada.</td><td>O ruído de uma semente (±1 p.p.) é maior que a folga da M8; uma rodada só não decide se a meta foi atingida.</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D34</td><td>Prioridade da fila só por tempo de espera: a cor de risco (urgência) sai da ordem das ofertas e dos dados sintéticos. Revoga a D13.</td><td>Decisão da equipe: a urgência era sintética e subjetiva. Média de 5 sementes: M8 44,5% (antes 45,3%), M9 16,6% (antes 17,0%); quem ganha a vaga esperava 25 dias em média (antes 21).</td><td><span class="tag ok">tomada</span></td></tr>
       <tr><td class="id">D35</td><td>Em <b>hospital particular</b>, a vaga liberada é oferecida a quem tem consulta marcada <b>uma semana depois, no mesmo horário</b> (mesmo dia da semana e hora). No SUS continua valendo a D34 (tempo de espera).</td><td>Decisão da equipe. Mantém o dia da semana e o horário que o paciente já escolheu, e a cascata anda de semana em semana. Se ninguém tem consulta nesse horário ou o paciente não aceita em 30 min, a vaga cai para a regra geral (D34, tempo de espera). No MVP (média de 5 sementes): M8 44,9% contra 44,5% da regra geral, M9 igual (16,6%); 42 das ~2.100 remarcações vêm do critério do mesmo horário, porque é raro alguém ter consulta exatamente uma semana depois, no mesmo horário, e aceitar.</td><td><span class="tag ok">tomada</span></td></tr>
+      <tr><td class="id">D36</td><td>Cobrança por <b>coparticipação</b>: o Giro recebe um percentual da receita das consultas recuperadas (vagas liberadas e reocupadas registradas pelo Giro), no lugar da mensalidade fixa. Revoga a D10.</td><td>Decisão da equipe. Alinha o ganho do Giro ao do cliente: menos abandono → mais pacientes atendidos → mais receita para os dois, e o cliente só paga quando há resultado. A base é a receita recuperada, e não o lucro do cliente, porque é o que o Giro mede e o cliente pode auditar. Em aberto: o percentual e como cobrar no SUS, onde não há lucro (por exemplo, valor por consulta recuperada pago pelo gestor público).</td><td><span class="tag ok">tomada</span></td></tr>
     </table>
   </section>
 
@@ -488,7 +489,7 @@
       <div class="step"><span class="k">FASE 1 · fechada ✓</span><b>Dados</b><span class="small muted">Quais dados, quais perfis de pacientes, quais variáveis.</span></div>
       <div class="step"><span class="k">FASE 2 · fechada ✓</span><b>MVP</b><span class="small muted">Como funciona, código Python, produto final, eficácia.</span></div>
       <div class="step"><span class="k">FASE 3 · fechada ✓</span><b>Desenvolvimento</b><span class="small muted">Código Python, testes, interface, placar.</span></div>
-      <div class="step"><span class="k">FASE 4 · próxima</span><b>Pitch</b><span class="small muted">Roteiro, números, mensalidade, demo.</span></div>
+      <div class="step"><span class="k">FASE 4 · próxima</span><b>Pitch</b><span class="small muted">Roteiro, números, coparticipação, demo.</span></div>
     </div>
 
     <h3>Fase 1 · Dados <span class="tag ok">fechada</span></h3>
@@ -833,7 +834,7 @@
     <p class="small muted" data-edit>Contato sorteado com o mesmo volume, sem modelo: R$ 122 mil. Atingidas: M3, M4, M6, M7, M9–M12. Próximas: M1, M2 e M8 (44,5% para meta de 45%, dentro da variação entre sementes). Abaixo: M5.</p>
 
     <h3>Fase 4 · Pitch <span class="tag pend">próxima</span></h3>
-    <p class="small muted" data-edit>Roteiro, números do placar, preço da mensalidade e demo.</p>
+    <p class="small muted" data-edit>Roteiro, números do placar, percentual da coparticipação e demo.</p>
 
     <h3>Ciclo de cada mudança</h3>
     <div class="flow">

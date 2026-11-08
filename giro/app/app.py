@@ -92,6 +92,12 @@ st.markdown("""
   .semantica>div{display:flex;align-items:flex-start;gap:8px;font-size:.88rem}
   .semantica small{display:block;color:#5D7183;font-size:.78rem}
   .pac{display:flex;align-items:flex-start;gap:10px}
+  .alav{display:grid;grid-template-columns:1fr 18px 1fr 18px 1fr 18px 1fr;align-items:stretch;gap:8px;margin:6px 0 4px 0}
+  .alav-p{background:#fff;border:1px solid #DCE5EA;border-radius:12px;padding:12px 14px}
+  .alav-p:last-child{border-color:#FF6B57;background:#FFF5F3}
+  .alav-v{font-family:"Sora",sans-serif;font-size:1.45rem;font-weight:700;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+  .alav-seta{align-self:center;text-align:center;color:#8597A6;font-size:1.2rem}
+  @media (max-width:900px){.alav{grid-template-columns:1fr}.alav-seta{transform:rotate(90deg)}}
   .chip-sem{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.74rem;font-weight:600;color:#0B4F6C;
             background:#D7F5EE;white-space:nowrap}
   .chip60{margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;font-weight:700;color:#0B4F6C;background:#DCEAF1}
@@ -303,6 +309,8 @@ ICONE = {  # ícones de traço, 18 px
     "contato": '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>',
     "vaga": '<path d="M4 21h16M6 21V4h9v17M15 6l4 2v13M12 12v1"/>',
     "falta": '<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/>',
+    "dinheiro": '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/>',
+    "giro": '<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v3.8h-3.8"/>',
 }
 
 
@@ -692,6 +700,35 @@ with aba4:
     else:
         st.caption(f"No SUS o valor por consulta é baixo ({brl(r['valor_recuperado_sus'])} no período); "
                    "o ganho é a fila andar: pacientes atendidos antes.")
+
+    # ---- Coparticipação (D36): a alavanca do produto ----
+    st.markdown("#### Coparticipação: o Giro ganha quando a clínica ganha")
+    pct = st.slider("Percentual da coparticipação", 5, 40, 20, step=5, format="%d%%", key="copart",
+                    help="Percentual da receita das consultas recuperadas que fica com o Giro (D36). "
+                         "O valor final ainda será definido; este controle serve para simular.") / 100
+    receita = r["valor_recuperado_convenio"] if valor == "Particular" else r["valor_recuperado_sus"]
+    meses = r["dias_uteis"] / 22
+    por_mes = receita / r["unidades"] / meses
+    passos = [
+        ("vaga", "#0B4F6C", "Vagas liberadas antes da falta", f"{r['vagas_liberadas']:,}".replace(",", "."),
+         "pacientes avisaram que não iam"),
+        ("agenda", "#14B8A6", "Consultas a mais", f"{r['vagas_recuperadas']:,}".replace(",", "."),
+         "vagas que viraram atendimento"),
+        ("dinheiro", "#0B4F6C", "Receita recuperada pela " + ("clínica" if valor == "Particular" else "unidade"),
+         brl(receita), f"{brl(por_mes)} por unidade/mês"),
+        ("giro", "#FF6B57", f"Parte do Giro ({pct:.0%})", brl(receita * pct), f"{brl(por_mes * pct)} por unidade/mês"),
+    ]
+    st.markdown('<div class="alav">' + '<span class="alav-seta">→</span>'.join(
+        f'<div class="alav-p"><div class="kpi-t">{icone(ic, cor)}{tit}</div><div class="alav-v">{v}</div>'
+        f'<div class="kpi-s">{sub}</div></div>' for ic, cor, tit, v, sub in passos) + "</div>", unsafe_allow_html=True)
+    if valor == "Particular":
+        st.caption(f"A clínica fica com {brl(receita * (1 - pct))} ({1 - pct:.0%}) da receita recuperada e só paga quando há "
+                   "consulta recuperada. Menos faltas e vagas ociosas → mais pacientes atendidos → mais receita para a "
+                   "clínica → mais receita para o Giro. Base: as vagas reocupadas registradas pelo Giro, que o cliente pode "
+                   "auditar. Período simulado de 9 dias úteis.")
+    else:
+        st.caption("No SUS a forma de cobrança ainda está em aberto (D36): não há lucro, e o valor acima é só ilustrativo, "
+                   "a R$ 13,85 por consulta recuperada. O ganho principal é a fila andar: mais pacientes atendidos antes.")
 
     st.markdown("#### Quem ganhou as vagas")
     c1, c2, c3 = st.columns(3)
