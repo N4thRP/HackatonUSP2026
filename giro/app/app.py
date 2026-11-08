@@ -33,7 +33,7 @@ st.markdown("""
   table.ag th{text-align:left;font-weight:600;color:#4E6462;border-bottom:2px solid #C9D5D2;padding:6px 8px;font-size:.85rem}
   table.ag td{border-bottom:1px solid #DCE4E2;padding:8px;vertical-align:top}
   .fat{color:#4E6462;font-size:.83rem}
-  .st-ok{color:#2F6F2A;font-weight:600}.st-lib{color:#B43C2A;font-weight:600}.st-cin{color:#6B7B79}
+  .st-ok{color:#2F6F2A;font-weight:600}.st-lib{color:#B43C2A;font-weight:600}.st-prox{color:#A87A00;font-weight:600}.st-cin{color:#6B7B79}
   .of{display:grid;grid-template-columns:34px 8px 1fr auto;gap:10px;align-items:center;padding:5px 0;border-bottom:1px dashed #DCE4E2;font-size:.9rem}
   .of:last-child{border-bottom:0}
   .of .n{color:#6B7B79;text-align:right;font-variant-numeric:tabular-nums}
@@ -510,20 +510,27 @@ with aba4:
             ("M10", "Tempo por realocação (s)", "<=", 2, "{:.4f}"),
             ("M11", "Sintéticos batem com as fontes", "=", "100%", "{}"), ("M12", "Nada sintético no treino", "=", "100%", "{}"),
         ]
+        TOLERANCIA = 0.05  # "próxima": não atinge a meta, mas fica a até 5% dela
+        SITUACAO = {"ok": ("st-ok", "atingida"), "prox": ("st-prox", "próxima"), "abaixo": ("st-lib", "abaixo")}
         linhas = []
         for k, nome, op, meta, fmt in metas:
             v = ult[k]
             try:
                 v = float(v)
                 ok = v >= meta if op == ">=" else v <= meta
+                perto = meta != 0 and abs(v - meta) / abs(meta) <= TOLERANCIA
+                sit = "ok" if ok else ("prox" if perto else "abaixo")
                 txt = fmt.format(v)
             except (TypeError, ValueError):
-                ok, txt = v == meta, str(v)
+                sit, txt = ("ok" if v == meta else "abaixo"), str(v)
             meta_txt = fmt.format(meta) if not isinstance(meta, str) else meta
+            cls, rot = SITUACAO[sit]
             linhas.append(f"<tr><td>{k}</td><td>{nome}</td><td>{ {'>=': '≥', '<=': '≤'}.get(op, op)} {meta_txt}</td><td>{txt}</td>"
-                          f"<td class='{'st-ok' if ok else 'st-lib'}'>{'atingida' if ok else 'abaixo'}</td></tr>")
+                          f"<td class='{cls}'>{rot}</td></tr>")
         st.markdown("<table class='ag'><tr><th></th><th>Métrica</th><th>Meta</th><th>Resultado</th><th></th></tr>"
                     + "".join(linhas) + "</table>", unsafe_allow_html=True)
+        st.caption("Atingida: cumpre a meta. Próxima: não cumpre, mas fica a até 5% do valor da meta. "
+                   "Abaixo: fica mais longe que isso.")
         if "M5a" in ult and pd.notna(ult["M5a"]):
             st.caption(f"Informativo · M5a, ordenação do modelo entre grupos: {float(ult['M5a']):.1f} p.p. "
                        "(medida antiga da M5, mantida por transparência).")

@@ -55,6 +55,7 @@
   .tag.pend{background:#f1efe9;color:var(--muted)}
   .tag.base{background:var(--accent-soft);color:var(--accent);border-color:#bcd9cf}
   .tag.open{background:var(--warn-soft);color:var(--warn);border-color:#e9c9b1}
+  .tag.near{background:#fbf3d5;color:#8a6512;border-color:#ecdca0}
   .tag.ok{background:#e4f0e1;color:var(--ok);border-color:#c3dcbd}
   .bars{display:grid;gap:6px;margin:10px 0}
   .brow{display:grid;grid-template-columns:150px 1fr 74px;gap:10px;align-items:center;font-size:13px}
@@ -362,11 +363,11 @@
   <!-- 06 -->
   <section id="s06">
     <h2><span class="n">06</span>MÉTRICAS-ALVO</h2>
-    <p class="small muted" data-edit>Comandos são os previstos para o MVP (ainda não existem). Validação sempre com o corte temporal em 25/05/2016. Status: <span class="tag pend">pendente</span> <span class="tag base">baseline medido</span> <span class="tag ok">atingida</span> <span class="tag open">em risco</span></p>
+    <p class="small muted" data-edit>Comandos são os previstos para o MVP (ainda não existem). Validação sempre com o corte temporal em 25/05/2016. Status: <span class="tag pend">pendente</span> <span class="tag base">baseline medido</span> <span class="tag ok">atingida</span> <span class="tag near">próxima</span> (não atinge, mas fica a até 5% da meta) <span class="tag open">em risco</span></p>
     <table data-edit>
       <tr><th>ID</th><th>Meta</th><th>Como medir</th><th>Comando que mede</th><th>Status</th></tr>
-      <tr><td class="id">M1</td><td>AUC-ROC ≥ <b>0,75</b></td><td>Conjunto de teste temporal</td><td><code>python avaliar.py --metrica auc</code></td><td><span class="tag open">mvp 0,743 · abaixo</span></td></tr>
-      <tr><td class="id">M2</td><td>Recall no top 20% de risco ≥ <b>40%</b></td><td>% de todas as faltas do teste nos 20% de maior risco</td><td><code>python avaliar.py --metrica recall_top --k 0.20</code></td><td><span class="tag open">mvp 39,6% · abaixo</span></td></tr>
+      <tr><td class="id">M1</td><td>AUC-ROC ≥ <b>0,75</b></td><td>Conjunto de teste temporal</td><td><code>python avaliar.py --metrica auc</code></td><td><span class="tag near">mvp 0,743 · próxima</span></td></tr>
+      <tr><td class="id">M2</td><td>Recall no top 20% de risco ≥ <b>40%</b></td><td>% de todas as faltas do teste nos 20% de maior risco</td><td><code>python avaliar.py --metrica recall_top --k 0.20</code></td><td><span class="tag near">mvp 39,6% · próxima</span></td></tr>
       <tr><td class="id">M3</td><td>Precisão no top 20% ≥ <b>36%</b> (≈ 2× a taxa base)</td><td>% de faltas reais entre os contatados</td><td><code>python avaliar.py --metrica precisao_top --k 0.20</code></td><td><span class="tag ok">mvp 36,9%</span></td></tr>
       <tr><td class="id">M4</td><td>Erro de calibração (ECE) ≤ <b>0,03</b></td><td>Probabilidade prevista × taxa real, em 10 faixas</td><td><code>python avaliar.py --metrica ece</code></td><td><span class="tag ok">mvp 0,028</span></td></tr>
       <tr><td class="id">M5</td><td>Diferença ≤ <b>10 p.p.</b> entre grupos na chance de quem faltaria receber contato</td><td>Cobertura de contato entre faltosos, por faixa etária, sexo e Bolsa Família (D32). M5a, ordenação do modelo, segue como informativo.</td><td><code>python simular.py</code> (resumo: <code>M5_cobertura_gap_pp</code>)</td><td><span class="tag open">final 27,5 p.p. · abaixo</span></td></tr>
@@ -823,7 +824,7 @@ def candidatos(vaga, lista, hoje):
       <tr><th>Contatos</th><th>Vagas liberadas</th><th>Vagas recuperadas</th><th>M8</th><th>M9</th><th>R$ convênio (9 dias úteis)</th><th>Por unidade/mês</th><th>Cobertura dos faltosos</th></tr>
       <tr><td class="mono">24.717 (63%)</td><td class="mono">3.113</td><td class="mono">1.234</td><td class="mono">45,3% <span class="muted">(44,5–46,2)</span></td><td class="mono">17,0% <span class="muted">(16,6–17,4)</span></td><td class="mono">R$ 195 mil</td><td class="mono">R$ 6,0 mil</td><td class="mono">0–17: 86% · 18–39: 89% · 40–59: 72% · 60+: 100%</td></tr>
     </table>
-    <p class="small muted" data-edit>Contato sorteado com o mesmo volume, sem modelo: R$ 130 mil. Atingidas: M3, M4, M6–M12. Abaixo: M1 (teto do dataset), M2 (0,4 p.p.) e M5 (40–59 anos com 72% de cobertura).</p>
+    <p class="small muted" data-edit>Contato sorteado com o mesmo volume, sem modelo: R$ 130 mil. Atingidas: M3, M4, M6–M12. Próximas: M1 (teto do dataset, faltam 0,007 de AUC) e M2 (faltam 0,4 p.p.). Abaixo: M5 (40–59 anos com 72% de cobertura).</p>
 
     <h3>Fase 4 · Pitch <span class="tag pend">próxima</span></h3>
     <p class="small muted" data-edit>Roteiro, números do placar, preço da mensalidade e demo.</p>
@@ -847,7 +848,7 @@ def candidatos(vaga, lista, hoje):
       <tr><td class="mono">08/11 01:05</td><td>mvp-v2</td><td class="mono">0,743</td><td class="mono">39,6%</td><td class="mono">36,9%</td><td class="mono">0,028</td><td class="mono">41,1</td><td class="mono">0</td><td class="mono">100%</td><td class="mono">43,4%</td><td class="mono">16,4%</td><td class="mono">0,4 ms</td><td class="mono">100%</td><td class="mono">100%</td><td>Aviso D-2 para 60+ (D31)</td></tr>
       <tr><td class="mono">08/11 01:22</td><td><b>mvp-final</b></td><td class="mono">0,743</td><td class="mono">39,6%</td><td class="mono">36,9%</td><td class="mono">0,028</td><td class="mono">27,5*</td><td class="mono">0</td><td class="mono">100%</td><td class="mono">45,3%</td><td class="mono">17,0%</td><td class="mono">0,4 ms</td><td class="mono">100%</td><td class="mono">100%</td><td>Aviso D-3 para 60+; M5 = cobertura; M8/M9 média de 5 sementes</td></tr>
     </table>
-    <p class="small muted">* A partir da mvp-final, M5 mede a cobertura de contato (D32); nas linhas anteriores, a ordenação do modelo (hoje M5a = 41,1). Versão final — atingidas: M3, M4, M6–M12; abaixo: M1, M2 e M5. Histórico em <code>saidas/placar.csv</code>.</p>
+    <p class="small muted">* A partir da mvp-final, M5 mede a cobertura de contato (D32); nas linhas anteriores, a ordenação do modelo (hoje M5a = 41,1). Versão final — atingidas: M3, M4, M6–M12; próximas: M1 e M2; abaixo: M5. Histórico em <code>saidas/placar.csv</code>.</p>
   </section>
 </main>
 
